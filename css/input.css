@@ -265,6 +265,16 @@ body {
     -webkit-backdrop-filter: blur(20px);
 }
 
+/* On phones use a solid header so the open menu
+   never shows a blur band behind/around the tabs */
+@media (max-width: 767px) {
+    .nav-blur {
+        background: #0c1222;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+}
+
 /* Hero background gradient orbs */
 .hero-orb-1 {
     position: absolute;

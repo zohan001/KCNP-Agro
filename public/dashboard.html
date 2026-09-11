@@ -405,7 +405,7 @@
                             <span class="text-primary-400 font-bold text-lg">${formatPrice(p.price, p.unit)}</span>
                             <span class="text-gray-500 text-xs">${p.location || 'Location TBD'}</span>
                         </div>
-                        <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen">&#9654; Listen</button>
+                        <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen" onclick="event.stopPropagation(); KCNP.speakBtn(this);">&#9654; Listen</button>
                     </article>
                 `).join('');
             } catch (err) {
@@ -454,7 +454,7 @@
                             ${p.contactEmail ? `<a href="mailto:${p.contactEmail}" class="block text-xs text-primary-400 hover:text-primary-300 transition-colors truncate">${p.contactEmail}</a>` : ''}
                             ${p.contactPhone ? `<a href="tel:${p.contactPhone}" class="block text-xs text-gray-400 hover:text-primary-300 transition-colors">${p.contactPhone}</a>` : ''}
                         </div>
-                        <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen">&#9654; Listen</button>
+                        <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen" onclick="event.stopPropagation(); KCNP.speakBtn(this);">&#9654; Listen</button>
                     </article>
                 `).join('');
             } catch (err) {

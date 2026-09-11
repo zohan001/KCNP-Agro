@@ -13,8 +13,10 @@
  *    localStorage). Helpful for farmers who do
  *    not read comfortably in English.
  *
- * It is intentionally dependency-free and runs
- * defensively on any page that includes it.
+ * Handlers are attached inline via
+ * `onclick="KCNP.speakBtn(this)"` in each page
+ * template, so buttons created later (cards
+ * rendered after API fetch) always work.
  * ============================================
  */
 (function () {
@@ -171,55 +173,74 @@
     // ==============================
     // Read-aloud helpers
     // ==============================
-    function ttsSupported() {
-        return ('speechSynthesis' in window) && ('SpeechSynthesisUtterance' in window);
+    function pickVoice(lang) {
+        var voices = [];
+        try { voices = window.speechSynthesis.getVoices() || []; } catch (e) { return null; }
+        if (!voices.length) return null;
+        var prefix = lang.split('-')[0];
+        return voices.find(function (v) { return v.lang === lang; })
+            || voices.find(function (v) { return v.lang && v.lang.split('-')[0] === prefix; })
+            || voices.find(function (v) { return v.lang && v.lang.split('-')[0] === 'en'; })
+            || voices[0];
     }
 
-    function speakText(text, lang) {
-        if (!text) return;
-        if (!ttsSupported()) {
-            alert('Voice is not supported by this browser.');
+    function speak(text, lang) {
+        if (!text.trim()) return;
+        if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) {
+            alert('This browser does not support text-to-speech.');
             return;
         }
-        window.speechSynthesis.cancel();
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+
+        var code = TTS_LANG[lang] || 'en-US';
         var u = new SpeechSynthesisUtterance(text);
-        u.lang = TTS_LANG[lang] || 'en-US';
-        u.rate = 0.95;
+        u.lang = code;
+        var v = pickVoice(code);
+        if (v) u.voice = v;
+        u.rate = 0.9;
+        u.pitch = 1;
         window.speechSynthesis.speak(u);
     }
 
     function collectText(el) {
         if (!el) return '';
         var clone = el.cloneNode(true);
-        clone.querySelectorAll('script,style,button,input,select,textarea,.listen-btn').forEach(function (n) {
+        (clone.querySelectorAll('script,style,button,input,select,textarea,.listen-btn,a') || []).forEach(function (n) {
             if (n.parentNode) n.parentNode.removeChild(n);
         });
-        return (clone.innerText || '').replace(/\s+/g, ' ').trim();
+        return (clone.textContent || '').replace(/\s+/g, ' ').trim();
     }
 
-    function bindListeners() {
-        document.querySelectorAll('.listen-btn').forEach(function (btn) {
-            if (btn.getAttribute('data-bound')) return;
-            btn.setAttribute('data-bound', '1');
+    function speakBtn(btn) {
+        if (!btn) return;
 
-            var defaultLabel = btn.innerHTML;
-            btn.addEventListener('click', function () {
-                var sel = btn.getAttribute('data-speak');
-                var target = null;
-                if (sel && sel !== 'self') {
-                    target = document.querySelector(sel);
-                } else if (sel === 'self') {
-                    target = btn.closest('.listen-block');
-                }
-                var text = target ? collectText(target) : (btn.getAttribute('data-speak-text') || '');
+        if (btn.getAttribute('speaking') === '1') {
+            try { window.speechSynthesis.cancel(); } catch (e) {}
+            btn.removeAttribute('speaking');
+            btn.innerHTML = btn.getAttribute('data-label') || tr('btn_listen');
+            return;
+        }
 
-                if (text) {
-                    speakText(text, currentLang());
-                    btn.textContent = tr('btn_stop');
-                    setTimeout(function () { btn.innerHTML = defaultLabel; }, 3000);
-                }
-            });
-        });
+        var sel = btn.getAttribute('data-speak');
+        var target = null;
+        if (sel && sel !== 'self') {
+            target = document.querySelector(sel);
+        } else if (sel === 'self') {
+            target = btn.closest('.listen-block');
+        }
+        var text = target ? collectText(target) : (btn.getAttribute('data-speak-text') || '');
+
+        if (!text) return;
+        btn.setAttribute('data-label', btn.innerHTML);
+        speak(text, currentLang());
+        btn.setAttribute('speaking', '1');
+        btn.textContent = tr('btn_stop');
+        setTimeout(function () {
+            if (btn.getAttribute('speaking') === '1') {
+                btn.innerHTML = btn.getAttribute('data-label') || tr('btn_listen');
+                btn.removeAttribute('speaking');
+            }
+        }, 5000);
     }
 
     // ==============================
@@ -238,8 +259,19 @@
             try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
         });
 
-        bindListeners();
+        // Refresh voice list once available (voices load asynchronously on some devices)
+        if ('speechSynthesis' in window) {
+            var loadVoices = function () { try { window.speechSynthesis.getVoices(); } catch (e) {} };
+            loadVoices();
+            window.speechSynthesis.addEventListener('voiceschanged', loadVoices);
+        }
     }
+
+    // Expose to inline onclick handlers in templates
+    window.KCNP = {
+        speakBtn: speakBtn,
+        speak: speak
+    };
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);

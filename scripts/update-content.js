@@ -7,7 +7,8 @@
  *
  * - Articles are matched by title and updated/inserted.
  * - Quizzes are matched by title and updated/inserted.
- * - Users and products are left untouched.
+ * - Demo marketplace listings are inserted only when the marketplace is empty.
+ * - Users and existing user listings are left untouched.
  *
  * Usage (defaults to the MONGO_URI in .env):
  *   node scripts/update-content.js
@@ -19,7 +20,8 @@ require('dotenv').config();
 const { connectDB, initializeDatabase, closeDatabase } = require('../server/db/database');
 const Article = require('../server/models/Article');
 const Quiz = require('../server/models/Quiz');
-const { SEED_ARTICLES, SEED_QUIZZES } = require('./seed-data');
+const Product = require('../server/models/Product');
+const { SEED_ARTICLES, SEED_QUIZZES, SEED_PRODUCTS } = require('./seed-data');
 
 (async () => {
     try {
@@ -48,6 +50,14 @@ const { SEED_ARTICLES, SEED_QUIZZES } = require('./seed-data');
             if (res) updated++;
         }
         console.log(`[Quiz] ${updated}/${SEED_QUIZZES.length} upserted`);
+
+        const productCount = await Product.countDocuments();
+        if (productCount === 0 && SEED_PRODUCTS.length) {
+            await Product.create(SEED_PRODUCTS);
+            console.log(`[Product] Marketplace was empty — created ${SEED_PRODUCTS.length} demo listings`);
+        } else {
+            console.log(`[Product] Skipped — marketplace already has ${productCount} listing(s)`);
+        }
 
         console.log('\n=== Update complete ===\n');
         await closeDatabase();

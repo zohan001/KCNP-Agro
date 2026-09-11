@@ -105,7 +105,82 @@
             quiz_next: 'Next',
             quiz_submit: 'Submit Answers',
             edu_listen_article: 'Listen to article',
-            mp_listen_listing: 'Listen to listing'
+            mp_listen_listing: 'Listen to listing',
+            mp_post: 'Post a New Listing',
+            btn_post_listing: 'Post Listing',
+            btn_post_cta: 'Post a Listing',
+            toggle_post: '+ Post a Listing',
+            btn_search: 'Search',
+            mp_loading: 'Loading listings...',
+            mp_empty: 'No listings found. Be the first to post!',
+            mp_posted: 'Listing posted successfully!',
+            mp_failed: 'Failed to post listing.',
+            mp_network: 'Network error or timeout. Please try again.',
+            np_trader: 'Traders browse and buy — only farmers can post listings. Contact the farmer shown on any listing to make an order.',
+            np_login1: 'Only registered farmers can post listings.',
+            np_login2: 'to start selling.',
+            np_or: 'or',
+            np_link_reg: 'Create an account',
+            np_link_login: 'log in',
+            l_title: 'Title',
+            l_desc: 'Description',
+            l_cat: 'Category',
+            l_price: 'Price',
+            l_unit: 'Unit',
+            l_loc: 'Location',
+            l_email: 'Contact Email',
+            l_phone: 'Contact Phone',
+            l_image: 'Photo of the item',
+            ph_title: 'e.g. Organic maize seeds',
+            ph_desc: 'Describe your product or service...',
+            ph_price: 'e.g. 150',
+            ph_unit: 'e.g. kg, bag, unit',
+            ph_loc: 'e.g. Mombasa, Kenya',
+            ph_email: 'you@example.com',
+            ph_phone: '+254 7XX XXX XXX',
+            ph_search: 'Search listings...',
+            cat_all: 'All Categories',
+            cat_seeds: 'Seeds',
+            cat_tools: 'Tools',
+            cat_fertilizer: 'Fertilizer',
+            cat_livestock: 'Livestock',
+            cat_produce: 'Produce',
+            cat_equipment: 'Equipment',
+            cat_services: 'Services',
+            cat_other: 'Other',
+            err_price: 'Please enter the price.',
+            err_unit: 'Please enter the unit (e.g. kg, bag).',
+            err_loc: 'Please enter the location.',
+            err_phone: 'Please enter a phone number buyers can call.',
+            err_image_big: 'That photo is too big. Please choose one under 5 MB.',
+            err_image_type: 'Please choose an image file (JPG, PNG, WEBP or GIF).',
+            err_image_empty: 'No photo chosen yet.',
+            mp_contact: 'Contact',
+            price_on_request: 'Price on request',
+            d_no_listings: "You haven't posted any listings yet.",
+            r_no_listings: 'No listings available yet.',
+            s_all: 'See all marketplace listings',
+            s_post_new: '+ Post a new listing',
+            f_howto: 'How to Use',
+            tour_title: 'Welcome to KCNP Agro!',
+            tour_sub: 'Here is a quick guide to get you started in minutes.',
+            t1_t: 'Marketplace',
+            t1_d: 'Farmers post what they grow — produce, seeds, tools and services. Traders browse and buy. Use the search and category filter to find what you need.',
+            t2_t: 'Knowledge & Quizzes',
+            t2_d: 'Visit Education to learn climate-smart farming. Tap a lesson to read it, use the Listen button to hear it read aloud, then take a quiz to test yourself.',
+            t3_t: 'Listen anywhere',
+            t3_d: 'Press the dark ▶ Listen button on any article, quiz, or listing to hear it spoken slowly and clearly, without needing to read.',
+            t4_t: 'Choose your language',
+            t4_d: 'Press the SW / EN button in the corner to switch the whole site between Kiswahili and English.',
+            t5_t: 'Call for help',
+            t5_d: 'Need a hand? Tap the green Help button to call us anytime, day or night.',
+            tour_next: 'Next',
+            tour_skip: 'Skip — I do not need this',
+            tour_done: 'Got it, let us go!',
+            stat_farmers: 'Farmers',
+            stat_traders: 'Traders',
+            stat_listings: 'Live Listings',
+            stat_articles: 'Knowledge Articles'
         },
         sw: {
             nav_home: 'Nyumbani',
@@ -180,7 +255,82 @@
             quiz_next: 'Endelea',
             quiz_submit: 'Tuma Majibu',
             edu_listen_article: 'Sikiliza makala',
-            mp_listen_listing: 'Sikiliza matangazo'
+            mp_listen_listing: 'Sikiliza matangazo',
+            mp_post: 'Chapisha Tangazo Jipya',
+            btn_post_listing: 'Chapisha Tangazo',
+            btn_post_cta: 'Chapisha Tangazo',
+            toggle_post: '+ Chapisha Tangazo',
+            btn_search: 'Tafuta',
+            mp_loading: 'Inapakia matangazo...',
+            mp_empty: 'Hakuna matangazo. Kuwa wa kwanza kuchapisha!',
+            mp_posted: 'Tangazo limechapishwa kikamilifu!',
+            mp_failed: 'Imeshindikana kuchapisha tangazo.',
+            mp_network: 'Hitilafu ya mtandao. Tafadhali jaribu tena.',
+            np_trader: 'Wafanyabiashara hutazama na kununua — wakulima pekee ndio wanaweza kuchapisha matangazo. Wasiliana na mkulima aliyeandika tangazo kufanya agizo.',
+            np_login1: 'Wakulima waliojisajili tu ndio wanaweza kuchapisha matangazo.',
+            np_login2: 'uanze kuuza.',
+            np_or: 'au',
+            np_link_reg: 'Fungua akaunti',
+            np_link_login: 'ingia',
+            l_title: 'Jina la Kitu',
+            l_desc: 'Maelezo',
+            l_cat: 'Aina',
+            l_price: 'Bei',
+            l_unit: 'Kipimo',
+            l_loc: 'Eneo',
+            l_email: 'Barua Pepe',
+            l_phone: 'Nambari ya Simu',
+            l_image: 'Picha ya Kitu',
+            ph_title: 'mf. Mbegu za mahindi',
+            ph_desc: 'Eleza bidhaa au huduma yako...',
+            ph_price: 'mf. 150',
+            ph_unit: 'mf. kg, gunia, kipande',
+            ph_loc: 'mf. Mombasa, Kenya',
+            ph_email: 'wewe@example.com',
+            ph_phone: '+254 7XX XXX XXX',
+            ph_search: 'Tafuta matangazo...',
+            cat_all: 'Aina Zote',
+            cat_seeds: 'Mbegu',
+            cat_tools: 'Vifaa',
+            cat_fertilizer: 'Mbolea',
+            cat_livestock: 'Mifugo',
+            cat_produce: 'Mazao',
+            cat_equipment: 'Mitambo',
+            cat_services: 'Huduma',
+            cat_other: 'Nyingine',
+            err_price: 'Tafadhali weka bei.',
+            err_unit: 'Tafadhali weka kipimo (mf. kg, gunia).',
+            err_loc: 'Tafadhali weka eneo.',
+            err_phone: 'Tafadhali weka nambari ya simu mnunuzi aweze kukupigia.',
+            err_image_big: 'Picha iko kubwa mno. Chagua moja chini ya MB 5.',
+            err_image_type: 'Tafadhali chagua faili ya picha (JPG, PNG, WEBP au GIF).',
+            err_image_empty: 'Hakuna picha iliyochaguliwa bado.',
+            mp_contact: 'Mawasiliano',
+            price_on_request: 'Bei kwa ombi',
+            d_no_listings: 'Hujachapisha tangazo lolote bado.',
+            r_no_listings: 'Hakuna matangazo bado.',
+            s_all: 'Ona matangazo yote ya soko',
+            s_post_new: '+ Chapisha tangazo jipya',
+            f_howto: 'Jinsi ya Kutumia',
+            tour_title: 'Karibu KCNP Agro!',
+            tour_sub: 'Huu ni mwongozo wa haraka wa kukusaidia kuanza.',
+            t1_t: 'Soko',
+            t1_d: 'Wakulima huweka yale wanayozalisha — mazao, mbegu, vifaa na huduma. Wafanyabiashara huona na kununua. Tumia utafutaji kupata unachohitaji.',
+            t2_t: 'Elimu na Maswali',
+            t2_d: 'Nenda kwenye Elimu kujifunza kilimo bora kwa mazingira. Gonga somo lisome, tumia kitufe cha Sikiliza kisikizwe kwa sauti, kisha ujipime kwa maswali.',
+            t3_t: 'Sikiliza popote',
+            t3_d: 'Bonyeza kitufe cheusi cha ▶ Sikiliza kwenye makala, maswali au matangazo yoyote kisome kwa sauti polepole na kwa uwazi.',
+            t4_t: 'Chagua lugha yako',
+            t4_d: 'Bonyeza kitufe cha SW / EN kwenye kona ubadilishe tovuti nzima Kiingereza na Kiswahili.',
+            t5_t: 'Piga simu kwa msaada',
+            t5_d: 'Unahitaji msaada? Gonga kitufe cha kijani cha Msaada kutupigia simu wakati wowote.',
+            tour_next: 'Endelea',
+            tour_skip: 'Ruka — sihitaji hii',
+            tour_done: 'Nimeelewa, twende!',
+            stat_farmers: 'Wakulima',
+            stat_traders: 'Wafanyabiashara',
+            stat_listings: 'Matangazo',
+            stat_articles: 'Makala za Elimu'
         }
     };
 
@@ -207,6 +357,16 @@
         document.querySelectorAll('[data-i18n]').forEach(function (el) {
             var key = el.getAttribute('data-i18n');
             if (dict[key] !== undefined) el.innerHTML = dict[key];
+        });
+
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(function (el) {
+            var key = el.getAttribute('data-i18n-placeholder');
+            if (dict[key] !== undefined) el.setAttribute('placeholder', dict[key]);
+        });
+
+        document.querySelectorAll('[data-i18n-title]').forEach(function (el) {
+            var key = el.getAttribute('data-i18n-title');
+            if (dict[key] !== undefined) el.setAttribute('title', dict[key]);
         });
 
         try { document.documentElement.lang = lang === 'sw' ? 'sw-KE' : 'en'; } catch (e) {}
@@ -334,6 +494,114 @@
     }
 
     // ==============================
+    // Quick guide (onboarding tour)
+    // ==============================
+    var TOUR_KEY = 'kcnp_tour_done';
+    var tourStep = 0;
+    var tourShown = false;
+    var TOUR_STEPS = 5;
+
+    function tourMarkup() {
+        return '<div id="tour-wrap" class="tour-backdrop" hidden>' +
+            '<div class="tour-modal" role="dialog" aria-modal="true" aria-label="Quick guide">' +
+            '<button type="button" id="tour-close" class="tour-close" aria-label="Close" onclick="KCNP.skipTour()">&times;</button>' +
+            '<h2 class="tour-title" data-i18n="tour_title">Welcome to KCNP Agro!</h2>' +
+            '<p class="tour-sub" data-i18n="tour_sub">Quick guide to get you started.</p>' +
+            '<div class="tour-step-box">' +
+            '<h3 id="tour-step-title" class="tour-step-title" data-i18n="t1_t"></h3>' +
+            '<p id="tour-step-desc" class="tour-step-desc" data-i18n="t1_d"></p>' +
+            '</div>' +
+            '<div id="tour-dots" class="tour-dots" role="presentation"></div>' +
+            '<div class="tour-actions">' +
+            '<button type="button" id="tour-skip-btn" class="tour-skip" data-i18n="tour_skip" onclick="KCNP.skipTour()">Skip</button>' +
+            '<button type="button" id="tour-next-btn" class="tour-next" data-i18n="tour_next" onclick="KCNP.nextTour()">Next</button>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+    }
+
+    function buildTour() {
+        var wrap = document.getElementById('tour-wrap');
+        if (wrap) return wrap;
+        if (!document.body) return null;
+        var holder = document.createElement('div');
+        holder.innerHTML = tourMarkup();
+        document.body.appendChild(holder.firstElementChild);
+        var dots = document.getElementById('tour-dots');
+        if (dots) {
+            for (var i = 0; i < TOUR_STEPS; i++) {
+                var d = document.createElement('span');
+                d.className = 'tour-dot';
+                dots.appendChild(d);
+            }
+        }
+        applyLang();
+        return document.getElementById('tour-wrap');
+    }
+
+    function setTourStep(n) {
+        if (n >= TOUR_STEPS) { finishTour(); return; }
+        if (n < 0) n = 0;
+        tourStep = n;
+        var dict = I18N[currentLang()] || I18N.en;
+        var t = document.getElementById('tour-step-title');
+        var d = document.getElementById('tour-step-desc');
+        var tk = 't' + (n + 1) + '_t';
+        var dk = 't' + (n + 1) + '_d';
+        if (t) {
+            t.setAttribute('data-i18n', tk);
+            t.innerHTML = dict[tk] !== undefined ? dict[tk] : t.innerHTML;
+        }
+        if (d) {
+            d.setAttribute('data-i18n', dk);
+            d.innerHTML = dict[dk] !== undefined ? dict[dk] : d.innerHTML;
+        }
+        var dots = document.querySelectorAll('#tour-dots .tour-dot');
+        dots.forEach(function (dot, idx) {
+            if (idx === n) dot.className = 'tour-dot active';
+            else dot.className = 'tour-dot';
+        });
+        var nextBtn = document.getElementById('tour-next-btn');
+        if (nextBtn) {
+            nextBtn.setAttribute('data-i18n', n === TOUR_STEPS - 1 ? 'tour_done' : 'tour_next');
+            nextBtn.innerHTML = n === TOUR_STEPS - 1
+                ? (dict.tour_done !== undefined ? dict.tour_done : 'Got it, let\'s go!')
+                : (dict.tour_next !== undefined ? dict.tour_next : 'Next');
+        }
+    }
+
+    function showTour() {
+        var wrap = buildTour();
+        if (!wrap) return;
+        wrap.hidden = false;
+        document.body.classList.add('tour-lock');
+        setTourStep(0);
+    }
+
+    function hideTour() {
+        var wrap = document.getElementById('tour-wrap');
+        if (wrap) wrap.hidden = true;
+        document.body.classList.remove('tour-lock');
+    }
+
+    function finishTour() { skipTour(); }
+
+    function skipTour() {
+        try { localStorage.setItem(TOUR_KEY, '1'); } catch (e) {}
+        hideTour();
+        tourShown = true;
+    }
+
+    function maybeShowTour() {
+        if (tourShown) return;
+        var done = false;
+        try { done = localStorage.getItem(TOUR_KEY) === '1'; } catch (e) {}
+        if (done) return;
+        showTour();
+        tourShown = true;
+    }
+
+    // ==============================
     // Init
     // ==============================
     function init() {
@@ -355,6 +623,9 @@
             loadVoices();
             window.speechSynthesis.addEventListener('voiceschanged', loadVoices);
         }
+
+        // Show the quick guide on first visit
+        maybeShowTour();
     }
 
     // Expose to inline onclick handlers in templates
@@ -363,7 +634,10 @@
         speak: speak,
         t: tr,
         lang: currentLang,
-        applyLang: applyLang
+        applyLang: applyLang,
+        showTour: showTour,
+        skipTour: skipTour,
+        nextTour: nextTour
     };
 
     if (document.readyState === 'loading') {

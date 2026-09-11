@@ -28,13 +28,13 @@
                 </a>
                 <div class="hidden md:flex items-center gap-8">
                     <a href="/" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_home">Home</span></a>
-                    <a href="/marketplace" class="text-sm font-medium text-primary-400 transition-colors duration-300"><span data-i18n="nav_marketplace" data-i18n="p_eyebrow_market">Marketplace</span></a>
+                    <a href="/marketplace" class="text-sm font-medium text-primary-400 transition-colors duration-300"><span data-i18n="nav_marketplace">Marketplace</span></a>
                     <a href="/education" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_education">Education</span></a>
                     <span id="nav-auth-desktop" class="hidden md:inline-flex"></span>
                 </div>
                 <div class="hidden md:block">
-                    <a href="/marketplace" class="cta-btn inline-flex items-center px-5 py-2.5 rounded-xl text-white font-semibold text-sm">
-                        <span>Post Listing</span>
+                    <a href="/marketplace#listing-form" class="cta-btn inline-flex items-center px-5 py-2.5 rounded-xl text-white font-semibold text-sm">
+                        <span data-i18n="btn_post_cta">Post a Listing</span>
                     </a>
                 </div>
                 <button id="mobile-menu-btn" class="hamburger md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -69,75 +69,82 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-3 mb-8 reveal">
-                    <input type="text" id="search-input" placeholder="Search listings..." class="flex-1 px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all">
+                    <input type="text" id="search-input" data-i18n-placeholder="ph_search" placeholder="Search listings..." class="flex-1 px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all">
                     <select id="category-filter" class="px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all">
-                        <option value="">All Categories</option>
-                        <option value="seeds">Seeds</option>
-                        <option value="tools">Tools</option>
-                        <option value="fertilizer">Fertilizer</option>
-                        <option value="livestock">Livestock</option>
-                        <option value="produce">Produce</option>
-                        <option value="equipment">Equipment</option>
-                        <option value="services">Services</option>
-                        <option value="other">Other</option>
+                        <option value="" data-i18n="cat_all">All Categories</option>
+                        <option value="seeds" data-i18n="cat_seeds">Seeds</option>
+                        <option value="tools" data-i18n="cat_tools">Tools</option>
+                        <option value="fertilizer" data-i18n="cat_fertilizer">Fertilizer</option>
+                        <option value="livestock" data-i18n="cat_livestock">Livestock</option>
+                        <option value="produce" data-i18n="cat_produce">Produce</option>
+                        <option value="equipment" data-i18n="cat_equipment">Equipment</option>
+                        <option value="services" data-i18n="cat_services">Services</option>
+                        <option value="other" data-i18n="cat_other">Other</option>
                     </select>
-                    <button id="search-btn" class="cta-btn px-6 py-3 rounded-xl text-white font-semibold text-sm">Search</button>
+                    <button id="search-btn" data-i18n="btn_search" class="cta-btn px-6 py-3 rounded-xl text-white font-semibold text-sm">Search</button>
                 </div>
 
                 <div id="post-controls" class="text-right mb-4 hidden">
-                    <button id="toggle-form-btn" class="text-primary-400 hover:text-primary-300 text-sm font-semibold">+ Post a Listing</button>
+                    <button id="toggle-form-btn" class="text-primary-400 hover:text-primary-300 text-sm font-semibold"><span data-i18n="toggle_post">+ Post a Listing</span></button>
                 </div>
 
                 <div id="post-notice" class="hidden mb-4 p-4 rounded-xl bg-dark-800 border border-white/10 text-gray-300 text-sm text-center"></div>
 
                 <div id="listing-form-container" class="hidden mb-10 reveal">
                     <form id="listing-form" class="glass-card rounded-2xl p-6 sm:p-8" novalidate>
-                        <h2 class="font-heading text-xl font-bold text-white mb-6">Post a New Listing</h2>
+                        <h2 data-i18n="mp_post" class="font-heading text-xl font-bold text-white mb-6">Post a New Listing</h2>
+                        <div id="listing-status" class="mb-4 p-4 rounded-xl hidden text-sm text-center"></div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div class="md:col-span-2">
-                                <label for="l-title" class="block text-sm font-medium text-gray-300 mb-2">Title <span class="text-red-400">*</span></label>
-                                <input type="text" id="l-title" required placeholder="e.g. Organic maize seeds" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
+                                <label for="l-title" class="block text-sm font-medium text-gray-300 mb-2"><span data-i18n="l_title">Title</span> <span class="req-star">*</span></label>
+                                <input type="text" id="l-title" required data-i18n-placeholder="ph_title" placeholder="e.g. Organic maize seeds" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
                             </div>
                             <div class="md:col-span-2">
-                                <label for="l-description" class="block text-sm font-medium text-gray-300 mb-2">Description <span class="text-red-400">*</span></label>
-                                <textarea id="l-description" required rows="4" placeholder="Describe your product or service..." class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base"></textarea>
+                                <label for="l-description" class="block text-sm font-medium text-gray-300 mb-2"><span data-i18n="l_desc">Description</span> <span class="req-star">*</span></label>
+                                <textarea id="l-description" required rows="4" data-i18n-placeholder="ph_desc" placeholder="Describe your product or service..." class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base"></textarea>
                             </div>
                             <div>
-                                <label for="l-category" class="block text-sm font-medium text-gray-300 mb-2">Category <span class="text-red-400">*</span></label>
+                                <label for="l-category" class="block text-sm font-medium text-gray-300 mb-2"><span data-i18n="l_cat">Category</span> <span class="req-star">*</span></label>
                                 <select id="l-category" required class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white text-sm sm:text-base">
-                                    <option value="seeds">Seeds</option>
-                                    <option value="tools">Tools</option>
-                                    <option value="fertilizer">Fertilizer</option>
-                                    <option value="livestock">Livestock</option>
-                                    <option value="produce">Produce</option>
-                                    <option value="equipment">Equipment</option>
-                                    <option value="services">Services</option>
-                                    <option value="other">Other</option>
+                                    <option value="seeds" data-i18n="cat_seeds">Seeds</option>
+                                    <option value="tools" data-i18n="cat_tools">Tools</option>
+                                    <option value="fertilizer" data-i18n="cat_fertilizer">Fertilizer</option>
+                                    <option value="livestock" data-i18n="cat_livestock">Livestock</option>
+                                    <option value="produce" data-i18n="cat_produce">Produce</option>
+                                    <option value="equipment" data-i18n="cat_equipment">Equipment</option>
+                                    <option value="services" data-i18n="cat_services">Services</option>
+                                    <option value="other" data-i18n="cat_other">Other</option>
                                 </select>
                             </div>
                             <div>
-                                <label for="l-price" class="block text-sm font-medium text-gray-300 mb-2">Price</label>
-                                <input type="number" id="l-price" min="0" step="0.01" placeholder="0.00" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
+                                <label for="l-price" class="block text-sm font-medium text-gray-300 mb-2"><span data-i18n="l_price">Price</span> <span class="req-star">*</span></label>
+                                <input type="number" id="l-price" required min="0" step="0.01" data-i18n-placeholder="ph_price" placeholder="e.g. 150" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
                             </div>
                             <div>
-                                <label for="l-unit" class="block text-sm font-medium text-gray-300 mb-2">Unit</label>
-                                <input type="text" id="l-unit" placeholder="e.g. kg, bag, unit" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
+                                <label for="l-unit" class="block text-sm font-medium text-gray-300 mb-2"><span data-i18n="l_unit">Unit</span> <span class="req-star">*</span></label>
+                                <input type="text" id="l-unit" required data-i18n-placeholder="ph_unit" placeholder="e.g. kg, bag, unit" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
                             </div>
                             <div>
-                                <label for="l-location" class="block text-sm font-medium text-gray-300 mb-2">Location</label>
-                                <input type="text" id="l-location" placeholder="e.g. Mombasa, Kenya" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
+                                <label for="l-location" class="block text-sm font-medium text-gray-300 mb-2"><span data-i18n="l_loc">Location</span> <span class="req-star">*</span></label>
+                                <input type="text" id="l-location" required data-i18n-placeholder="ph_loc" placeholder="e.g. Mombasa, Kenya" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
                             </div>
                             <div>
-                                <label for="l-contactEmail" class="block text-sm font-medium text-gray-300 mb-2">Contact Email <span class="text-red-400">*</span></label>
-                                <input type="email" id="l-contactEmail" required placeholder="you@example.com" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
+                                <label for="l-contactEmail" class="block text-sm font-medium text-gray-300 mb-2"><span data-i18n="l_email">Contact Email</span> <span class="req-star">*</span></label>
+                                <input type="email" id="l-contactEmail" required data-i18n-placeholder="ph_email" placeholder="you@example.com" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
                             </div>
                             <div>
-                                <label for="l-contactPhone" class="block text-sm font-medium text-gray-300 mb-2">Contact Phone</label>
-                                <input type="tel" id="l-contactPhone" placeholder="+254 7XX XXX XXX" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
+                                <label for="l-contactPhone" class="block text-sm font-medium text-gray-300 mb-2"><span data-i18n="l_phone">Contact Phone</span> <span class="req-star">*</span></label>
+                                <input type="tel" id="l-contactPhone" required data-i18n-placeholder="ph_phone" placeholder="+254 7XX XXX XXX" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="l-image" class="block text-sm font-medium text-gray-300 mb-2"><span data-i18n="l_image">Photo of the item</span></label>
+                                <div class="photo-upload">
+                                    <img id="l-image-preview" class="photo-preview photo-preview--empty" data-i18n-title="err_image_empty" title="No photo chosen yet" alt="Photo preview">
+                                    <input type="file" id="l-image" accept="image/jpeg,image/png,image/webp,image/gif" class="form-input flex-1 px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white text-sm sm:text-base file:mr-3 file:rounded-lg file:border-0 file:bg-primary-600 file:px-4 file:py-2 file:text-white">
+                                </div>
                             </div>
                         </div>
-                        <button type="submit" class="cta-btn w-full md:w-auto mt-6 px-6 py-3 rounded-xl text-white font-semibold text-sm">Post Listing</button>
-                        <div id="listing-status" class="mt-4 p-4 rounded-xl hidden text-sm text-center"></div>
+                        <button type="submit" data-i18n="btn_post_listing" class="cta-btn w-full md:w-auto mt-6 px-6 py-3 rounded-xl text-white font-semibold text-sm">Post Listing</button>
                     </form>
                 </div>
 
@@ -185,7 +192,6 @@
                 <div>
                     <h3 data-i18n="f_quick" class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Quick Links</h3>
                     <ul class="space-y-3">
-                        <li><a href="/" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_home">Home</span></a></li>
                         <li><a href="/marketplace" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_marketplace">Marketplace</span></a></li>
                         <li><a href="/education" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_education">Education</span></a></li>
                         <li><a href="/dashboard" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_dashboard">Dashboard</span></a></li>
@@ -197,11 +203,11 @@
                 <div>
                     <h3 data-i18n="f_services" class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Services</h3>
                     <ul class="space-y-3">
-                        <li><a href="/#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Climate Smart Farming</a></li>
-                        <li><a href="/#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Trade Facilitation</a></li>
-                        <li><a href="/#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Supply Chain</a></li>
-                        <li><a href="/#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Capacity Building</a></li>
-                        <li><a href="/#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Carbon Credits</a></li>
+                        <li><a href="/education" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Climate Smart Farming</a></li>
+                        <li><a href="/marketplace" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Trade Facilitation</a></li>
+                        <li><a href="/marketplace" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Supply Chain</a></li>
+                        <li><a href="/education" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Capacity Building</a></li>
+                        <li><a href="/education" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Carbon Credits</a></li>
                     </ul>
                 </div>
 
@@ -239,6 +245,7 @@
                     <span>Mombasa, Kenya</span>
                 </div>
                 <div class="flex gap-6">
+                    <a href="#" onclick="KCNP && KCNP.showTour(); return false;" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_howto">How to Use</span></a>
                     <a href="/privacy" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_privacy">Privacy Policy</span></a>
                     <a href="/terms" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_terms">Terms of Service</span></a>
                 </div>
@@ -365,23 +372,26 @@
         function renderListings(listings) {
             const grid = document.getElementById('listings-grid');
             const empty = document.getElementById('listings-empty');
+            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
             if (!listings.length) {
                 grid.innerHTML = '';
+                empty.innerHTML = t('mp_empty');
                 empty.classList.remove('hidden');
                 return;
             }
             empty.classList.add('hidden');
             grid.innerHTML = listings.map(p => `
                 <article class="listen-block glass-card rounded-2xl p-6 reveal active">
+                    ${p.image ? `<img src="${p.image}" alt="${p.title}" class="listing-img" loading="lazy" onerror="this.parentNode.removeChild(this)">` : ''}
                     <div class="flex items-center justify-between mb-3">
-                        <span class="inline-block px-3 py-1 rounded-full bg-primary-500/10 text-primary-300 text-xs font-semibold uppercase tracking-wide">${p.category}</span>
-                        ${p.price ? `<span class="text-accent-400 font-bold text-lg">Ksh ${Number(p.price).toFixed(2)}${p.unit ? '/' + p.unit : ''}</span>` : '<span class="text-gray-500 text-sm">Price on request</span>'}
+                        <span class="inline-block px-3 py-1 rounded-full bg-primary-500/10 text-primary-300 text-xs font-semibold uppercase tracking-wide">${t('cat_' + p.category) || p.category}</span>
+                        ${p.price > 0 ? `<span class="text-accent-400 font-bold text-lg">Ksh ${Number(p.price).toFixed(2)}${p.unit ? '/' + p.unit : ''}</span>` : `<span class="text-gray-500 text-sm">${t('price_on_request')}</span>`}
                     </div>
                     <h3 class="text-xl font-bold text-white mb-2">${p.title}</h3>
                     <p class="text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3">${p.description}</p>
                     ${p.location ? `<p class="text-gray-500 text-xs mb-1">📍 ${p.location}</p>` : ''}
                     <div class="pt-3 border-t border-white/5 mt-3">
-                        <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Contact</h4>
+                        <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">${t('mp_contact')}</h4>
                         <a href="mailto:${p.contactEmail}" class="text-primary-400 hover:text-primary-300 text-sm block truncate">${p.contactEmail}</a>
                         ${p.contactPhone ? `<a href="tel:${p.contactPhone}" class="text-gray-400 hover:text-primary-400 text-sm block truncate">${p.contactPhone}</a>` : ''}
                     </div>
@@ -393,15 +403,36 @@
         async function submitListing(e) {
             e.preventDefault();
             const status = document.getElementById('listing-status');
+            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+
+            const title = document.getElementById('l-title').value.trim();
+            const description = document.getElementById('l-description').value.trim();
+            const price = document.getElementById('l-price').value;
+            const unit = document.getElementById('l-unit').value.trim();
+            const location = document.getElementById('l-location').value.trim();
+            const contactEmail = document.getElementById('l-contactEmail').value.trim();
+            const contactPhone = document.getElementById('l-contactPhone').value.trim();
+
+            const fail = (msg) => {
+                status.className = 'mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm text-center';
+                status.textContent = msg;
+                status.classList.remove('hidden');
+            };
+
+            if (!title || !description || !contactEmail) return fail('Please complete the required fields.');
+            const priceNum = Number(price);
+            if (!price || isNaN(priceNum) || priceNum <= 0) return fail(t('err_price'));
+            if (!unit) return fail(t('err_unit'));
+            if (!location) return fail(t('err_loc'));
+            if (!contactPhone) return fail(t('err_phone'));
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) return fail('Please enter a valid email address.');
+
             const payload = {
-                title: document.getElementById('l-title').value.trim(),
-                description: document.getElementById('l-description').value.trim(),
+                title, description,
                 category: document.getElementById('l-category').value,
-                price: document.getElementById('l-price').value ? Number(document.getElementById('l-price').value) : 0,
-                unit: document.getElementById('l-unit').value.trim(),
-                location: document.getElementById('l-location').value.trim(),
-                contactEmail: document.getElementById('l-contactEmail').value.trim(),
-                contactPhone: document.getElementById('l-contactPhone').value.trim()
+                price: priceNum,
+                unit, location, contactEmail, contactPhone,
+                image: listingImage || undefined
             };
 
             const headers = { 'Content-Type': 'application/json' };
@@ -411,21 +442,60 @@
             try {
                 const data = await fetchJSON(`${API}/products`, { method: 'POST', headers, body: JSON.stringify(payload) });
                 if (data.success) {
-                    status.className = 'mt-4 p-4 rounded-xl bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm text-center';
-                    status.textContent = data.message || 'Listing posted successfully!';
+                    status.className = 'mb-4 p-4 rounded-xl bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm text-center';
+                    status.textContent = t('mp_posted');
                     status.classList.remove('hidden');
                     document.getElementById('listing-form').reset();
+                    listingImage = null;
+                    resetImagePreview();
                     loadListings();
                 } else {
-                    status.className = 'mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm text-center';
-                    status.textContent = data.message || 'Failed to post listing.';
-                    status.classList.remove('hidden');
+                    const first = data.errors && data.errors[0] && data.errors[0].message;
+                    fail(first || t('mp_failed'));
                 }
             } catch (err) {
-                status.className = 'mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm text-center';
-                status.textContent = 'Network error or timeout. Please try again.';
-                status.classList.remove('hidden');
+                fail(t('mp_network'));
             }
+        }
+
+        let listingImage = null;
+
+        function resetImagePreview() {
+            const preview = document.getElementById('l-image-preview');
+            if (!preview) return;
+            preview.src = '';
+            preview.classList.add('photo-preview--empty');
+        }
+
+        function bindImageUpload() {
+            const input = document.getElementById('l-image');
+            if (!input || input.getAttribute('data-bound')) return;
+            input.setAttribute('data-bound', '1');
+            input.addEventListener('change', function () {
+                const preview = document.getElementById('l-image-preview');
+                const file = input.files && input.files[0];
+                if (!file) { resetImagePreview(); return; }
+                if (file.type && !/^image\//.test(file.type)) {
+                    alert((window.KCNP && KCNP.t('err_image_type')) || 'Please choose an image file (JPG, PNG, WEBP or GIF).');
+                    input.value = '';
+                    return;
+                }
+                if (file.size > 5 * 1024 * 1024) {
+                    alert((window.KCNP && KCNP.t('err_image_big')) || 'That photo is too big. Please choose one under 5 MB.');
+                    input.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function (ev) {
+                    listingImage = ev.target.result;
+                    if (preview) {
+                        preview.src = listingImage;
+                        preview.classList.remove('photo-preview--empty');
+                        preview.setAttribute('title', '');
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
         }
 
         function logout() {
@@ -440,6 +510,7 @@
             if (!controls || !notice) return;
             const auth = getAuthUser();
             const role = (auth && auth.role) || null;
+            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
 
             if (role === 'farmer' || role === 'admin') {
                 controls.classList.remove('hidden');
@@ -447,20 +518,31 @@
             } else if (role === 'trader') {
                 controls.classList.add('hidden');
                 formContainer.classList.add('hidden');
-                notice.textContent = 'Traders browse and buy — only farmers can post listings. Contact the farmer shown on any listing to make an order.';
+                notice.textContent = t('np_trader');
                 notice.classList.remove('hidden');
             } else {
                 controls.classList.add('hidden');
                 formContainer.classList.add('hidden');
-                notice.innerHTML = 'Only registered farmers can post listings. <a href="/register" class="text-primary-400 hover:text-primary-300 font-semibold">Create an account</a> or <a href="/login" class="text-primary-400 hover:text-primary-300 font-semibold">log in</a> to start selling.';
+                notice.innerHTML = `${t('np_login1')} <a href="/register" class="text-primary-400 hover:text-primary-300 font-semibold">${t('np_link_reg')}</a> ${t('np_or')} <a href="/login" class="text-primary-400 hover:text-primary-300 font-semibold">${t('np_link_login')}</a> ${t('np_login2')}`;
                 notice.classList.remove('hidden');
             }
+        }
+
+        function openListingForm() {
+            const container = document.getElementById('listing-form-container');
+            if (container) container.classList.remove('hidden');
+            try {
+                const el = document.getElementById('listing-form');
+                if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } catch (e) {}
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             setupAuthNav();
             applyPostingPermissions();
             loadListings();
+            bindImageUpload();
+            document.addEventListener('kcnp:lang', () => { loadListings(); applyPostingPermissions(); });
 
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
@@ -489,6 +571,7 @@
                 const container = document.getElementById('listing-form-container');
                 container.classList.toggle('hidden');
             });
+            if (window.location.hash === '#listing-form') openListingForm();
 
             const yearEl = document.getElementById('current-year');
             if (yearEl) yearEl.textContent = new Date().getFullYear();

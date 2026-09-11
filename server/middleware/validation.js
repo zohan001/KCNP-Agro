@@ -247,7 +247,7 @@ function validateResetPassword(req, res, next) {
 }
 
 function validateProduct(req, res, next) {
-    const { title, description, category, contactEmail } = req.body;
+    const { title, description, category, price, unit, location, contactEmail, contactPhone, image } = req.body;
     const errors = [];
 
     if (!title || !title.trim()) {
@@ -267,10 +267,44 @@ function validateProduct(req, res, next) {
         errors.push({ field: 'category', message: 'Valid category is required.' });
     }
 
+    if (price === undefined || price === null || price === '') {
+        errors.push({ field: 'price', message: 'Price is required.' });
+    } else if (isNaN(Number(price))) {
+        errors.push({ field: 'price', message: 'Price must be a number.' });
+    } else if (Number(price) <= 0) {
+        errors.push({ field: 'price', message: 'Price must be greater than zero.' });
+    }
+
+    if (!unit || !unit.trim()) {
+        errors.push({ field: 'unit', message: 'Unit is required.' });
+    } else if (unit.trim().length > 30) {
+        errors.push({ field: 'unit', message: 'Unit cannot exceed 30 characters.' });
+    }
+
+    if (!location || !location.trim()) {
+        errors.push({ field: 'location', message: 'Location is required.' });
+    } else if (location.trim().length > 200) {
+        errors.push({ field: 'location', message: 'Location cannot exceed 200 characters.' });
+    }
+
     if (!contactEmail || !contactEmail.trim()) {
         errors.push({ field: 'contactEmail', message: 'Contact email is required.' });
     } else if (!emailRegex.test(contactEmail)) {
         errors.push({ field: 'contactEmail', message: 'Please provide a valid contact email.' });
+    }
+
+    if (!contactPhone || !contactPhone.trim()) {
+        errors.push({ field: 'contactPhone', message: 'Contact phone is required.' });
+    } else if (contactPhone.trim().length > 30) {
+        errors.push({ field: 'contactPhone', message: 'Phone cannot exceed 30 characters.' });
+    }
+
+    if (image !== undefined && image !== null && image !== '') {
+        if (typeof image !== 'string') {
+            errors.push({ field: 'image', message: 'Image must be a valid data URL.' });
+        } else if (image.length > 6000000) {
+            errors.push({ field: 'image', message: 'Image is too large (max 5 MB).' });
+        }
     }
 
     if (errors.length > 0) {
@@ -279,8 +313,11 @@ function validateProduct(req, res, next) {
 
     req.body.title = title.trim();
     req.body.description = description.trim();
+    req.body.price = Number(price);
+    req.body.unit = unit.trim();
+    req.body.location = location.trim();
     req.body.contactEmail = contactEmail.trim().toLowerCase();
-    if (req.body.location) req.body.location = req.body.location.trim();
+    req.body.contactPhone = contactPhone.trim();
     next();
 }
 

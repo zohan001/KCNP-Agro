@@ -524,6 +524,62 @@ const SEED_QUIZZES = [
 ];
 
 // ---------------------------------------------------------------------------
+// Demo listings for the marketplace (farmers post / traders buy)
+// ---------------------------------------------------------------------------
+const SEED_PRODUCTS = [
+    {
+        title: 'Drought-Tolerant Maize Seeds (Katumani)',
+        description: 'Certified Katumani maize seeds ideal for low-rainfall regions. High-yield and drought tolerant.',
+        category: 'seeds',
+        price: 550,
+        unit: 'kg',
+        location: 'Mombasa, Kenya',
+        contactEmail: 'farmer@example.com',
+        contactPhone: '+254 700 000 000'
+    },
+    {
+        title: 'Organic Cow Manure (Bag)',
+        description: 'Well-decomposed manure ready for planting. Improves soil fertility and water retention.',
+        category: 'fertilizer',
+        price: 800,
+        unit: 'bag',
+        location: 'Kilifi, Kenya',
+        contactEmail: 'farmer@example.com',
+        contactPhone: '+254 700 000 000'
+    },
+    {
+        title: 'Fresh Green Bananas (Dodo)',
+        description: 'Farm-fresh green bananas harvested weekly. Wholesale prices for traders.',
+        category: 'produce',
+        price: 100,
+        unit: 'bunch',
+        location: 'Voi, Kenya',
+        contactEmail: 'farmer@example.com',
+        contactPhone: '+254 712 345 678'
+    },
+    {
+        title: 'Panga and Garden Hoe Set',
+        description: 'Sturdy locally-made tools for smallholder farmers. Sold as a set of two.',
+        category: 'tools',
+        price: 450,
+        unit: 'set',
+        location: 'Mombasa, Kenya',
+        contactEmail: 'farmer@example.com',
+        contactPhone: '+254 712 345 678'
+    },
+    {
+        title: 'Tropical Fruit Tree Seedlings',
+        description: 'Grafted mango, avocado and passion fruit seedlings ready for planting this season.',
+        category: 'services',
+        price: 300,
+        unit: 'piece',
+        location: 'Kwale, Kenya',
+        contactEmail: 'farmer@example.com',
+        contactPhone: '+254 728 456 789'
+    }
+];
+
+// ---------------------------------------------------------------------------
 // Run as a script: npm run seed (only seeds fresh collections)
 // ---------------------------------------------------------------------------
 if (require.main === module) {
@@ -562,17 +618,8 @@ if (require.main === module) {
 
             const productCount = await Product.countDocuments();
             if (productCount === 0) {
-                await Product.create({
-                    title: 'Drought-Tolerant Maize Seeds (Katumani)',
-                    description: 'Quality certified Katumani maize seeds ideal for low-rainfall regions. High-yield and drought tolerant.',
-                    category: 'seeds',
-                    price: 12,
-                    unit: 'kg',
-                    location: 'Mombasa, Kenya',
-                    contactEmail: 'farmer@example.com',
-                    contactPhone: '+254 700 000 000'
-                });
-                console.log('[Product] Created sample listing');
+                await Product.create(SEED_PRODUCTS);
+                console.log(`[Product] Created ${SEED_PRODUCTS.length} sample listings`);
             }
 
             console.log('\n=== Seeding complete ===');
@@ -591,4 +638,4 @@ if (require.main === module) {
     })();
 }
 
-module.exports = { SEED_USERS, SEED_ARTICLES, SEED_QUIZZES };
+module.exports = { SEED_USERS, SEED_ARTICLES, SEED_QUIZZES, SEED_PRODUCTS };

@@ -200,6 +200,52 @@ function validateLogin(req, res, next) {
     next();
 }
 
+function validateForgotPassword(req, res, next) {
+    const { email } = req.body;
+
+    if (!email || !email.trim()) {
+        return res.status(400).json({
+            success: false,
+            message: 'Validation failed',
+            errors: [{ field: 'email', message: 'Email is required.' }]
+        });
+    }
+
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({
+            success: false,
+            message: 'Validation failed',
+            errors: [{ field: 'email', message: 'Please provide a valid email address.' }]
+        });
+    }
+
+    req.body.email = email.trim().toLowerCase();
+    next();
+}
+
+function validateResetPassword(req, res, next) {
+    const { token, password } = req.body;
+    const errors = [];
+
+    if (!token || typeof token !== 'string' || token.length < 16) {
+        errors.push({ field: 'token', message: 'A valid reset token is required.' });
+    }
+
+    if (!password) {
+        errors.push({ field: 'password', message: 'Password is required.' });
+    } else if (password.length < 6) {
+        errors.push({ field: 'password', message: 'Password must be at least 6 characters.' });
+    } else if (password.length > 128) {
+        errors.push({ field: 'password', message: 'Password cannot exceed 128 characters.' });
+    }
+
+    if (errors.length > 0) {
+        return res.status(400).json({ success: false, message: 'Validation failed', errors });
+    }
+
+    next();
+}
+
 function validateProduct(req, res, next) {
     const { title, description, category, contactEmail } = req.body;
     const errors = [];
@@ -290,6 +336,8 @@ module.exports = {
     validateNewsletter,
     validateRegister,
     validateLogin,
+    validateForgotPassword,
+    validateResetPassword,
     validateProduct,
     validateArticle,
     validateQuiz,

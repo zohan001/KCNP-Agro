@@ -14,6 +14,8 @@ const {
     validateNewsletter,
     validateRegister,
     validateLogin,
+    validateForgotPassword,
+    validateResetPassword,
     validateProduct,
     validateArticle,
     validateQuiz
@@ -39,6 +41,8 @@ router.get('/newsletter', newsletterController.getSubscribers);
 router.post('/auth/register', validateRegister, authController.register);
 router.post('/auth/login', validateLogin, authController.login);
 router.get('/auth/profile', authenticate, authController.getProfile);
+router.post('/auth/forgot-password', validateForgotPassword, authController.forgotPassword);
+router.post('/auth/reset-password', validateResetPassword, authController.resetPassword);
 
 // ==============================
 // Product / Marketplace Routes

@@ -40,7 +40,7 @@
             <div class="flex items-center justify-between h-16 md:h-20">
 
                 <!-- Logo -->
-                <a href="#" class="flex items-center gap-2 group" aria-label="KCNP Agro Home">
+                <a href="/" class="flex items-center gap-2 group" aria-label="KCNP Agro Home">
                     <!-- KCNP Agro logo image -->
                     <img src="/logo.jpg" alt="KCNP Agro logo" class="w-10 h-10 rounded-xl object-cover transition-transform duration-300 group-hover:scale-110" width="40" height="40">
                     <span class="font-heading font-bold text-xl text-white">
@@ -106,6 +106,25 @@
              Hero Section
              ============================== -->
         <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+            <!-- ==============================
+                 Hero Slideshow Background
+                 Crossfading photos of crops,
+                 livestock, seeds, tools, soil and
+                 education. Falls back gracefully to
+                 the dark gradient if images fail.
+                 ============================== -->
+            <div class="absolute inset-0" aria-hidden="true">
+                <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=2000&q=70')"></div>
+                <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=2000&q=70')"></div>
+                <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1596733430284-f7437764b1a9?auto=format&fit=crop&w=2000&q=70')"></div>
+                <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1595246140625-573b715d11dc?auto=format&fit=crop&w=2000&q=70')"></div>
+                <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2000&q=70')"></div>
+                <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=2000&q=70')"></div>
+                <!-- Dark overlay so text stays readable on any photo -->
+                <div class="absolute inset-0 bg-dark-900/75"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-dark-900/70 via-transparent to-dark-900/90"></div>
+            </div>
+
             <!-- Background decorative orbs -->
             <div class="hero-orb-1" aria-hidden="true"></div>
             <div class="hero-orb-2" aria-hidden="true"></div>
@@ -159,6 +178,8 @@
                     </svg>
                 </div>
             </div>
+        <!-- Slideshow navigation dots -->
+            <div class="hero-slide-dots" role="tablist" aria-label="Hero images"></div>
         </section>
 
         <!-- ==============================
@@ -732,7 +753,7 @@
 
                 <!-- Column 1: Brand -->
                 <div class="lg:col-span-1">
-                    <a href="#" class="flex items-center gap-2 mb-4" aria-label="KCNP Agro Home">
+                    <a href="/" class="flex items-center gap-2 mb-4" aria-label="KCNP Agro Home">
                         <img src="/logo.jpg" alt="KCNP Agro logo" class="w-10 h-10 rounded-xl object-cover" width="40" height="40">
                         <span class="font-heading font-bold text-xl text-white">KCNP<span class="text-primary-400">Agro</span></span>
                     </a>
@@ -763,6 +784,7 @@
                         <li><a href="/" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Home</a></li>
                         <li><a href="/marketplace" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Marketplace</a></li>
                         <li><a href="/education" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Education</a></li>
+                        <li><a href="/dashboard" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Dashboard</a></li>
                         <li><a href="/login" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Login</a></li>
                     </ul>
                 </div>
@@ -771,11 +793,11 @@
                 <div>
                     <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Services</h3>
                     <ul class="space-y-3">
-                        <li><a href="#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Climate Smart Farming</a></li>
-                        <li><a href="#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Trade Facilitation</a></li>
-                        <li><a href="#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Supply Chain</a></li>
-                        <li><a href="#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Capacity Building</a></li>
-                        <li><a href="#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Carbon Credits</a></li>
+                        <li><a href="/#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Climate Smart Farming</a></li>
+                        <li><a href="/#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Trade Facilitation</a></li>
+                        <li><a href="/#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Supply Chain</a></li>
+                        <li><a href="/#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Capacity Building</a></li>
+                        <li><a href="/#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Carbon Credits</a></li>
                     </ul>
                 </div>
 
@@ -807,6 +829,11 @@
                 <p class="text-gray-600 text-xs sm:text-sm">
                     &copy; <span id="current-year"></span> KCNP Agro. All rights reserved.
                 </p>
+                <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-gray-600 text-xs sm:text-sm">
+                    <a href="mailto:kabulmatano027@gmail.com" class="hover:text-primary-400 transition-colors">kabulmatano027@gmail.com</a>
+                    <a href="tel:+254745756470" class="hover:text-primary-400 transition-colors">+254 745 756 470</a>
+                    <span>Mombasa, Kenya</span>
+                </div>
                 <div class="flex gap-6">
                     <a href="/privacy" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors">Privacy Policy</a>
                     <a href="/terms" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors">Terms of Service</a>
@@ -920,6 +947,43 @@
                         mobileMenuBtn.setAttribute('aria-expanded', 'false');
                     });
                 });
+            }
+
+            // ==============================
+            // 1b. Hero Slideshow
+            // ==============================
+            const heroSlides = document.querySelectorAll('.hero-slide');
+            const heroDots = document.querySelector('.hero-slide-dots');
+            if (heroSlides.length > 1 && heroDots) {
+                let currentSlide = 0;
+                let slideTimer = null;
+
+                const restartTimer = () => {
+                    if (slideTimer) clearInterval(slideTimer);
+                    slideTimer = setInterval(() => {
+                        goToSlide((currentSlide + 1) % heroSlides.length);
+                    }, 6000);
+                };
+
+                const goToSlide = (index) => {
+                    heroSlides[currentSlide].classList.remove('active');
+                    heroDots.children[currentSlide] && heroDots.children[currentSlide].classList.remove('active');
+                    currentSlide = index;
+                    heroSlides[currentSlide].classList.add('active');
+                    heroDots.children[currentSlide] && heroDots.children[currentSlide].classList.add('active');
+                    restartTimer();
+                };
+
+                heroSlides.forEach((slide, i) => {
+                    const dot = document.createElement('button');
+                    dot.type = 'button';
+                    dot.className = 'dot' + (i === 0 ? ' active' : '');
+                    dot.setAttribute('aria-label', 'Show image ' + (i + 1));
+                    heroDots.appendChild(dot);
+                    dot.addEventListener('click', () => goToSlide(i));
+                });
+
+                restartTimer();
             }
 
             // ==============================
@@ -1177,6 +1241,7 @@
             const newsletterForm = document.getElementById('newsletter-form');
 
             if (newsletterForm) {
+                newsletterForm.setAttribute('data-bound', '1');
                 newsletterForm.addEventListener('submit', (e) => {
                     e.preventDefault();
                     const emailInput = document.getElementById('newsletter-email');

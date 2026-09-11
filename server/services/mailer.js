@@ -1,0 +1,103 @@
+/**
+ * ============================================
+ * Mailer Service
+ * ============================================
+ * Sends transactional emails (currently used for
+ * password resets). Uses nodemailer with SMTP
+ * credentials from the environment. If no SMTP is
+ * configured, sendPasswordResetEmail resolves to
+ * false so the caller can fall back to showing
+ * the reset link directly on screen.
+ * ============================================
+ */
+
+const nodemailer = require('nodemailer');
+const config = require('../config');
+
+let transporter = null;
+
+/**
+ * Lazily create the nodemailer transport when SMTP
+ * credentials are configured.
+ *
+ * @returns {Object|null} nodemailer transporter or null
+ */
+function getTransporter() {
+    if (transporter) return transporter;
+    if (!config.mailConfigured()) return null;
+
+    transporter = nodemailer.createTransport({
+        host: config.mail.host,
+        port: config.mail.port,
+        secure: config.mail.secure,
+        auth: {
+            user: config.mail.user,
+            pass: config.mail.pass
+        }
+    });
+    return transporter;
+}
+
+/**
+ * Send a password reset email to the given address.
+ *
+ * @param {string} to - Recipient email address
+ * @param {string} resetUrl - Full reset link including the token
+ * @returns {Promise<boolean>} True if the email was sent, false if no
+ *                             SMTP is configured (caller falls back to
+ *                             showing the link on screen).
+ */
+async function sendPasswordResetEmail(to, resetUrl) {
+    const transport = getTransporter();
+    if (!transport) {
+        console.warn('[Mailer] SMTP not configured — password reset email will not be sent.');
+        return false;
+    }
+
+    const subject = 'Reset your KCNP Agro password';
+
+    // Plain text body for simple clients
+    const text = [
+        'Hello,',
+        '',
+        'You requested a password reset for your KCNP Agro account.',
+        'Use the link below to choose a new password. This link is valid for 60 minutes.',
+        '',
+        resetUrl,
+        '',
+        'If you did not request this, you can safely ignore this email — your password will not change.',
+        '',
+        'Regards,',
+        'The KCNP Agro Team'
+    ].join('\n');
+
+    // HTML body with a styled button
+    const html = `
+        <div style="font-family: Arial, Helvetica, sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;">
+            <h2 style="color: #16a34a; margin: 0 0 16px;">Reset your password</h2>
+            <p style="color: #334155; line-height: 1.6;">Hello,</p>
+            <p style="color: #334155; line-height: 1.6;">You requested a password reset for your KCNP Agro account. Click the button below to choose a new password.</p>
+            <p style="color: #64748b; font-size: 13px; line-height: 1.6;">This link is valid for <strong>60 minutes</strong>. If you did not request a reset, you can safely ignore this email — your password will not change.</p>
+            <div style="text-align: center; margin: 24px 0;">
+                <a href="${resetUrl}" style="display: inline-block; background: #16a34a; color: #ffffff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">Reset Password</a>
+            </div>
+            <p style="color: #94a3b8; font-size: 12px; line-height: 1.6; border-top: 1px solid #e2e8f0; padding-top: 12px;">If the button does not work, copy and paste this link into your browser:<br><a href="${resetUrl}" style="color: #16a34a; word-break: break-all;">${resetUrl}</a></p>
+        </div>
+    `;
+
+    try {
+        await transport.sendMail({
+            from: config.mail.from,
+            to,
+            subject,
+            text,
+            html
+        });
+        return true;
+    } catch (err) {
+        console.error('[Mailer] Failed to send password reset email:', err.message);
+        return false;
+    }
+}
+
+module.exports = { sendPasswordResetEmail };

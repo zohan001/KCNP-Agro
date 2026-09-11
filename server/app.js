@@ -53,7 +53,7 @@ function createApp() {
                 scriptSrcAttr: ["'unsafe-inline'"],
                 styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
                 fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
-                imgSrc: ["'self'", 'data:'],
+                imgSrc: ["'self'", 'data:', 'https://images.unsplash.com'],
                 connectSrc: ["'self'"],
                 objectSrc: ["'none'"],
                 frameAncestors: ["'self'"],
@@ -113,7 +113,9 @@ function createApp() {
         ['/education', 'education.html'],
         ['/login', 'login.html'],
         ['/register', 'register.html'],
-        ['/dashboard', 'dashboard.html']
+        ['/dashboard', 'dashboard.html'],
+        ['/forgot-password', 'forgot-password.html'],
+        ['/reset-password', 'reset-password.html']
     ];
     pageRoutes.forEach(([pathName, file]) => {
         app.get([pathName, `${pathName}/`], (req, res) => {

@@ -275,6 +275,23 @@ body {
     }
 }
 
+/* On phones the header is NOT fixed: it scrolls away
+   with the page so it never covers the content */
+@media (max-width: 767px) {
+    #navbar {
+        position: relative;
+    }
+    .pt-20 {
+        padding-top: 0.75rem;
+    }
+    .mobile-menu.closed {
+        display: none;
+    }
+    .mobile-menu.open {
+        display: block;
+    }
+}
+
 /* Hero background gradient orbs */
 .hero-orb-1 {
     position: absolute;

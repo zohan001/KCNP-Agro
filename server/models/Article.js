@@ -25,6 +25,18 @@ const articleSchema = new mongoose.Schema(
             trim: true,
             maxlength: [500, 'Summary cannot exceed 500 characters.']
         },
+        titleSw: {
+            type: String,
+            trim: true
+        },
+        summarySw: {
+            type: String,
+            trim: true,
+            maxlength: [500, 'Kiswahili summary cannot exceed 500 characters.']
+        },
+        contentSw: {
+            type: String
+        },
         category: {
             type: String,
             required: [true, 'Category is required.'],

@@ -6,6 +6,10 @@ const questionSchema = new mongoose.Schema({
         required: [true, 'Question text is required.'],
         trim: true
     },
+    questionSw: {
+        type: String,
+        trim: true
+    },
     options: {
         type: [String],
         required: true,
@@ -16,12 +20,25 @@ const questionSchema = new mongoose.Schema({
             message: 'A question must have at least 2 options.'
         }
     },
+    optionsSw: {
+        type: [String],
+        validate: {
+            validator: function (v) {
+                return !v || v.length === 0 || this.options.length === v.length;
+            },
+            message: 'Kiswahili options must match the number of options.'
+        }
+    },
     correctIndex: {
         type: Number,
         required: true,
         min: 0
     },
     explanation: {
+        type: String,
+        trim: true
+    },
+    explanationSw: {
         type: String,
         trim: true
     }
@@ -40,6 +57,15 @@ const quizSchema = new mongoose.Schema(
             type: String,
             trim: true,
             maxlength: [1000, 'Description cannot exceed 1000 characters.']
+        },
+        titleSw: {
+            type: String,
+            trim: true
+        },
+        descriptionSw: {
+            type: String,
+            trim: true,
+            maxlength: [1000, 'Kiswahili description cannot exceed 1000 characters.']
         },
         category: {
             type: String,

@@ -62,6 +62,33 @@
             p_reset_sub: 'Enter a new password for your account.',
             d_my: 'My Listings',
             d_all: 'Marketplace Listings',
+            p_knowledge: 'Knowledge Base',
+            p_quizzes: 'Self-Assessment Quizzes',
+            p_educ_sub: 'Learn climate-smart agricultural practices and test your knowledge with self-assessment quizzes.',
+            cat_all_topics: 'All Topics',
+            cat_csa: 'Climate Smart Farming',
+            cat_water: 'Water Management',
+            cat_soil: 'Soil Health',
+            cat_crops: 'Crop Diversification',
+            cat_carbon: 'Carbon Credits',
+            cat_market: 'Market Access',
+            cat_policy: 'Policy & Support',
+            cat_livestock: 'Livestock & Sustainability',
+            cat_all_quizzes: 'All Quizzes',
+            cat_climate_basics: 'Climate Basics',
+            cat_soil_mgmt: 'Soil Management',
+            cat_water_con: 'Water Conservation',
+            cat_crop_plan: 'Crop Planning',
+            cat_carbon_ft: 'Carbon Footprint',
+            q_of: 'Question {i} of {n}',
+            quiz_please_answer: 'Please answer question {n}.',
+            res_score: 'You scored {s} out of {t}',
+            res_excellent: 'Excellent! You have a strong grasp of this topic.',
+            res_good: 'Good job! Review the material to improve further.',
+            res_keep: 'Keep learning — revisit the knowledge base and try again.',
+            res_correct: '✓ Correct',
+            res_incorrect: '✗ Incorrect',
+            res_close: 'Close',
             f_quick: 'Quick Links',
             f_services: 'Services',
             f_stay: 'Stay Updated',
@@ -110,6 +137,33 @@
             p_reset_sub: 'Weka nenosiri jipya la akaunti yako.',
             d_my: 'Orodha Zangu',
             d_all: 'Matangazo ya Soko',
+            p_knowledge: 'Kituo cha Maarifa',
+            p_quizzes: 'Maswali ya Kujipima',
+            p_educ_sub: 'Jifunze mbinu bora za kilimo kwa mazingira na ujipime kwa maswali ya kujipima.',
+            cat_all_topics: 'Mada Zote',
+            cat_csa: 'Kilimo Bora kwa Mazingira',
+            cat_water: 'Uhifadhi wa Maji',
+            cat_soil: 'Afya ya Udongo',
+            cat_crops: 'Mazao Mbalimbali',
+            cat_carbon: 'Kadi za Carbon',
+            cat_market: 'Ufikiaji wa Soko',
+            cat_policy: 'Sera na Msaada',
+            cat_livestock: 'Mifugo na Uendelevu',
+            cat_all_quizzes: 'Maswali Yote',
+            cat_climate_basics: 'Misingi ya Tabianchi',
+            cat_soil_mgmt: 'Usimamizi wa Udongo',
+            cat_water_con: 'Uhifadhi wa Maji',
+            cat_crop_plan: 'Upangaji wa Mazao',
+            cat_carbon_ft: 'Kiwango cha Carbon',
+            q_of: 'Swali {i} kati ya {n}',
+            quiz_please_answer: 'Tafadhali jibu swali la {n}.',
+            res_score: 'Umepata {s} kati ya {t}',
+            res_excellent: 'Hongera! Umeelewa mada hii vizuri.',
+            res_good: 'Umefanya vizuri! Soma tena ili uboreke zaidi.',
+            res_keep: 'Endelea kujifunza — soma tena maarifa na ujaribu tena.',
+            res_correct: '✓ Sahihi',
+            res_incorrect: '✗ Si Sahihi',
+            res_close: 'Funga',
             f_quick: 'Viungo vya Haraka',
             f_services: 'Huduma',
             f_stay: 'Endelea Kupata Habari',
@@ -162,6 +216,12 @@
             btn.textContent = lang === 'en' ? 'SW' : 'EN';
             btn.setAttribute('aria-label', lang === 'en' ? 'Switch to Kiswahili' : 'Badilisha kwa Kiingereza');
         }
+
+        // Let pages that load dynamic content re-render in the new language
+        try {
+            var evt = new Event('kcnp:lang', { bubbles: true });
+            document.dispatchEvent(evt);
+        } catch (e) {}
     }
 
     function toggleLang() {
@@ -184,8 +244,31 @@
             || voices[0];
     }
 
+    // Split long text into sentence-sized chunks so the voice
+    // pauses naturally and the listener can follow every word.
+    function splitSentences(text) {
+        var cleaned = (text || '').replace(/\s+/g, ' ').trim();
+        var parts = cleaned.match(/[^.!?]+[.!?]*/g) || [cleaned];
+        var chunks = [];
+        var buffer = '';
+        parts.forEach(function (p) {
+            if (buffer) {
+                if ((buffer + ' ' + p).length > 220) {
+                    chunks.push(buffer);
+                    buffer = p;
+                } else {
+                    buffer += ' ' + p;
+                }
+            } else {
+                buffer = p;
+            }
+        });
+        if (buffer) chunks.push(buffer);
+        return chunks.slice(0, 40);
+    }
+
     function speak(text, lang) {
-        if (!text.trim()) return;
+        if (!text || !text.trim()) return;
         if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) {
             alert('This browser does not support text-to-speech.');
             return;
@@ -193,13 +276,20 @@
         try { window.speechSynthesis.cancel(); } catch (e) {}
 
         var code = TTS_LANG[lang] || 'en-US';
-        var u = new SpeechSynthesisUtterance(text);
-        u.lang = code;
         var v = pickVoice(code);
-        if (v) u.voice = v;
-        u.rate = 0.9;
-        u.pitch = 1;
-        window.speechSynthesis.speak(u);
+        var chunks = splitSentences(text);
+
+        chunks.forEach(function (chunk) {
+            var u = new SpeechSynthesisUtterance(chunk);
+            u.lang = code;
+            if (v) u.voice = v;
+            u.rate = 0.7;   // slow & clear
+            u.pitch = 1;
+            u.volume = 1;
+            // Some engines support a short pause at sentence ends
+            if ('pause' in u) u.pause = 350;
+            window.speechSynthesis.speak(u);
+        });
     }
 
     function collectText(el) {
@@ -270,7 +360,10 @@
     // Expose to inline onclick handlers in templates
     window.KCNP = {
         speakBtn: speakBtn,
-        speak: speak
+        speak: speak,
+        t: tr,
+        lang: currentLang,
+        applyLang: applyLang
     };
 
     if (document.readyState === 'loading') {

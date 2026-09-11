@@ -58,7 +58,7 @@
                     <h1 data-i18n="p_education" class="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
                         Education <span class="gradient-text">Center</span>
                     </h1>
-                    <p class="max-w-2xl mx-auto text-gray-400 text-base sm:text-lg">
+                    <p data-i18n="p_educ_sub" class="max-w-2xl mx-auto text-gray-400 text-base sm:text-lg">
                         Learn climate-smart agricultural practices and test your knowledge with self-assessment quizzes.
                     </p>
                 </div>
@@ -66,15 +66,17 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
                     <div class="reveal">
                         <div class="flex items-center justify-between mb-6">
-                            <h2 class="font-heading text-2xl font-bold text-white">Knowledge Base</h2>
+                            <h2 data-i18n="p_knowledge" class="font-heading text-2xl font-bold text-white">Knowledge Base</h2>
                             <select id="article-category" class="px-3 py-2 rounded-lg bg-dark-900 border border-white/10 text-white text-sm focus:border-primary-500 outline-none">
-                                <option value="">All Topics</option>
-                                <option value="climate-smart-farming">Climate Smart Farming</option>
-                                <option value="water-management">Water Management</option>
-                                <option value="soil-health">Soil Health</option>
-                                <option value="crop-diversification">Crop Diversification</option>
-                                <option value="carbon-credits">Carbon Credits</option>
-                                <option value="market-access">Market Access</option>
+                                <option value="" data-i18n="cat_all_topics">All Topics</option>
+                                <option value="climate-smart-farming" data-i18n="cat_csa">Climate Smart Farming</option>
+                                <option value="water-management" data-i18n="cat_water">Water Management</option>
+                                <option value="soil-health" data-i18n="cat_soil">Soil Health</option>
+                                <option value="crop-diversification" data-i18n="cat_crops">Crop Diversification</option>
+                                <option value="carbon-credits" data-i18n="cat_carbon">Carbon Credits</option>
+                                <option value="market-access" data-i18n="cat_market">Market Access</option>
+                                <option value="policy" data-i18n="cat_policy">Policy & Support</option>
+                                <option value="general" data-i18n="cat_livestock">Livestock & Sustainability</option>
                             </select>
                         </div>
                         <div id="articles-list" class="space-y-4">
@@ -84,14 +86,16 @@
 
                     <div class="reveal">
                         <div class="flex items-center justify-between mb-6">
-                            <h2 class="font-heading text-2xl font-bold text-white">Self-Assessment Quizzes</h2>
+                            <h2 data-i18n="p_quizzes" class="font-heading text-2xl font-bold text-white">Self-Assessment Quizzes</h2>
                             <select id="quiz-category" class="px-3 py-2 rounded-lg bg-dark-900 border border-white/10 text-white text-sm focus:border-primary-500 outline-none">
-                                <option value="">All Quizzes</option>
-                                <option value="climate-basics">Climate Basics</option>
-                                <option value="soil-management">Soil Management</option>
-                                <option value="water-conservation">Water Conservation</option>
-                                <option value="crop-planning">Crop Planning</option>
-                                <option value="carbon-footprint">Carbon Footprint</option>
+                                <option value="" data-i18n="cat_all_quizzes">All Quizzes</option>
+                                <option value="climate-basics" data-i18n="cat_climate_basics">Climate Basics</option>
+                                <option value="soil-management" data-i18n="cat_soil_mgmt">Soil Management</option>
+                                <option value="water-conservation" data-i18n="cat_water_con">Water Conservation</option>
+                                <option value="crop-planning" data-i18n="cat_crop_plan">Crop Planning</option>
+                                <option value="carbon-footprint" data-i18n="cat_carbon_ft">Carbon Footprint</option>
+                                <option value="sustainability" data-i18n="cat_livestock">Livestock & Sustainability</option>
+                                <option value="general" data-i18n="cat_policy">Policy & Support</option>
                             </select>
                         </div>
                         <div id="quizzes-list" class="space-y-4">
@@ -249,6 +253,9 @@
 
     <script>
         const API = '/api';
+        function isSw() {
+            try { return (localStorage.getItem('kcnp_lang') || 'en') === 'sw'; } catch (e) { return false; }
+        }
         function readStored(name) {
             try {
                 const v = localStorage.getItem(name);
@@ -319,17 +326,22 @@
                     container.innerHTML = '<div class="text-center py-10 text-gray-500">No articles yet.</div>';
                     return;
                 }
-                container.innerHTML = data.data.map(a => `
+                container.innerHTML = data.data.map(a => {
+                    const sw = isSw();
+                    const title = sw && a.titleSw ? a.titleSw : a.title;
+                    const summary = sw && a.summarySw ? a.summarySw : (a.summary || 'Click to read more...');
+                    return `
                     <article class="glass-card listen-block rounded-xl p-5 cursor-pointer hover:border-primary-500/30 transition-all" onclick="openArticle('${a._id}')">
                         <div class="flex items-center justify-between mb-2">
                             <span class="inline-block px-2 py-1 rounded-full bg-accent-500/10 text-accent-300 text-xs font-semibold uppercase tracking-wide">${a.category.replace(/-/g, ' ')}</span>
                             <span class="text-gray-600 text-xs">${a.views || 0} views</span>
                         </div>
-                        <h3 class="text-lg font-bold text-white mb-1">${a.title}</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">${a.summary || 'Click to read more...'}</p>
+                        <h3 class="text-lg font-bold text-white mb-1">${title}</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">${summary}</p>
                     <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen" onclick="event.stopPropagation(); KCNP.speakBtn(this);">&#9654; Listen</button>
                     </article>
-                `).join('');
+                `;
+                }).join('');
             } catch (err) {
                 container.innerHTML = '<div class="text-center py-10 text-gray-500">Failed to load articles.</div>';
             }
@@ -340,8 +352,11 @@
                 const data = await fetchJSON(`${API}/articles/${id}`);
                 if (!data.success) return;
                 const a = data.data.article;
+                const sw = isSw();
+                const title = sw && a.titleSw ? a.titleSw : a.title;
+                const content = sw && a.contentSw ? a.contentSw : (a.content || '');
                 const win = window.open('', '_blank');
-                win.document.write(`<html><head><title>${a.title}</title><link rel="stylesheet" href="/styles.css"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></head><body class="bg-dark-900 text-white" style="font-family:Inter,sans-serif"><main style="max-width:800px;margin:0 auto;padding:40px 20px"><a href="/education" style="color:#a78bfa;text-decoration:none">← Back to Education</a><h1 style="font-size:2rem;margin:20px 0">${a.title}</h1><p style="color:#9ca3af;font-size:.9rem">By ${a.author} • ${new Date(a.createdAt).toLocaleDateString()}</p><div style="line-height:1.8;font-size:1rem">${a.content}</div></main>    <!-- Assist: call for help + language toggle (low-literacy support) -->
+                win.document.write(`<html><head><title>${title}</title><link rel="stylesheet" href="/styles.css"><scr`+`ipt src="/js/ux.js" defer><\/scr`+`ipt><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></head><body class="bg-dark-900 text-white" style="font-family:Inter,sans-serif"><main style="max-width:800px;margin:0 auto;padding:40px 20px"><a href="/education" style="color:#a78bfa;text-decoration:none">← Back to Education</a><div class="mb-4"><button type="button" class="listen-btn" data-speak="#art-body" data-i18n="btn_listen" onclick="KCNP.speakBtn(this)">&#9654; Listen</button></div><h1 style="font-size:2rem;margin:20px 0">${title}</h1><p style="color:#9ca3af;font-size:.9rem">By ${a.author} • ${new Date(a.createdAt).toLocaleDateString()}</p><div id="art-body" style="line-height:1.8;font-size:1rem">${content}</div></main>    <!-- Assist: call for help + language toggle (low-literacy support) -->
     <a href="tel:+254745756470" class="fab-help" aria-label="Call for help">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.4 21 3 13.6 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.25 1.01l-2.2 2.2z"/></svg>
         <span class="fab-help-label" data-i18n="btn_help">Help</span>
@@ -366,17 +381,22 @@
                     container.innerHTML = '<div class="text-center py-10 text-gray-500">No quizzes available.</div>';
                     return;
                 }
-                container.innerHTML = data.data.map(q => `
+                container.innerHTML = data.data.map(q => {
+                    const sw = isSw();
+                    const title = sw && q.titleSw ? q.titleSw : q.title;
+                    const description = sw && q.descriptionSw ? q.descriptionSw : (q.description || '');
+                    return `
                     <article class="glass-card rounded-xl p-5 cursor-pointer hover:border-primary-500/30 transition-all" onclick="startQuiz('${q._id}')">
                         <div class="flex items-center justify-between mb-2">
                             <span class="inline-block px-2 py-1 rounded-full bg-primary-500/10 text-primary-300 text-xs font-semibold uppercase tracking-wide">${q.category.replace(/-/g, ' ')}</span>
                             <span class="text-gray-600 text-xs">${q.questions ? q.questions.length : 0} questions</span>
                         </div>
-                        <h3 class="text-lg font-bold text-white mb-1">${q.title}</h3>
-                        ${q.description ? `<p class="text-gray-400 text-sm leading-relaxed">${q.description}</p>` : ''}
+                        <h3 class="text-lg font-bold text-white mb-1">${title}</h3>
+                        ${description ? `<p class="text-gray-400 text-sm leading-relaxed">${description}</p>` : ''}
                     <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen" onclick="event.stopPropagation(); KCNP.speakBtn(this);">&#9654; Listen</button>
                     </article>
-                `).join('');
+                `;
+                }).join('');
             } catch (err) {
                 container.innerHTML = '<div class="text-center py-10 text-gray-500">Failed to load quizzes.</div>';
             }
@@ -389,7 +409,8 @@
                 currentQuiz = data.data.quiz;
                 currentIndex = 0;
                 quizAnswers = new Array(currentQuiz.questions.length).fill(-1);
-                document.getElementById('quiz-modal-title').textContent = currentQuiz.title;
+                const title = isSw() && currentQuiz.titleSw ? currentQuiz.titleSw : currentQuiz.title;
+                document.getElementById('quiz-modal-title').textContent = title;
                 document.getElementById('quiz-modal').classList.remove('hidden');
                 document.getElementById('quiz-modal').classList.add('flex');
                 renderQuestion();
@@ -402,17 +423,22 @@
             const container = document.getElementById('quiz-question-container');
             const q = currentQuiz.questions[currentIndex];
             const saved = quizAnswers[currentIndex];
+            const sw = isSw();
+            const question = sw && q.questionSw ? q.questionSw : q.question;
             container.innerHTML = `
-                <p class="text-sm text-gray-400 mb-1">Question ${currentIndex + 1} of ${currentQuiz.questions.length}</p>
-                <h4 class="text-lg font-semibold text-white mb-4">${q.question}</h4>
+                <p class="text-sm text-gray-400 mb-1">${(window.KCNP && KCNP.t('q_of') || 'Question {i} of {n}').replace('{i}', currentIndex + 1).replace('{n}', currentQuiz.questions.length)}</p>
+                <h4 class="text-lg font-semibold text-white mb-4">${question}</h4>
                 <div class="mb-3"><button type="button" class="listen-btn" data-speak="self" data-i18n="btn_listen" onclick="event.stopPropagation(); KCNP.speakBtn(this);">&#9654; Listen</button></div>
                 <div class="listen-block space-y-3 mb-6">
-                    ${q.options.map((opt, i) => `
+                    ${q.options.map((opt, i) => {
+                        const option = sw && q.optionsSw && q.optionsSw[i] ? q.optionsSw[i] : opt;
+                        return `
                         <label class="flex items-center gap-3 p-3 rounded-lg bg-dark-900 border cursor-pointer hover:border-primary-500/40 transition-all ${saved === i ? 'border-primary-500/60' : 'border-white/10'}">
                             <input type="radio" name="quiz-option" value="${i}" ${saved === i ? 'checked' : ''} class="accent-primary-500">
-                            <span class="text-gray-300 text-sm">${opt}</span>
+                            <span class="text-gray-300 text-sm">${option}</span>
                         </label>
-                    `).join('')}
+                    `;
+                    }).join('')}
                 </div>
                 <div class="flex justify-between">
                     <button onclick="prevQuestion()" class="px-5 py-2.5 rounded-lg border border-white/10 text-gray-300 text-sm hover:bg-white/5" ${currentIndex === 0 ? 'style="visibility:hidden"' : ''}><span data-i18n="quiz_prev">Previous</span></button>
@@ -448,7 +474,7 @@
                 const missing = quizAnswers.indexOf(-1);
                 currentIndex = missing;
                 renderQuestion();
-                alert(`Please answer question ${missing + 1}.`);
+                alert((window.KCNP && KCNP.t('quiz_please_answer') || 'Please answer question {n}.').replace('{n}', missing + 1));
                 return;
             }
             try {
@@ -470,23 +496,32 @@
         function showResult(d) {
             const container = document.getElementById('quiz-question-container');
             const color = d.percentage >= 70 ? 'text-primary-400' : d.percentage >= 50 ? 'text-accent-400' : 'text-red-400';
+            const sw = isSw();
+            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            const feedback = d.percentage >= 70 ? t('res_excellent') : d.percentage >= 50 ? t('res_good') : t('res_keep');
             container.innerHTML = `
                 <div class="text-center py-6">
                     <div class="text-5xl font-heading font-extrabold ${color} mb-2">${d.percentage}%</div>
-                    <p class="text-white text-lg mb-1">You scored ${d.score} out of ${d.total}</p>
-                    <p class="text-gray-400 text-sm mb-6">${d.percentage >= 70 ? 'Excellent! You have a strong grasp of this topic.' : d.percentage >= 50 ? 'Good job! Review the material to improve further.' : 'Keep learning — revisit the knowledge base and try again.'}</p>
+                    <p class="text-white text-lg mb-1">${t('res_score').replace('{s}', d.score).replace('{t}', d.total)}</p>
+                    <p class="text-gray-400 text-sm mb-6">${feedback}</p>
                 </div>
                 <div class="max-h-64 overflow-y-auto space-y-3 mb-6">
-                    ${d.results.map(r => `
+                    ${d.results.map((r, idx) => {
+                        const qq = currentQuiz.questions[r.questionIndex !== undefined ? r.questionIndex : idx] || {};
+                        const question = sw && qq.questionSw ? qq.questionSw : r.question;
+                        const explanation = sw && qq.explanationSw ? qq.explanationSw : (r.explanation || '');
+                        const verdict = r.isCorrect ? t('res_correct') : t('res_incorrect');
+                        return `
                         <div class="p-3 rounded-lg ${r.isCorrect ? 'bg-primary-500/10 border border-primary-500/20' : 'bg-red-500/10 border border-red-500/20'}">
-                            <p class="text-sm font-semibold text-white mb-1">${r.question}</p>
-                            <p class="text-xs ${r.isCorrect ? 'text-primary-300' : 'text-red-300'}">${r.isCorrect ? '✓ Correct' : '✗ Incorrect'}</p>
-                            ${r.explanation ? `<p class="text-xs text-gray-400 mt-1">${r.explanation}</p>` : ''}
+                            <p class="text-sm font-semibold text-white mb-1">${question}</p>
+                            <p class="text-xs ${r.isCorrect ? 'text-primary-300' : 'text-red-300'}">${verdict}</p>
+                            ${explanation ? `<p class="text-xs text-gray-400 mt-1">${explanation}</p>` : ''}
                         </div>
-                    `).join('')}
+                    `;
+                    }).join('')}
                 </div>
                 <div class="text-center">
-                    <button onclick="closeQuiz()" class="cta-btn px-6 py-2.5 rounded-lg text-white text-sm font-semibold">Close</button>
+                    <button onclick="closeQuiz()" class="cta-btn px-6 py-2.5 rounded-lg text-white text-sm font-semibold">${t('res_close')}</button>
                 </div>
             `;
         }
@@ -505,6 +540,7 @@
             setupAuthNav();
             loadArticles();
             loadQuizzes();
+            document.addEventListener('kcnp:lang', () => { loadArticles(); loadQuizzes(); });
 
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');

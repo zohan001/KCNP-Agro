@@ -14,6 +14,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     <script>document.documentElement.classList.add('js');</script>
+    <script src="/js/ux.js" defer></script>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -26,9 +27,9 @@
                     <span class="font-heading font-bold text-xl text-white">KCNP<span class="text-primary-400">Agro</span></span>
                 </a>
                 <div class="hidden md:flex items-center gap-8">
-                    <a href="/" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300">Home</a>
-                    <a href="/marketplace" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300">Marketplace</a>
-                    <a href="/education" class="text-sm font-medium text-primary-400 transition-colors duration-300">Education</a>
+                    <a href="/" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_home">Home</span></a>
+                    <a href="/marketplace" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_marketplace">Marketplace</span></a>
+                    <a href="/education" class="text-sm font-medium text-primary-400 transition-colors duration-300"><span data-i18n="nav_education">Education</span></a>
                     <span id="nav-auth-desktop" class="hidden md:inline-flex"></span>
                 </div>
                 <button id="mobile-menu-btn" class="hamburger md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -39,9 +40,9 @@
             </div>
             <div id="mobile-menu" class="mobile-menu closed md:hidden pb-4" role="menu">
                 <div class="flex flex-col gap-2 pt-2">
-                    <a href="/" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem">Home</a>
-                    <a href="/marketplace" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem">Marketplace</a>
-                    <a href="/education" class="block px-4 py-3 rounded-lg text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem">Education</a>
+                    <a href="/" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_home">Home</span></a>
+                    <a href="/marketplace" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_marketplace">Marketplace</span></a>
+                    <a href="/education" class="block px-4 py-3 rounded-lg text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_education">Education</span></a>
                     <div id="nav-auth-mobile" class="pt-2 px-4"></div>
                 </div>
             </div>
@@ -53,8 +54,8 @@
             <div class="hero-orb-1" aria-hidden="true"></div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
                 <div class="text-center mb-10 reveal">
-                    <span class="inline-block text-sm font-semibold text-accent-400 uppercase tracking-widest mb-4">Knowledge & Learning</span>
-                    <h1 class="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+                    <span class="inline-block text-sm font-semibold text-accent-400 uppercase tracking-widest mb-4" data-i18n="p_eyebrow_educ">Knowledge & Learning</span>
+                    <h1 data-i18n="p_education" class="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
                         Education <span class="gradient-text">Center</span>
                     </h1>
                     <p class="max-w-2xl mx-auto text-gray-400 text-base sm:text-lg">
@@ -143,19 +144,19 @@
 
                 <!-- Column 2: Quick Links -->
                 <div>
-                    <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Quick Links</h3>
+                    <h3 data-i18n="f_quick" class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Quick Links</h3>
                     <ul class="space-y-3">
-                        <li><a href="/" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Home</a></li>
-                        <li><a href="/marketplace" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Marketplace</a></li>
-                        <li><a href="/education" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Education</a></li>
-                        <li><a href="/dashboard" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Dashboard</a></li>
-                        <li><a href="/login" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Login</a></li>
+                        <li><a href="/" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_home">Home</span></a></li>
+                        <li><a href="/marketplace" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_marketplace">Marketplace</span></a></li>
+                        <li><a href="/education" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_education">Education</span></a></li>
+                        <li><a href="/dashboard" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_dashboard">Dashboard</span></a></li>
+                        <li><a href="/login" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_login">Login</span></a></li>
                     </ul>
                 </div>
 
                 <!-- Column 3: Services -->
                 <div>
-                    <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Services</h3>
+                    <h3 data-i18n="f_services" class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Services</h3>
                     <ul class="space-y-3">
                         <li><a href="/#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Climate Smart Farming</a></li>
                         <li><a href="/#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Trade Facilitation</a></li>
@@ -167,7 +168,7 @@
 
                 <!-- Column 4: Stay Updated -->
                 <div>
-                    <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Stay Updated</h3>
+                    <h3 data-i18n="f_stay" class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Stay Updated</h3>
                     <p class="text-gray-500 text-sm mb-4">Subscribe to our newsletter for the latest updates on climate-smart agriculture.</p>
                     <form id="newsletter-form" class="flex gap-2">
                         <label for="newsletter-email" class="sr-only">Email for newsletter</label>
@@ -191,7 +192,7 @@
             <!-- Bottom bar -->
             <div class="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p class="text-gray-600 text-xs sm:text-sm">
-                    &copy; <span id="current-year"></span> KCNP Agro. All rights reserved.
+                    &copy; <span id="current-year"></span> KCNP Agro. <span data-i18n="f_rights">All rights reserved.</span>
                 </p>
                 <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-gray-600 text-xs sm:text-sm">
                     <a href="mailto:kabulmatano027@gmail.com" class="hover:text-primary-400 transition-colors">kabulmatano027@gmail.com</a>
@@ -199,8 +200,8 @@
                     <span>Mombasa, Kenya</span>
                 </div>
                 <div class="flex gap-6">
-                    <a href="/privacy" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors">Privacy Policy</a>
-                    <a href="/terms" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors">Terms of Service</a>
+                    <a href="/privacy" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_privacy">Privacy Policy</span></a>
+                    <a href="/terms" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_terms">Terms of Service</span></a>
                 </div>
             </div>
         </div>
@@ -291,15 +292,15 @@
             const mobile = document.getElementById('nav-auth-mobile');
             if (desktop) {
                 if (token && auth) {
-                    desktop.innerHTML = `<a href="/dashboard" class="text-sm font-medium text-primary-400 hover:text-primary-300 transition-colors">Dashboard</a>
+                    desktop.innerHTML = `<a href="/dashboard" class="text-sm font-medium text-primary-400 hover:text-primary-300 transition-colors"><span data-i18n="nav_dashboard">Dashboard</span></a>
                         <a href="#" onclick="logout()" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors">Logout (${auth.name.split(' ')[0]})</a>`;
                 } else {
-                    desktop.innerHTML = `<a href="/login" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors">Login</a>`;
+                    desktop.innerHTML = `<a href="/login" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors"><span data-i18n="nav_login">Login</span></a>`;
                 }
             }
             if (mobile) {
                 if (token && auth) {
-                    mobile.innerHTML = `<a href="/dashboard" class="block px-4 py-3 rounded-lg text-primary-400 hover:bg-white/5 transition-all duration-300">Dashboard</a>
+                    mobile.innerHTML = `<a href="/dashboard" class="block px-4 py-3 rounded-lg text-primary-400 hover:bg-white/5 transition-all duration-300"><span data-i18n="nav_dashboard">Dashboard</span></a>
                         <a href="#" onclick="logout()" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300">Logout (${auth.name.split(' ')[0]})</a>`;
                 } else {
                     mobile.innerHTML = `<a href="/login" class="block px-4 py-3 rounded-lg text-primary-400 hover:bg-white/5 transition-all duration-300">Login / Register</a>`;
@@ -319,13 +320,14 @@
                     return;
                 }
                 container.innerHTML = data.data.map(a => `
-                    <article class="glass-card rounded-xl p-5 cursor-pointer hover:border-primary-500/30 transition-all" onclick="openArticle('${a._id}')">
+                    <article class="glass-card listen-block rounded-xl p-5 cursor-pointer hover:border-primary-500/30 transition-all" onclick="openArticle('${a._id}')">
                         <div class="flex items-center justify-between mb-2">
                             <span class="inline-block px-2 py-1 rounded-full bg-accent-500/10 text-accent-300 text-xs font-semibold uppercase tracking-wide">${a.category.replace(/-/g, ' ')}</span>
                             <span class="text-gray-600 text-xs">${a.views || 0} views</span>
                         </div>
                         <h3 class="text-lg font-bold text-white mb-1">${a.title}</h3>
                         <p class="text-gray-400 text-sm leading-relaxed">${a.summary || 'Click to read more...'}</p>
+                    <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen">&#9654; Listen</button>
                     </article>
                 `).join('');
             } catch (err) {
@@ -339,7 +341,14 @@
                 if (!data.success) return;
                 const a = data.data.article;
                 const win = window.open('', '_blank');
-                win.document.write(`<html><head><title>${a.title}</title><link rel="stylesheet" href="/styles.css"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></head><body class="bg-dark-900 text-white" style="font-family:Inter,sans-serif"><main style="max-width:800px;margin:0 auto;padding:40px 20px"><a href="/education" style="color:#a78bfa;text-decoration:none">← Back to Education</a><h1 style="font-size:2rem;margin:20px 0">${a.title}</h1><p style="color:#9ca3af;font-size:.9rem">By ${a.author} • ${new Date(a.createdAt).toLocaleDateString()}</p><div style="line-height:1.8;font-size:1rem">${a.content}</div></main></body></html>`);
+                win.document.write(`<html><head><title>${a.title}</title><link rel="stylesheet" href="/styles.css"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></head><body class="bg-dark-900 text-white" style="font-family:Inter,sans-serif"><main style="max-width:800px;margin:0 auto;padding:40px 20px"><a href="/education" style="color:#a78bfa;text-decoration:none">← Back to Education</a><h1 style="font-size:2rem;margin:20px 0">${a.title}</h1><p style="color:#9ca3af;font-size:.9rem">By ${a.author} • ${new Date(a.createdAt).toLocaleDateString()}</p><div style="line-height:1.8;font-size:1rem">${a.content}</div></main>    <!-- Assist: call for help + language toggle (low-literacy support) -->
+    <a href="tel:+254745756470" class="fab-help" aria-label="Call for help">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.4 21 3 13.6 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.25 1.01l-2.2 2.2z"/></svg>
+        <span class="fab-help-label" data-i18n="btn_help">Help</span>
+    </a>
+    <button id="lang-toggle" type="button" class="lang-fab" aria-label="Switch language">SW</button>
+
+</body></html>`);
                 win.document.close();
             } catch (err) {
                 console.error(err);
@@ -365,6 +374,7 @@
                         </div>
                         <h3 class="text-lg font-bold text-white mb-1">${q.title}</h3>
                         ${q.description ? `<p class="text-gray-400 text-sm leading-relaxed">${q.description}</p>` : ''}
+                    <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen">&#9654; Listen</button>
                     </article>
                 `).join('');
             } catch (err) {
@@ -395,7 +405,8 @@
             container.innerHTML = `
                 <p class="text-sm text-gray-400 mb-1">Question ${currentIndex + 1} of ${currentQuiz.questions.length}</p>
                 <h4 class="text-lg font-semibold text-white mb-4">${q.question}</h4>
-                <div class="space-y-3 mb-6">
+                <div class="mb-3"><button type="button" class="listen-btn" data-speak="self" data-i18n="btn_listen">&#9654; Listen</button></div>
+                <div class="listen-block space-y-3 mb-6">
                     ${q.options.map((opt, i) => `
                         <label class="flex items-center gap-3 p-3 rounded-lg bg-dark-900 border cursor-pointer hover:border-primary-500/40 transition-all ${saved === i ? 'border-primary-500/60' : 'border-white/10'}">
                             <input type="radio" name="quiz-option" value="${i}" ${saved === i ? 'checked' : ''} class="accent-primary-500">
@@ -404,10 +415,10 @@
                     `).join('')}
                 </div>
                 <div class="flex justify-between">
-                    <button onclick="prevQuestion()" class="px-5 py-2.5 rounded-lg border border-white/10 text-gray-300 text-sm hover:bg-white/5" ${currentIndex === 0 ? 'style="visibility:hidden"' : ''}>Previous</button>
+                    <button onclick="prevQuestion()" class="px-5 py-2.5 rounded-lg border border-white/10 text-gray-300 text-sm hover:bg-white/5" ${currentIndex === 0 ? 'style="visibility:hidden"' : ''}><span data-i18n="quiz_prev">Previous</span></button>
                     ${currentIndex === currentQuiz.questions.length - 1
-                        ? '<button onclick="submitAnswers()" class="cta-btn px-6 py-2.5 rounded-lg text-white text-sm font-semibold">Submit Answers</button>'
-                        : '<button onclick="nextQuestion()" class="cta-btn px-6 py-2.5 rounded-lg text-white text-sm font-semibold">Next</button>'}
+                        ? '<button onclick="submitAnswers()" class="cta-btn px-6 py-2.5 rounded-lg text-white text-sm font-semibold"><span data-i18n="quiz_submit">Submit Answers</span></button>'
+                        : '<button onclick="nextQuestion()" class="cta-btn px-6 py-2.5 rounded-lg text-white text-sm font-semibold"><span data-i18n="quiz_next">Next</span></button>'}
                 </div>
             `;
         }

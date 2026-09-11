@@ -24,6 +24,7 @@
         document.documentElement.classList.add('js');
     </script>
 
+    <script src="/js/ux.js" defer></script>
 </head>
 
 <body>
@@ -50,9 +51,9 @@
 
                 <!-- Desktop Navigation Links -->
                 <div class="hidden md:flex items-center gap-8">
-                    <a href="#home" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300">Home</a>
-                    <a href="/marketplace" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300">Marketplace</a>
-                    <a href="/education" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300">Education</a>
+                    <a href="#home" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_home">Home</span></a>
+                    <a href="/marketplace" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_marketplace">Marketplace</span></a>
+                    <a href="/education" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_education">Education</span></a>
                     <span id="dashboard-nav-desktop"></span>
                     <a href="#impact" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300">Impact</a>
                     <a href="#contact" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300">Contact</a>
@@ -82,9 +83,9 @@
             <!-- Mobile Navigation Menu -->
             <div id="mobile-menu" class="mobile-menu closed md:hidden pb-4" role="menu">
                 <div class="flex flex-col gap-2 pt-2">
-                    <a href="#home" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem">Home</a>
-                    <a href="/marketplace" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem">Marketplace</a>
-                    <a href="/education" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem">Education</a>
+                    <a href="#home" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_home">Home</span></a>
+                    <a href="/marketplace" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_marketplace">Marketplace</span></a>
+                    <a href="/education" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_education">Education</span></a>
                     <a href="#impact" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem">Impact</a>
                     <a href="#contact" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem">Contact</a>
                     <div id="mobile-auth-area" class="pt-2 px-4">
@@ -140,7 +141,7 @@
                 </div>
 
                 <!-- Main heading -->
-                <h1 class="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 animate-fade-in-up delay-100">
+                <h1 data-i18n="hero_title" class="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 animate-fade-in-up delay-100">
                     <span class="text-white">Promoting </span>
                     <span class="gradient-text">Climate Smart</span>
                     <br>
@@ -150,7 +151,7 @@
                 </h1>
 
                 <!-- Subheadline -->
-                <p class="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-gray-400 leading-relaxed mb-10 animate-fade-in-up delay-200">
+                <p data-i18n="hero_subtitle" class="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-gray-400 leading-relaxed mb-10 animate-fade-in-up delay-200">
                     Driving sustainable economic growth through innovative agricultural practices,
                     equitable trade partnerships, and community-powered climate resilience.
                 </p>
@@ -158,7 +159,7 @@
                 <!-- CTA Buttons -->
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-300">
                     <a href="#contact" class="cta-btn animate-pulse-glow inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold text-base sm:text-lg w-full sm:w-auto justify-center">
-                        <span>Join the Movement</span>
+                        <span data-i18n="btn_join">Join the Movement</span>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                         </svg>
@@ -167,7 +168,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
-                        <span>Learn More</span>
+                        <span data-i18n="btn_learn">Learn More</span>
                     </a>
                 </div>
 
@@ -779,19 +780,19 @@
 
                 <!-- Column 2: Quick Links -->
                 <div>
-                    <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Quick Links</h3>
+                    <h3 data-i18n="f_quick" class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Quick Links</h3>
                     <ul class="space-y-3">
-                        <li><a href="/" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Home</a></li>
-                        <li><a href="/marketplace" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Marketplace</a></li>
-                        <li><a href="/education" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Education</a></li>
-                        <li><a href="/dashboard" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Dashboard</a></li>
-                        <li><a href="/login" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Login</a></li>
+                        <li><a href="/" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_home">Home</span></a></li>
+                        <li><a href="/marketplace" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_marketplace">Marketplace</span></a></li>
+                        <li><a href="/education" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_education">Education</span></a></li>
+                        <li><a href="/dashboard" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_dashboard">Dashboard</span></a></li>
+                        <li><a href="/login" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_login">Login</span></a></li>
                     </ul>
                 </div>
 
                 <!-- Column 3: Services -->
                 <div>
-                    <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Services</h3>
+                    <h3 data-i18n="f_services" class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Services</h3>
                     <ul class="space-y-3">
                         <li><a href="/#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Climate Smart Farming</a></li>
                         <li><a href="/#services" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Trade Facilitation</a></li>
@@ -803,7 +804,7 @@
 
                 <!-- Column 4: Newsletter -->
                 <div>
-                    <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Stay Updated</h3>
+                    <h3 data-i18n="f_stay" class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Stay Updated</h3>
                     <p class="text-gray-500 text-sm mb-4">Subscribe to our newsletter for the latest updates on climate-smart agriculture.</p>
                     <form id="newsletter-form" class="flex gap-2">
                         <label for="newsletter-email" class="sr-only">Email for newsletter</label>
@@ -827,7 +828,7 @@
             <!-- Bottom bar -->
             <div class="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p class="text-gray-600 text-xs sm:text-sm">
-                    &copy; <span id="current-year"></span> KCNP Agro. All rights reserved.
+                    &copy; <span id="current-year"></span> KCNP Agro. <span data-i18n="f_rights">All rights reserved.</span>
                 </p>
                 <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-gray-600 text-xs sm:text-sm">
                     <a href="mailto:kabulmatano027@gmail.com" class="hover:text-primary-400 transition-colors">kabulmatano027@gmail.com</a>
@@ -835,8 +836,8 @@
                     <span>Mombasa, Kenya</span>
                 </div>
                 <div class="flex gap-6">
-                    <a href="/privacy" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors">Privacy Policy</a>
-                    <a href="/terms" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors">Terms of Service</a>
+                    <a href="/privacy" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_privacy">Privacy Policy</span></a>
+                    <a href="/terms" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_terms">Terms of Service</span></a>
                 </div>
             </div>
         </div>
@@ -897,7 +898,7 @@
                     desktopText.textContent = firstName;
                     const dashDesktop = document.getElementById('dashboard-nav-desktop');
                     if (dashDesktop) {
-                        dashDesktop.innerHTML = '<a href="/dashboard" class="text-sm font-medium text-primary-400 transition-colors duration-300">Dashboard</a>';
+                        dashDesktop.innerHTML = '<a href="/dashboard" class="text-sm font-medium text-primary-400 transition-colors duration-300"><span data-i18n="nav_dashboard">Dashboard</span></a>';
                     }
                     if (mobileLink) {
                         mobileLink.href = '/dashboard';
@@ -1357,5 +1358,12 @@
             }
         })();
     </script>
+    <!-- Assist: call for help + language toggle (low-literacy support) -->
+    <a href="tel:+254745756470" class="fab-help" aria-label="Call for help">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.4 21 3 13.6 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.25 1.01l-2.2 2.2z"/></svg>
+        <span class="fab-help-label" data-i18n="btn_help">Help</span>
+    </a>
+    <button id="lang-toggle" type="button" class="lang-fab" aria-label="Switch language">SW</button>
+
 </body>
 </html>

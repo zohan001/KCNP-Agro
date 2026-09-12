@@ -13,7 +13,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-    <script>document.documentElement.classList.add('js');</script>
+    <script>document.documentElement.classList.add('js');
+        function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }</script>
     <script src="/js/ux.js" defer></script>
 </head>
 <body>
@@ -211,7 +212,7 @@
                     var input = document.getElementById('newsletter-email');
                     var email = input ? input.value.trim() : '';
                     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                        alert('Please enter a valid email address.');
+                        alert(P('Please enter a valid email address.'));
                         return;
                     }
                     fetch('/api/newsletter', {
@@ -221,10 +222,10 @@
                     })
                         .then(function (r) { return r.json(); })
                         .then(function (data) {
-                            alert(data.message || 'Thank you for subscribing!');
+                            alert(data.message || P('Thank you for subscribing!'));
                             if (data.success && input) input.value = '';
                         })
-                        .catch(function () { alert('Network error. Please try again.'); });
+                        .catch(function () { alert(P('Network error. Please try again.')); });
                 });
             }
 
@@ -279,6 +280,7 @@
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }
             const email = document.getElementById('email');
             const password = document.getElementById('password');
             const formError = document.getElementById('form-error');
@@ -288,13 +290,13 @@
             formError.classList.add('hidden');
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email.value)) {
-                document.getElementById('email-error').textContent = 'Please enter a valid email address.';
+                document.getElementById('email-error').textContent = P('Please enter a valid email address.');
                 document.getElementById('email-error').classList.remove('hidden');
                 email.classList.add('border-red-500');
                 return;
             }
 
-            submitText.textContent = 'Logging in...';
+            submitText.textContent = P('Logging in...');
             submitSpinner.classList.remove('hidden');
 
             try {
@@ -302,23 +304,23 @@
                     email: email.value,
                     password: password.value
                 });
-                submitText.textContent = 'Login';
+                submitText.textContent = P('Login');
                 submitSpinner.classList.add('hidden');
 
                 if (res.ok && data.success) {
                     saveSession(data.data.token, data.data.user);
                     formError.className = 'mt-4 p-4 rounded-xl bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm text-center';
-                    formError.textContent = 'Login successful! Taking you to your dashboard...';
+                    formError.textContent = P('Login successful! Taking you to your dashboard...');
                     formError.classList.remove('hidden');
                     window.location.href = '/dashboard';
                 } else {
-                    formError.textContent = data.message || 'Login failed. Please try again.';
+                    formError.textContent = data.message ? P(data.message) : P('Login failed. Please try again.');
                     formError.classList.remove('hidden');
                 }
             } catch (err) {
-                submitText.textContent = 'Login';
+                submitText.textContent = P('Login');
                 submitSpinner.classList.add('hidden');
-                formError.textContent = (err && err.name === 'AbortError') ? 'Login timed out. Please try again.' : 'Network error. Please try again.';
+                formError.textContent = (err && err.name === 'AbortError') ? P('Login timed out. Please try again.') : P('Network error. Please try again.');
                 formError.classList.remove('hidden');
             }
         });

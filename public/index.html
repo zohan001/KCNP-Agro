@@ -22,6 +22,7 @@
          This guarantees all page content is visible even if JS fails. -->
     <script>
         document.documentElement.classList.add('js');
+        function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }
     </script>
 
     <script src="/js/ux.js" defer></script>
@@ -1101,7 +1102,7 @@
 
                     // Validate name
                     if (!name.value.trim()) {
-                        nameError.textContent = 'Please enter your full name.';
+                        nameError.textContent = P('Please enter your full name.');
                         nameError.classList.remove('hidden');
                         name.classList.add('border-red-500');
                         isValid = false;
@@ -1110,12 +1111,12 @@
                     // Validate email
                     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                     if (!email.value.trim()) {
-                        emailError.textContent = 'Please enter your email address.';
+                        emailError.textContent = P('Please enter your email address.');
                         emailError.classList.remove('hidden');
                         email.classList.add('border-red-500');
                         isValid = false;
                     } else if (!emailRegex.test(email.value)) {
-                        emailError.textContent = 'Please enter a valid email address.';
+                        emailError.textContent = P('Please enter a valid email address.');
                         emailError.classList.remove('hidden');
                         email.classList.add('border-red-500');
                         isValid = false;
@@ -1123,7 +1124,7 @@
 
                     // Validate subject
                     if (!subject.value) {
-                        subjectError.textContent = 'Please select a subject.';
+                        subjectError.textContent = P('Please select a subject.');
                         subjectError.classList.remove('hidden');
                         subject.classList.add('border-red-500');
                         isValid = false;
@@ -1131,12 +1132,12 @@
 
                     // Validate message
                     if (!message.value.trim()) {
-                        messageError.textContent = 'Please enter your message.';
+                        messageError.textContent = P('Please enter your message.');
                         messageError.classList.remove('hidden');
                         message.classList.add('border-red-500');
                         isValid = false;
                     } else if (message.value.trim().length < 10) {
-                        messageError.textContent = 'Message must be at least 10 characters.';
+                        messageError.textContent = P('Message must be at least 10 characters.');
                         messageError.classList.remove('hidden');
                         message.classList.add('border-red-500');
                         isValid = false;
@@ -1151,7 +1152,7 @@
                         const formError = document.getElementById('form-error');
 
                         // Show loading state
-                        submitText.textContent = 'Sending...';
+                        submitText.textContent = P('Sending...');
                         submitIcon.classList.add('hidden');
                         submitSpinner.classList.remove('hidden');
 
@@ -1177,18 +1178,18 @@
                         .then(response => response.json().then(data => ({ ok: response.ok, data })))
                         .then(({ ok, data }) => {
                             // Reset button state
-                            submitText.textContent = 'Send Message';
+                            submitText.textContent = P('Send Message');
                             submitIcon.classList.remove('hidden');
                             submitSpinner.classList.add('hidden');
 
                             if (ok) {
                                 // Show success message
-                                formSuccess.textContent = data.message || 'Thank you! Your message has been sent successfully.';
+                                formSuccess.textContent = data.message || P('Thank you! Your message has been sent successfully.');
                                 formSuccess.classList.remove('hidden');
                                 contactForm.reset();
                             } else {
                                 // Show error message returned by server
-                                formError.textContent = data.message || 'Failed to send message. Please try again.';
+                                formError.textContent = data.message || P('Failed to send message. Please try again.');
                                 formError.classList.remove('hidden');
 
                                 // Highlight fields with server-side errors
@@ -1210,7 +1211,7 @@
                         .catch(err => {
                             console.error('[Contact] API error:', err);
                             // Reset button state
-                            submitText.textContent = 'Send Message';
+                            submitText.textContent = P('Send Message');
                             submitIcon.classList.remove('hidden');
                             submitSpinner.classList.add('hidden');
 
@@ -1255,7 +1256,7 @@
                     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
                     if (!emailRegex.test(emailInput.value)) {
-                        alert('Please enter a valid email address.');
+                        alert(P('Please enter a valid email address.'));
                         return;
                     }
 
@@ -1268,15 +1269,15 @@
                     .then(response => response.json().then(data => ({ ok: response.ok, data })))
                     .then(({ ok, data }) => {
                         alert(data.message || (ok
-                            ? 'Thank you for subscribing! You\'ll receive our latest updates.'
-                            : 'Subscription failed. Please try again.'));
+                            ? P('Thank you for subscribing! You\'ll receive our latest updates.')
+                            : P('Subscription failed. Please try again.')));
                         if (ok) {
                             emailInput.value = '';
                         }
                     })
                     .catch(err => {
                         console.error('[Newsletter] API error:', err);
-                        alert('Network error. Please check your connection and try again.');
+                        alert(P('Network error. Please check your connection and try again.'));
                     });
                 });
             }

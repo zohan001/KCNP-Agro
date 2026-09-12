@@ -179,7 +179,8 @@
         </div>
     </footer>
 
-    <script>
+    <script>        function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }
+
         (function () {
             var yearEl = document.getElementById('current-year');
             if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -193,7 +194,7 @@
                     var input = document.getElementById('newsletter-email');
                     var email = input ? input.value.trim() : '';
                     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                        alert('Please enter a valid email address.');
+                        alert(P('Please enter a valid email address.'));
                         return;
                     }
                     fetch('/api/newsletter', {
@@ -203,10 +204,10 @@
                     })
                         .then(function (r) { return r.json(); })
                         .then(function (data) {
-                            alert(data.message || 'Thank you for subscribing!');
+                            alert(data.message || P('Thank you for subscribing!'));
                             if (data.success && input) input.value = '';
                         })
-                        .catch(function () { alert('Network error. Please try again.'); });
+                        .catch(function () { alert(P('Network error. Please try again.')); });
                 });
             }
 

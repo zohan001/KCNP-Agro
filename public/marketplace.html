@@ -363,12 +363,17 @@
             const url = `${API}/products?${params.toString()}`;
             try {
                 const data = await fetchJSON(url);
+                loadListings._retried = false;
                 renderListings(data.count ? data.data : []);
             } catch (err) {
                 console.error('Failed to load listings:', err);
                 const grid = document.getElementById('listings-grid');
                 document.getElementById('listings-empty').classList.add('hidden');
                 grid.innerHTML = '<div class="col-span-full text-center py-16 text-red-400">Failed to load listings. Please make sure the server is running.</div>';
+                if (!loadListings._retried) {
+                    loadListings._retried = true;
+                    setTimeout(loadListings, 2500);
+                }
             }
         }
 

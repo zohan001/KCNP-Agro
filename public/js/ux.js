@@ -224,6 +224,8 @@
             t6_d: 'Use "Login" to enter your account, or "Register" to create one as a Farmer or Trader. Logging in lets you post listings, use the Dashboard, and track your activity.',
             t7_t: 'Get help anytime',
             t7_d: 'Tap the green Help button to call us directly, and use the SW / EN button to switch the whole site between Kiswahili and English.',
+            t8_t: 'Market Insights',
+            t8_d: 'Open "Market Insights" from the top menu to see demand in real time: which products people view and express interest in, supply vs demand by region, and advice on what to grow or sell. On the Marketplace, every listing shows its views and "I\'m interested" clicks so you get real market signals.',
             tour_next: 'Next',
             tour_skip: 'Skip — I do not need this',
             tour_done: 'Got it, let us go!',
@@ -424,6 +426,8 @@
             t6_d: 'Tumia "Ingia" kuingia akaunti yako, au "Jisajili" kuunda moja kama Mkulima au Mfanyabiashara. Kuingia hukuruhusu kuchapisha matangazo, kutumia Dashibodi, na kufuatilia shughuli zako.',
             t7_t: 'Pata usaidizi wakati wowote',
             t7_d: 'Gonga kitufe cha kijani cha Msaada kutupigia simu moja kwa moja, na tumia kitufe cha SW / EN kubadilisha tovuti nzima Kiingereza na Kiswahili.',
+            t8_t: 'Uchambuzi wa Soko',
+            t8_d: 'Fungua "Uchambuzi wa Soko" kwenye menyu ya juu kuona mahitaji kwa wakati halisi: ni bidhaa zipi watu wanaangalia na kuonyesha nia, usambazaji dhidi ya mahitaji kwa eneo, na ushauri wa kukua au kuuza nini. Kwenye Soko, kila tangazo linaonyesha idadi ya watazamaji na mibofyo ya "Nina nia" ili upate ishara halisi za soko.',
             tour_next: 'Endelea',
             tour_skip: 'Ruka — sihitaji hii',
             tour_done: 'Nimeelewa, twende!',
@@ -993,7 +997,7 @@
     var TOUR_KEY = 'kcnp_tour_done';
     var tourStep = 0;
     var tourShown = false;
-    var TOUR_STEPS = 7;
+    var TOUR_STEPS = 8;
 
     function tourMarkup() {
         return '<div id="tour-wrap" class="tour-backdrop" hidden>' +

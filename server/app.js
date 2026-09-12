@@ -92,6 +92,20 @@ function createApp() {
     // Apply rate limiter to API routes
     app.use('/api', limiter);
 
+    // Looser limit for lightweight buyer demand signals so listing views and
+    // interest clicks are never cut short during busy browsing.
+    const eventsLimiter = rateLimit({
+        windowMs: config.rateLimit.windowMs,
+        max: 900,
+        standardHeaders: true,
+        legacyHeaders: false,
+        message: {
+            success: false,
+            message: 'Too many requests, please try again later.'
+        }
+    });
+    app.use(['/api/products/:id/view', '/api/products/:id/interest'], eventsLimiter);
+
     // ==============================
     // Static Files
     // ==============================
@@ -115,7 +129,8 @@ function createApp() {
         ['/register', 'register.html'],
         ['/dashboard', 'dashboard.html'],
         ['/forgot-password', 'forgot-password.html'],
-        ['/reset-password', 'reset-password.html']
+        ['/reset-password', 'reset-password.html'],
+        ['/market-insights', 'market-insights.html']
     ];
     pageRoutes.forEach(([pathName, file]) => {
         app.get([pathName, `${pathName}/`], (req, res) => {

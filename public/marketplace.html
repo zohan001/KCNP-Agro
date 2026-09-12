@@ -31,6 +31,7 @@
                     <a href="/" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_home">Home</span></a>
                     <a href="/marketplace" class="text-sm font-medium text-primary-400 transition-colors duration-300"><span data-i18n="nav_marketplace">Marketplace</span></a>
                     <a href="/education" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_education">Education</span></a>
+                    <a href="/market-insights" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_insights">Market Insights</span></a>
                     <span id="nav-auth-desktop" class="hidden md:inline-flex"></span>
                 </div>
                 <div class="hidden md:block">
@@ -49,6 +50,7 @@
                     <a href="/" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_home">Home</span></a>
                     <a href="/marketplace" class="block px-4 py-3 rounded-lg text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_marketplace">Marketplace</span></a>
                     <a href="/education" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_education">Education</span></a>
+                    <a href="/market-insights" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_insights">Market Insights</span></a>
                     <div id="nav-auth-mobile" class="pt-2 px-4"></div>
                 </div>
             </div>
@@ -382,12 +384,13 @@
             }
             empty.classList.add('hidden');
             grid.innerHTML = listings.map(p => `
-                <article class="listen-block glass-card rounded-2xl p-6 reveal active">
+                <article class="listen-block glass-card rounded-2xl p-6 reveal active" data-pid="${p._id}" data-viewed="">
                     ${p.image ? `<img src="${p.image}" alt="${p.title}" class="listing-img" loading="lazy" onerror="this.parentNode.removeChild(this)">` : ''}
                     <div class="flex items-center justify-between mb-3">
                         <span class="inline-block px-3 py-1 rounded-full bg-primary-500/10 text-primary-300 text-xs font-semibold uppercase tracking-wide">${t('cat_' + p.category) || p.category}</span>
                         ${p.price > 0 ? `<span class="text-accent-400 font-bold text-lg">Ksh ${Number(p.price).toFixed(2)}${p.unit ? '/' + p.unit : ''}</span>` : `<span class="text-gray-500 text-sm">${t('price_on_request')}</span>`}
                     </div>
+                    ${(p.views30d > 0 || p.interest30d > 0) ? `<div class="flex items-center gap-3 text-xs text-gray-500 mb-2"><span class="inline-flex items-center gap-1">👁 ${Number(p.views30d).toLocaleString()} <span class="lowercase">${t('mp_views_short')}</span></span><span class="inline-flex items-center gap-1">❤️ <span id="interest-count-${p._id}">${Number(p.interest30d).toLocaleString()}</span> <span class="lowercase">${t('mp_interest_short')}</span></span></div>` : ''}
                     <h3 class="text-xl font-bold text-white mb-2">${p.title}</h3>
                     <p class="text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3">${p.description}</p>
                     ${p.location ? `<p class="text-gray-500 text-xs mb-1">📍 ${p.location}</p>` : ''}
@@ -396,9 +399,11 @@
                         <a href="mailto:${p.contactEmail}" class="text-primary-400 hover:text-primary-300 text-sm block truncate">${p.contactEmail}</a>
                         ${p.contactPhone ? `<a href="tel:${p.contactPhone}" class="text-gray-400 hover:text-primary-400 text-sm block truncate">${p.contactPhone}</a>` : ''}
                     </div>
+                    <button type="button" class="interest-btn mt-3 w-full" data-id="${p._id}" onclick="markInterest('${p._id}')">${t('mp_interest')}</button>
                     <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen" onclick="event.stopPropagation(); KCNP.speakBtn(this);">&#9654; Listen</button>
                 </article>
             `).join('');
+            trackViews();
         }
 
         async function submitListing(e) {
@@ -543,7 +548,50 @@
             applyPostingPermissions();
             loadListings();
             bindImageUpload();
-            document.addEventListener('kcnp:lang', () => { loadListings(); applyPostingPermissions(); });
+            // ==============================
+        // Buyer demand signals: count listing views (once per card per session)
+        // and "I'm interested" clicks. These power the Market Insights analysis.
+        // ==============================
+        const viewedPids = new Set();
+        function trackViews() {
+            if (!('IntersectionObserver' in window)) return;
+            const cards = document.querySelectorAll('#listings-grid article[data-pid]');
+            if (!cards.length) return;
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    const pid = entry.target.getAttribute('data-pid');
+                    if (!pid || viewedPids.has(pid)) return;
+                    viewedPids.add(pid);
+                    fetch(`/api/products/${pid}/view`, { method: 'POST', headers: { 'Content-Type': 'application/json' } })
+                        .catch(() => {});
+                    obs.unobserve(entry.target);
+                });
+            }, { threshold: 0.3 });
+            cards.forEach(c => obs.observe(c));
+        }
+
+        async function markInterest(id) {
+            const btn = document.querySelector(`.interest-btn[data-id="${id}"]`);
+            if (btn && btn.disabled) return;
+            if (btn) { btn.disabled = true; btn.classList.add('opacity-60'); }
+            try {
+                const res = await fetch(`/api/products/${id}/interest`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (res.status === 404) {
+                    if (btn) { btn.disabled = false; btn.classList.remove('opacity-60'); }
+                    return;
+                }
+                const counter = document.getElementById(`interest-count-${id}`);
+                if (counter) counter.textContent = String(Number(counter.textContent || 0) + 1);
+            } catch (err) {
+                if (btn) { btn.disabled = false; btn.classList.remove('opacity-60'); }
+            }
+        }
+
+        document.addEventListener('kcnp:lang', () => { loadListings(); applyPostingPermissions(); });
 
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');

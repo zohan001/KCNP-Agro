@@ -1,4 +1,6 @@
 const Product = require('../models/Product');
+const ListingEvent = require('../models/ListingEvent');
+const { attachEventCounts } = require('./marketInsightsController');
 const { logAudit } = require('../db/database');
 
 async function createProduct(req, res) {
@@ -38,9 +40,11 @@ async function getProducts(req, res) {
 
         const skip = (parseInt(page) - 1) * parseInt(limit);
         const [products, total] = await Promise.all([
-            Product.find(filter).sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit)),
+            Product.find(filter).sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit)).lean(),
             Product.countDocuments(filter)
         ]);
+
+        await attachEventCounts(products);
 
         return res.status(200).json({
             success: true,
@@ -61,7 +65,8 @@ async function getProducts(req, res) {
 
 async function getMyProducts(req, res) {
     try {
-        const products = await Product.find({ seller: req.user._id }).sort({ createdAt: -1 });
+        const products = await Product.find({ seller: req.user._id }).sort({ createdAt: -1 }).lean();
+        await attachEventCounts(products);
         return res.status(200).json({
             success: true,
             count: products.length,
@@ -153,6 +158,7 @@ async function deleteProduct(req, res) {
         }
 
         await Product.findByIdAndDelete(req.params.id);
+        await ListingEvent.deleteMany({ product: req.params.id }).catch(() => {});
         return res.status(200).json({
             success: true,
             message: 'Listing deleted.'

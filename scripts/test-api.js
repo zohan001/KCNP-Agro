@@ -256,6 +256,43 @@ const request = (path, options = {}) => {
         console.log(`[19] Get product ${res.status}: ${res.body.data && res.body.data.product && res.body.data.product.title}`);
         console.assert(res.status === 200, 'Get product should be 200');
 
+        // 19a. Record listing views
+        res = await request(`/api/products/${productId}/view`, { method: 'POST', body: {} });
+        console.log(`[19a] Record view ${res.status}`);
+        console.assert(res.status === 201, 'Record view should be 201');
+
+        // 19b. Record interest clicks
+        res = await request(`/api/products/${productId}/interest`, { method: 'POST', body: {} });
+        console.log(`[19b] Record interest ${res.status}`);
+        console.assert(res.status === 201, 'Record interest should be 201');
+
+        // 19c. Record view on missing product -> 404
+        res = await request('/api/products/000000000000000000000000/view', { method: 'POST', body: {} });
+        console.log(`[19c] View missing product ${res.status}: expect 404`);
+        console.assert(res.status === 404, 'View of missing product should be 404');
+
+        // 19d. Get products includes 30-day demand counts
+        res = await request('/api/products');
+        console.log(`[19d] Get products ${res.status}: count=${res.body.count}`);
+        console.assert(res.status === 200, 'Get products should be 200');
+        const enriched = (res.body.data || []).find(p => String(p._id) === productId);
+        console.assert(enriched && enriched.views30d === 1, 'Listing should report 1 view in 30 days');
+        console.assert(enriched && enriched.interest30d === 1, 'Listing should report 1 interest in 30 days');
+
+        // 19e. Market insights computes supply/demand analysis
+        res = await request('/api/market-insights');
+        console.log(`[19e] Market insights ${res.status}: listings=${res.body.data && res.body.data.totals && res.body.data.totals.listings} views30d=${res.body.data && res.body.data.totals && res.body.data.totals.views30d}`);
+        console.assert(res.status === 200, 'Market insights should be 200');
+        console.assert(res.body.data && typeof res.body.data.totals.listings === 'number', 'Insights should include totals');
+        console.assert(Array.isArray(res.body.data.segments), 'Insights should include segments');
+        console.assert(Array.isArray(res.body.data.categories), 'Insights should include category breakdown');
+        console.assert(Array.isArray(res.body.data.opportunities), 'Insights should include opportunities');
+
+        // 19f. Market Insights page serves
+        res = await request('/market-insights');
+        console.log(`[19f] Market Insights page ${res.status}`);
+        console.assert(res.status === 200, 'Market Insights page should be 200');
+
         // 20. Update product (owner farmer)
         res = await request(`/api/products/${productId}`, {
             method: 'PUT',
@@ -365,7 +402,7 @@ const request = (path, options = {}) => {
         console.assert(res.body.data.score === 1, 'Score should be 1');
 
         // 30. New page URLs serve correctly
-        for (const page of ['/marketplace', '/education', '/login', '/register', '/dashboard']) {
+        for (const page of ['/marketplace', '/education', '/login', '/register', '/dashboard', '/market-insights']) {
             res = await request(page);
             console.log(`[30] Page ${page} ${res.status}`);
             console.assert(res.status === 200, `${page} should be 200`);

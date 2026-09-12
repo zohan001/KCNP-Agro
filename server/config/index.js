@@ -27,7 +27,7 @@ module.exports = {
     // Rate limiting configuration (per IP)
     rateLimit: {
         windowMs: (process.env.RATE_LIMIT_WINDOW || 15) * 60 * 1000, // 15 minutes by default
-        max: parseInt(process.env.RATE_LIMIT_MAX || '100', 10)      // 100 requests per window
+        max: parseInt(process.env.RATE_LIMIT_MAX || '300', 10)      // 300 requests per window
     },
 
     // JWT configuration

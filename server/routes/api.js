@@ -8,6 +8,7 @@ const productController = require('../controllers/productController');
 const articleController = require('../controllers/articleController');
 const quizController = require('../controllers/quizController');
 const statsController = require('../controllers/statsController');
+const marketInsightsController = require('../controllers/marketInsightsController');
 
 const {
     validateContactMessage,
@@ -53,6 +54,13 @@ router.get('/products/my', authenticate, productController.getMyProducts);
 router.get('/products/:id', productController.getProduct);
 router.put('/products/:id', authenticate, productController.updateProduct);
 router.delete('/products/:id', authenticate, productController.deleteProduct);
+
+// Buyer demand signals (public, lightweight)
+router.post('/products/:id/view', marketInsightsController.recordView);
+router.post('/products/:id/interest', marketInsightsController.recordInterest);
+
+// Supply/demand analysis
+router.get('/market-insights', marketInsightsController.getMarketInsights);
 
 // ==============================
 // Article / Knowledge Base Routes

@@ -31,6 +31,7 @@
                     <a href="/" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_home">Home</span></a>
                     <a href="/marketplace" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_marketplace">Marketplace</span></a>
                     <a href="/education" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_education">Education</span></a>
+                    <a href="/market-insights" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_insights">Market Insights</span></a>
                     <a href="/dashboard" class="text-sm font-medium text-primary-400 transition-colors duration-300"><span data-i18n="nav_dashboard">Dashboard</span></a>
                     <span id="nav-auth-desktop" class="hidden md:inline-flex"></span>
                 </div>
@@ -45,6 +46,7 @@
                     <a href="/" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_home">Home</span></a>
                     <a href="/marketplace" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_marketplace">Marketplace</span></a>
                     <a href="/education" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_education">Education</span></a>
+                    <a href="/market-insights" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_insights">Market Insights</span></a>
                     <a href="/dashboard" class="block px-4 py-3 rounded-lg text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_dashboard">Dashboard</span></a>
                     <div id="nav-auth-mobile" class="pt-2 px-4"></div>
                 </div>
@@ -89,6 +91,20 @@
                         <div id="stat-articles" class="text-3xl sm:text-4xl font-heading font-extrabold text-accent-400 mb-1">-</div>
                         <p class="text-xs sm:text-sm text-gray-400 uppercase tracking-wide"><span data-i18n="stat_articles">Knowledge Articles</span></p>
                     </div>
+                </div>
+
+                <!-- Market Insights -->
+                <div class="glass-card rounded-2xl p-6 md:p-8 mb-12 reveal">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                        <div>
+                            <h2 data-i18n="d_insights" class="font-heading text-2xl font-bold text-white">Market Insights</h2>
+                            <p data-i18n="d_insights_sub" class="text-gray-400 text-sm mt-1">Supply and demand analysis from live listing activity.</p>
+                        </div>
+                        <a id="insights-open" href="/market-insights" class="cta-btn inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-white font-semibold text-sm w-full sm:w-auto">
+                            <span data-i18n="d_insights_open">Open Market Insights</span>
+                        </a>
+                    </div>
+                    <p id="insights-dash" class="text-sm text-gray-300">Analyzing the market...</p>
                 </div>
 
                 <!-- Farmer panel -->
@@ -378,6 +394,30 @@
             }
         }
 
+        async function loadInsights() {
+            const line = document.getElementById('insights-dash');
+            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            try {
+                const data = await fetchJSON(`${API}/market-insights`);
+                if (!data.success) throw new Error('insights');
+                const d = data.data;
+                const bal = (b) => b === 'opportunity' ? t('bal_opportunity') : b === 'oversupply' ? t('bal_oversupply') : b === 'no-signal' ? t('bal_no_signal') : t('bal_balanced');
+                if (d.note === 'no-listings') {
+                    line.textContent = t('d_insights_empty');
+                    return;
+                }
+                const top = (d.opportunities && d.opportunities[0]) || (d.segments && d.segments[0]);
+                if (top) {
+                    const cat = (window.KCNP && KCNP.t) ? KCNP.t('cat_' + top.category) : top.category;
+                    line.innerHTML = `<span class="text-gray-400">${t('d_top_opp')}</span> <span class="text-primary-300 font-semibold">${cat} · ${top.location}</span> — ${bal(top.balance)}. ${Number(top.views30d).toLocaleString()} ${t('mp_views_short')}, ${Number(top.interest30d).toLocaleString()} ${t('mp_interest_short')}.`;
+                } else {
+                    line.textContent = t('mi_no_opportunities');
+                }
+            } catch (err) {
+                line.textContent = t('mi_error');
+            }
+        }
+
         function formatPrice(p, unit) {
             const u = unit ? ` / ${unit}` : '';
             return `Ksh ${parseFloat(p).toFixed(2)}${u}`;
@@ -479,6 +519,7 @@
             setupAuthNav();
             showRoleView(role);
             loadStats();
+            loadInsights();
 
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');

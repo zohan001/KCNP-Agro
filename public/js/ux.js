@@ -586,6 +586,8 @@
 
     function finishTour() { skipTour(); }
 
+    function nextTour() { setTourStep(tourStep + 1); }
+
     function skipTour() {
         try { localStorage.setItem(TOUR_KEY, '1'); } catch (e) {}
         hideTour();

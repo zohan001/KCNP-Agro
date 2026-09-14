@@ -37,7 +37,7 @@ module.exports = {
     },
 
     // Frontend base URL (used to build password reset links)
-    frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
+    frontendUrl: process.env.FRONTEND_URL || '',
 
     // SMTP / email configuration (used for password reset emails)
     mail: {

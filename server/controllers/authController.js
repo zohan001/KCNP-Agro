@@ -118,7 +118,8 @@ async function forgotPassword(req, res) {
         user.passwordResetExpires = expires;
         await user.save();
 
-        const resetUrl = `${config.frontendUrl}/reset-password?token=${rawToken}`;
+        const baseUrl = config.frontendUrl || `${req.protocol}://${req.get('host')}`;
+        const resetUrl = `${baseUrl}/reset-password?token=${rawToken}`;
 
         const emailed = await sendPasswordResetEmail(email, resetUrl);
 

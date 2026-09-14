@@ -32,6 +32,10 @@ const { errorHandler, notFoundHandler } = require('./middleware/validation');
 function createApp() {
     const app = express();
 
+    // Render/proxies terminate TLS in front of the app; trust them so
+    // req.protocol reports https and generated links use the public host.
+    app.set('trust proxy', 1);
+
     // ==============================
     // Apply Security Middleware
     // ==============================

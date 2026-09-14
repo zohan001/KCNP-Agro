@@ -102,8 +102,8 @@ async function sendPasswordResetEmail(to, resetUrl) {
         ]);
         return { status: 'sent' };
     } catch (err) {
-        console.error('[Mailer] Failed to send password reset email:', err.message);
-        return { status: 'error', code: err.code || err.message };
+        console.error('[Mailer] Failed to send password reset email:', err.message, err.address ? '-> ' + err.address + ':' + err.port : '');
+        return { status: 'error', code: (err.address ? err.address + ':' + err.port + ' ' : '') + (err.code || err.message) };
     }
 }
 

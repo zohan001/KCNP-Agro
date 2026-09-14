@@ -16,14 +16,49 @@ function median(values) {
     return sorted.length % 2 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2);
 }
 
+const VIEW_DEDUP_HOURS = 24;
+const HOUR = 3600 * 1000;
+
 async function recordEvent(req, res, type) {
     try {
         const product = await Product.findById(req.params.id).select('_id active');
         if (!product || !product.active) {
             return res.status(404).json({ success: false, message: 'Listing not found.' });
         }
-        await ListingEvent.create({ product: product._id, type });
-        return res.status(201).json({ success: true });
+
+        const visitor = req.headers['x-visitor-id'] || String(req.ip || '').replace(/^::ffff:/, '');
+        const ip = req.ip ? String(req.ip).replace(/^::ffff:/, '') : '';
+
+        if (type === 'view') {
+            const since = new Date(Date.now() - VIEW_DEDUP_HOURS * HOUR);
+            const existing = await ListingEvent.findOne({
+                product: product._id,
+                type: 'view',
+                visitor,
+                createdAt: { $gte: since }
+            });
+            if (existing) {
+                return res.status(200).json({ success: true, deduped: true });
+            }
+            await ListingEvent.create({ product: product._id, type, ip, visitor });
+            return res.status(201).json({ success: true, deduped: false });
+        }
+
+        if (type === 'interest') {
+            const existing = await ListingEvent.findOne({
+                product: product._id,
+                type: 'interest',
+                visitor
+            });
+            if (existing) {
+                await existing.deleteOne();
+                return res.status(200).json({ success: true, added: false });
+            }
+            await ListingEvent.create({ product: product._id, type, ip, visitor });
+            return res.status(201).json({ success: true, added: true });
+        }
+
+        return res.status(400).json({ success: false, message: 'Unknown activity type.' });
     } catch (err) {
         console.error(`[ListingEvent] ${type} failed:`, err.message);
         return res.status(500).json({ success: false, message: 'Failed to record activity.' });

@@ -307,6 +307,15 @@
             return m ? decodeURIComponent(m[1]) : null;
         }
         const getToken = () => readStored('kcnp_token') || readStored('token');
+        function getVisitorId() {
+            let id = '';
+            try { id = localStorage.getItem('kcnp_visitor'); } catch (e) {}
+            if (!id) {
+                id = 'v-' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+                try { localStorage.setItem('kcnp_visitor', id); } catch (e) {}
+            }
+            return id;
+        }
         const getAuthUser = () => {
             try {
                 return JSON.parse(readStored('kcnp_user') || readStored('user') || 'null');
@@ -424,7 +433,7 @@
                         <span class="inline-block px-3 py-1 rounded-full bg-primary-500/10 text-primary-300 text-xs font-semibold uppercase tracking-wide">${t('cat_' + p.category) || p.category}</span>
                         ${p.price > 0 ? `<span class="text-accent-400 font-bold text-lg">Ksh ${Number(p.price).toFixed(2)}${p.unit ? '/' + p.unit : ''}</span>` : `<span class="text-gray-500 text-sm">${t('price_on_request')}</span>`}
                     </div>
-                    ${(p.views30d > 0 || p.interest30d > 0) ? `<div class="flex items-center gap-3 text-xs text-gray-500 mb-2"><span class="inline-flex items-center gap-1">👁 ${Number(p.views30d).toLocaleString()} <span class="lowercase">${t('mp_views_short')}</span></span><span class="inline-flex items-center gap-1">❤️ <span id="interest-count-${p._id}">${Number(p.interest30d).toLocaleString()}</span> <span class="lowercase">${t('mp_interest_short')}</span></span></div>` : ''}
+                    <div class="flex items-center gap-3 text-xs text-gray-500 mb-2"><span class="inline-flex items-center gap-1">👁 <span id="views-count-${p._id}">${Number(p.views30d).toLocaleString()}</span> <span class="lowercase">${t('mp_views_short')}</span></span><span class="inline-flex items-center gap-1">❤️ <span id="interest-count-${p._id}">${Number(p.interest30d).toLocaleString()}</span> <span class="lowercase">${t('mp_interest_short')}</span></span></div>
                     <h3 class="text-xl font-bold text-white mb-2">${p.title}</h3>
                     <p class="text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3">${p.description}</p>
                     ${p.location ? `<p class="text-gray-500 text-xs mb-1">📍 ${p.location}</p>` : ''}
@@ -590,7 +599,7 @@
                     const pid = entry.target.getAttribute('data-pid');
                     if (!pid || viewedPids.has(pid)) return;
                     viewedPids.add(pid);
-                    fetch(`/api/products/${pid}/view`, { method: 'POST', headers: { 'Content-Type': 'application/json' } })
+                    fetch(`/api/products/${pid}/view`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Visitor-Id': getVisitorId() } })
                         .catch(() => {});
                     obs.unobserve(entry.target);
                 });
@@ -600,21 +609,28 @@
 
         async function markInterest(id) {
             const btn = document.querySelector(`.interest-btn[data-id="${id}"]`);
-            if (btn && btn.disabled) return;
-            if (btn) { btn.disabled = true; btn.classList.add('opacity-60'); }
+            if (btn && btn.dataset.busy) return;
+            if (btn) { btn.dataset.busy = '1'; if (btn.disabled) btn.disabled = false; }
             try {
                 const res = await fetch(`/api/products/${id}/interest`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json', 'X-Visitor-Id': getVisitorId() }
                 });
-                if (res.status === 404) {
-                    if (btn) { btn.disabled = false; btn.classList.remove('opacity-60'); }
-                    return;
-                }
+                if (res.status === 404) return;
+                const body = await res.json().catch(() => null);
+                const added = body && typeof body.added === 'boolean' ? body.added : true;
                 const counter = document.getElementById(`interest-count-${id}`);
-                if (counter) counter.textContent = String(Number(counter.textContent || 0) + 1);
+                if (counter) {
+                    const n = Number(String(counter.textContent || '0').replace(/[^\d]/g, '')) || 0;
+                    counter.textContent = String(Math.max(0, added ? n + 1 : n - 1));
+                }
+                if (btn) {
+                    btn.style.outline = added ? '2px solid #16a34a' : '';
+                }
             } catch (err) {
-                if (btn) { btn.disabled = false; btn.classList.remove('opacity-60'); }
+                console.error('Interest failed:', err);
+            } finally {
+                if (btn) delete btn.dataset.busy;
             }
         }
 

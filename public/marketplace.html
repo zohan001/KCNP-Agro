@@ -148,6 +148,7 @@
                             </div>
                         </div>
                         <button type="submit" data-i18n="btn_post_listing" class="cta-btn w-full md:w-auto mt-6 px-6 py-3 rounded-xl text-white font-semibold text-sm">Post Listing</button>
+                        <button type="button" id="cancel-edit-btn" onclick="cancelEdit()" data-i18n="btn_cancel" class="hidden mt-6 px-6 py-3 rounded-xl bg-white/5 text-gray-300 hover:bg-white/10 text-sm font-semibold">Cancel</button>
                     </form>
                 </div>
 
@@ -182,13 +183,7 @@
                         <a href="https://www.linkedin.com/in/kabul-matano-826b89284/" target="_blank" rel="noopener" class="social-link w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-primary-400 hover:bg-white/10" aria-label="Follow us on LinkedIn">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                         </a>
-                        <a href="https://x.com/Zohanally" target="_blank" rel="noopener" class="social-link w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-primary-400 hover:bg-white/10" aria-label="Follow us on Instagram">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                        </a>
-                        <a href="https://x.com/Zohanally" target="_blank" rel="noopener" class="social-link w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-primary-400 hover:bg-white/10" aria-label="Subscribe on YouTube">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                        </a>
-                    </div>
+                                                                    </div>
                 </div>
 
                 <!-- Column 2: Quick Links -->
@@ -406,6 +401,7 @@
                 return;
             }
             loadListings._attempts = 0;
+            LAST_LISTINGS = Array.isArray(data.data) ? data.data : [];
             try {
                 renderListings(data.count ? data.data : []);
             } catch (err) {
@@ -426,8 +422,12 @@
                 return;
             }
             empty.classList.add('hidden');
-            grid.innerHTML = listings.map(p => `
-                <article class="listen-block glass-card rounded-2xl p-6 reveal active" data-pid="${p._id}" data-viewed="">
+            grid.innerHTML = listings.map(p => {
+                const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+                const auth = getAuthUser();
+                const isOwner = auth && p.seller && String(p.seller) === String(auth._id);
+                return `
+                <article class="listen-block glass-card rounded-2xl p-6 reveal active cursor-pointer" data-pid="${p._id}" data-viewed="" onclick="openListingDetail('${p._id}')">
                     ${p.image ? `<img src="${p.image}" alt="${p.title}" class="listing-img" loading="lazy" onerror="this.parentNode.removeChild(this)">` : ''}
                     <div class="flex items-center justify-between mb-3">
                         <span class="inline-block px-3 py-1 rounded-full bg-primary-500/10 text-primary-300 text-xs font-semibold uppercase tracking-wide">${t('cat_' + p.category) || p.category}</span>
@@ -439,15 +439,20 @@
                     ${p.location ? `<p class="text-gray-500 text-xs mb-1">📍 ${p.location}</p>` : ''}
                     <div class="pt-3 border-t border-white/5 mt-3">
                         <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">${t('mp_contact')}</h4>
-                        <a href="mailto:${p.contactEmail}" class="text-primary-400 hover:text-primary-300 text-sm block truncate">${p.contactEmail}</a>
-                        ${p.contactPhone ? `<a href="tel:${p.contactPhone}" class="text-gray-400 hover:text-primary-400 text-sm block truncate">${p.contactPhone}</a>` : ''}
+                        <a href="mailto:${p.contactEmail}" onclick="event.stopPropagation()" class="text-primary-400 hover:text-primary-300 text-sm block truncate">${p.contactEmail}</a>
+                        ${p.contactPhone ? `<a href="tel:${p.contactPhone}" onclick="event.stopPropagation()" class="text-gray-400 hover:text-primary-400 text-sm block truncate">${p.contactPhone}</a>` : ''}
                     </div>
-                    <button type="button" class="interest-btn mt-3 w-full" data-id="${p._id}" onclick="markInterest('${p._id}')">${t('mp_interest')}</button>
+                    <button type="button" class="interest-btn mt-3 w-full" data-id="${p._id}" onclick="event.stopPropagation(); markInterest('${p._id}')">${t('mp_interest')}</button>
+                    ${isOwner ? `<button type="button" class="edit-btn mt-2 w-full py-2.5 rounded-lg bg-white/5 text-primary-400 hover:bg-white/10 text-sm font-semibold" onclick="event.stopPropagation(); openEdit('${p._id}');">${t('btn_edit')}</button>` : ''}
                     <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen" onclick="event.stopPropagation(); KCNP.speakBtn(this);">&#9654; Listen</button>
                 </article>
-            `).join('');
+            `;
+            }).join('');
             trackViews();
         }
+
+        let editingListing = null;
+        let LAST_LISTINGS = [];
 
         async function submitListing(e) {
             e.preventDefault();
@@ -488,15 +493,16 @@
             const token = getToken();
             if (token) headers['Authorization'] = `Bearer ${token}`;
 
+            const isEdit = !!(editingListing && editingListing._id);
+            const url = isEdit ? `${API}/products/${editingListing._id}` : `${API}/products`;
+
             try {
-                const data = await fetchJSON(`${API}/products`, { method: 'POST', headers, body: JSON.stringify(payload) });
+                const data = await fetchJSON(url, { method: isEdit ? 'PUT' : 'POST', headers, body: JSON.stringify(payload) });
                 if (data.success) {
                     status.className = 'mb-4 p-4 rounded-xl bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm text-center';
-                    status.textContent = t('mp_posted');
+                    status.textContent = isEdit ? t('mp_updated') : t('mp_posted');
                     status.classList.remove('hidden');
-                    document.getElementById('listing-form').reset();
-                    listingImage = null;
-                    resetImagePreview();
+                    cancelEdit(true);
                     loadListings();
                 } else {
                     const first = data.errors && data.errors[0] && data.errors[0].message;
@@ -505,6 +511,116 @@
             } catch (err) {
                 fail(t('mp_network'));
             }
+        }
+
+        function openEdit(id) {
+            const p = LAST_LISTINGS.find(x => String(x._id) === String(id));
+            if (!p) return;
+            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            editingListing = p;
+            document.getElementById('l-title').value = p.title || '';
+            document.getElementById('l-description').value = p.description || '';
+            document.getElementById('l-category').value = p.category || '';
+            document.getElementById('l-price').value = p.price || '';
+            document.getElementById('l-unit').value = p.unit || '';
+            document.getElementById('l-location').value = p.location || '';
+            document.getElementById('l-contactEmail').value = p.contactEmail || '';
+            document.getElementById('l-contactPhone').value = p.contactPhone || '';
+            listingImage = p.image || null;
+            const preview = document.getElementById('l-image-preview');
+            if (preview) {
+                preview.src = listingImage || '';
+                if (listingImage) preview.classList.remove('photo-preview--empty');
+                else preview.classList.add('photo-preview--empty');
+            }
+            const submitBtn = document.querySelector('#listing-form button[type="submit"]');
+            if (submitBtn) submitBtn.textContent = t('btn_update');
+            const cancelBtn = document.getElementById('cancel-edit-btn');
+            if (cancelBtn) cancelBtn.classList.remove('hidden');
+            openListingForm();
+        }
+
+        function cancelEdit(silent) {
+            editingListing = null;
+            document.getElementById('listing-form').reset();
+            listingImage = null;
+            resetImagePreview();
+            const submitBtn = document.querySelector('#listing-form button[type="submit"]');
+            if (submitBtn) submitBtn.textContent = (window.KCNP && KCNP.t) ? KCNP.t('btn_post_listing') : 'Post Listing';
+            const cancelBtn = document.getElementById('cancel-edit-btn');
+            if (cancelBtn) cancelBtn.classList.add('hidden');
+            if (!silent) {
+                const status = document.getElementById('listing-status');
+                if (status) status.classList.add('hidden');
+                document.getElementById('listing-form-container').classList.add('hidden');
+            }
+        }
+
+        async function openListingDetail(id) {
+            const p = LAST_LISTINGS.find(x => String(x._id) === String(id));
+            if (!p) return;
+            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+
+            const body = document.getElementById('listing-detail-body');
+            body.innerHTML = `
+                ${p.image ? `<img src="${p.image}" alt="${p.title}" class="w-full h-56 sm:h-72 object-cover rounded-xl mb-5">` : ''}
+                <div class="flex items-center justify-between mb-3">
+                    <span class="inline-block px-3 py-1 rounded-full bg-primary-500/10 text-primary-300 text-xs font-semibold uppercase tracking-wide">${t('cat_' + p.category) || p.category}</span>
+                    ${p.price > 0 ? `<span class="text-accent-400 font-bold text-2xl">Ksh ${Number(p.price).toFixed(2)}${p.unit ? '/' + p.unit : ''}</span>` : `<span class="text-gray-500">${t('price_on_request')}</span>`}
+                </div>
+                <h2 class="text-2xl font-bold text-white mb-3">${p.title}</h2>
+                <div class="flex items-center gap-4 text-xs text-gray-500 mb-4">
+                    <span class="inline-flex items-center gap-1">👁 ${Number(p.views30d).toLocaleString()} <span class="lowercase">${t('mp_views_short')}</span></span>
+                    <span class="inline-flex items-center gap-1">❤️ ${Number(p.interest30d).toLocaleString()} <span class="lowercase">${t('mp_interest_short')}</span></span>
+                    ${p.location ? `<span>📍 ${p.location}</span>` : ''}
+                </div>
+                <p class="text-gray-300 text-sm leading-relaxed mb-5">${String(p.description || '').replace(/</g, '&lt;')}</p>
+                <div class="pt-3 border-t border-white/5">
+                    <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">${t('mp_contact')}</h4>
+                    <a href="mailto:${p.contactEmail}" class="text-primary-400 hover:text-primary-300 text-sm block truncate">${p.contactEmail}</a>
+                    ${p.contactPhone ? `<a href="tel:${p.contactPhone}" class="text-gray-400 hover:text-primary-400 text-sm block truncate mt-1">${p.contactPhone}</a>` : ''}
+                </div>
+            `;
+            document.getElementById('listing-more').innerHTML = '<div class="text-center py-8 text-gray-500">' + t('mp_loading') + '</div>';
+            document.getElementById('listing-modal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+
+            try {
+                const res = await fetchJSON(`${API}/products?seller=${encodeURIComponent(p.seller)}`, {}, 15000);
+                const others = (res.data || []).filter(x => String(x._id) !== String(p._id)).slice(0, 4);
+                const more = document.getElementById('listing-more');
+                if (!others.length) {
+                    more.innerHTML = '';
+                } else {
+                    more.innerHTML = `
+                        <h3 class="text-lg font-bold text-white mb-4 border-t border-white/10 pt-6">${t('mp_more_from')}</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            ${others.map(o => `
+                                <div role="button" tabindex="0" class="glass-card rounded-xl p-4 cursor-pointer" onclick="openListingDetail('${o._id}')">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-primary-300 text-xs font-semibold uppercase tracking-wide">${t('cat_' + o.category) || o.category}</span>
+                                        ${o.price > 0 ? `<span class="text-accent-400 font-bold">Ksh ${Number(o.price).toFixed(2)}${o.unit ? '/' + o.unit : ''}</span>` : ''}
+                                    </div>
+                                    <h4 class="text-sm font-semibold text-white">${o.title}</h4>
+                                    ${o.image ? `<img src="${o.image}" alt="${o.title}" class="mt-2 h-24 w-full object-cover rounded-lg" onerror="this.remove()">` : ''}
+                                    <div class="mt-2 text-xs text-gray-500">👁 ${Number(o.views30d).toLocaleString()} · ❤️ ${Number(o.interest30d).toLocaleString()}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                document.getElementById('listing-more').innerHTML = '';
+            }
+        }
+
+        function closeListingDetail(ev) {
+            if (ev) {
+                if (ev.target !== ev.currentTarget) return;
+            }
+            const modal = document.getElementById('listing-modal');
+            if (modal) modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
         }
 
         let listingImage = null;
@@ -671,10 +787,29 @@
             });
             if (window.location.hash === '#listing-form') openListingForm();
 
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    const modal = document.getElementById('listing-modal');
+                    if (modal && !modal.classList.contains('hidden')) closeListingDetail();
+                }
+            });
+
             const yearEl = document.getElementById('current-year');
             if (yearEl) yearEl.textContent = new Date().getFullYear();
         });
     </script>
+    <!-- Listing detail modal -->
+    <div id="listing-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-label="Listing details">
+        <div class="absolute inset-0 bg-black/70" onclick="closeListingDetail(event)"></div>
+        <div class="absolute inset-0 overflow-y-auto p-4 sm:p-8">
+            <div class="relative m-auto w-full max-w-3xl glass-card rounded-2xl p-6 sm:p-8">
+                <button type="button" onclick="closeListingDetail()" class="absolute top-4 right-4 w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-primary-400 hover:bg-white/10" aria-label="Close">&times;</button>
+                <div id="listing-detail-body"></div>
+                <div id="listing-more" class="mt-8"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Assist: call for help + language toggle (low-literacy support) -->
     <a href="tel:+254745756470" class="fab-help" aria-label="Call for help">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.4 21 3 13.6 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.25 1.01l-2.2 2.2z"/></svg>

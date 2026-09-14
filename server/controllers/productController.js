@@ -32,10 +32,11 @@ async function createProduct(req, res) {
 
 async function getProducts(req, res) {
     try {
-        const { category, search, page = 1, limit = 20 } = req.query;
+        const { category, search, seller, page = 1, limit = 20 } = req.query;
         const filter = { active: true };
 
         if (category) filter.category = category;
+        if (seller) filter.seller = seller;
         if (search) filter.$text = { $search: search };
 
         const skip = (parseInt(page) - 1) * parseInt(limit);

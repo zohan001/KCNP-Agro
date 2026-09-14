@@ -123,12 +123,15 @@ async function forgotPassword(req, res) {
 
         const emailed = await sendPasswordResetEmail(email, resetUrl);
 
-        if (!emailed) {
-            // No SMTP configured — surface the link so the flow still works (dev/staging).
-            console.log('[Auth] Password reset link (SMTP disabled):', resetUrl);
+        if (emailed !== 'sent') {
+            // Email could not be delivered — surface the link so the flow still works.
+            console.log('[Auth] Password reset link (email not delivered):', resetUrl);
+            const reason = emailed === 'unconfigured'
+                ? 'Password reset link generated. SMTP is not configured, so the link is shown below.'
+                : 'Password reset link generated. Email delivery failed, so the link is shown below.';
             return res.status(200).json({
                 success: true,
-                message: 'Password reset link generated. Email delivery was not available, so the link is shown below.',
+                message: reason,
                 data: { resetLink: resetUrl, fallback: true }
             });
         }

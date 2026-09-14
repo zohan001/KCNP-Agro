@@ -735,7 +735,8 @@
   "Posting hasn't started yet.": "Bado hakuna matangazo yamechapishwa.",
   "Open Market Insights": "Fungua Uchambuzi wa Soko",
   "If that email is registered, a password reset link has been sent.": "Ikiwa anwani hii ya barua pepe imesajiliwa, kiungo cha kuweka upya nenosiri kimetumwa.",
-  "Password reset link generated. Email delivery was not available, so the link is shown below.": "Kiungo cha kuweka upya nenosiri kimeundwa. Uwasilishaji wa barua pepe haupatikani, kwa hivyo kiungo kinaonyeshwa hapa chini.",
+  "Password reset link generated. SMTP is not configured, so the link is shown below.": "Kiungo cha kuweka upya nenosiri kimeundwa. SMTP haijasanidiwa, kwa hivyo kiungo kinaonyeshwa hapa chini.",
+  "Password reset link generated. Email delivery failed, so the link is shown below.": "Kiungo cha kuweka upya nenosiri kimeundwa. Uwasilishaji wa barua pepe umeshindikana, kwa hivyo kiungo kinaonyeshwa hapa chini.",
   "This reset link is invalid or has expired. Please request a new one.": "Kiungo hiki cha upya nenosiri si sahihi au kimeisha. Tafadhali omba kipya.",
   "Your password has been reset successfully. You can now log in with your new password.": "Nenosiri lako limewekwa upya kwa mafanikio. Sasa unaweza kuingia kwa kutumia nenosiri lako jipya.",
   "Failed to reset your password. Please try again.": "Imeshindikana kuweka upya nenosiri lako. Tafadhali jaribu tena."

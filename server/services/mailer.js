@@ -52,7 +52,7 @@ async function sendPasswordResetEmail(to, resetUrl) {
     const transport = getTransporter();
     if (!transport) {
         console.warn('[Mailer] SMTP not configured — password reset email will not be sent.');
-        return 'unconfigured';
+        return { status: 'unconfigured' };
     }
 
     const subject = 'Reset your KCNP Agro password';
@@ -100,10 +100,10 @@ async function sendPasswordResetEmail(to, resetUrl) {
             }),
             guard
         ]);
-        return 'sent';
+        return { status: 'sent' };
     } catch (err) {
         console.error('[Mailer] Failed to send password reset email:', err.message);
-        return 'error';
+        return { status: 'error', code: err.code || err.message };
     }
 }
 

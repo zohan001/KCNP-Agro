@@ -362,9 +362,9 @@
         }
 
         const RETRY_MAX = 5;
-        const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
 
         async function loadListings() {
+            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
             if (loadListings._timer) {
                 clearTimeout(loadListings._timer);
                 loadListings._timer = null;
@@ -385,7 +385,10 @@
                 const grid = document.getElementById('listings-grid');
                 document.getElementById('listings-empty').classList.add('hidden');
                 if (attempts <= RETRY_MAX) {
-                    grid.innerHTML = `<div class="col-span-full text-center py-16 text-amber-300">${t('mp_waking')} (${attempts}/${RETRY_MAX})</div>`;
+                    grid.innerHTML = `<div class="col-span-full text-center py-16">
+                        <div class="text-amber-300">${t('mp_waking')} (${attempts}/${RETRY_MAX})</div>
+                        <div class="mt-1 text-xs text-gray-500">${String((err && err.message) || err)}</div>
+                    </div>`;
                     const delay = Math.min(30000, 2500 * Math.pow(2, attempts - 1));
                     loadListings._timer = setTimeout(loadListings, delay);
                 } else {

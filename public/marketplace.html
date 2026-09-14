@@ -375,10 +375,9 @@
             if (search) params.set('search', search);
             if (category) params.set('category', category);
             const url = `${API}/products?${params.toString()}`;
+            let data;
             try {
-                const data = await fetchJSON(url, {}, 20000);
-                loadListings._attempts = 0;
-                renderListings(data.count ? data.data : []);
+                data = await fetchJSON(url, {}, 20000);
             } catch (err) {
                 console.error('Failed to load listings:', err);
                 const attempts = (loadListings._attempts = (loadListings._attempts || 0) + 1);
@@ -395,6 +394,15 @@
                     loadListings._attempts = 0;
                     grid.innerHTML = `<div class="col-span-full text-center py-16 text-red-400">${t('mp_failed_listings')}</div>`;
                 }
+                return;
+            }
+            loadListings._attempts = 0;
+            try {
+                renderListings(data.count ? data.data : []);
+            } catch (err) {
+                console.error('Failed to render listings:', err);
+                document.getElementById('listings-empty').classList.add('hidden');
+                document.getElementById('listings-grid').innerHTML = `<div class="col-span-full text-center py-16 text-red-400">${t('mp_failed_listings')}<div class="mt-1 text-xs text-gray-500">${String((err && err.message) || err)}</div></div>`;
             }
         }
 
@@ -569,15 +577,8 @@
             } catch (e) {}
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            setupAuthNav();
-            applyPostingPermissions();
-            loadListings();
-            bindImageUpload();
-            // ==============================
         // Buyer demand signals: count listing views (once per card per session)
         // and "I'm interested" clicks. These power the Market Insights analysis.
-        // ==============================
         const viewedPids = new Set();
         function trackViews() {
             if (!('IntersectionObserver' in window)) return;
@@ -616,6 +617,12 @@
                 if (btn) { btn.disabled = false; btn.classList.remove('opacity-60'); }
             }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupAuthNav();
+            applyPostingPermissions();
+            loadListings();
+            bindImageUpload();
 
         document.addEventListener('kcnp:lang', () => { loadListings(); applyPostingPermissions(); });
 

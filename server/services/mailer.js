@@ -33,7 +33,10 @@ function getTransporter() {
         auth: {
             user: config.mail.user,
             pass: config.mail.pass
-        }
+        },
+        connectionTimeout: 8000,
+        greetingTimeout: 8000,
+        socketTimeout: 8000
     });
     return transporter;
 }
@@ -86,13 +89,19 @@ async function sendPasswordResetEmail(to, resetUrl) {
     `;
 
     try {
-        await transport.sendMail({
-            from: config.mail.from,
-            to,
-            subject,
-            text,
-            html
+        const guard = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('SMTP send timed out')), 12000);
         });
+        await Promise.race([
+            transport.sendMail({
+                from: config.mail.from,
+                to,
+                subject,
+                text,
+                html
+            }),
+            guard
+        ]);
         return true;
     } catch (err) {
         console.error('[Mailer] Failed to send password reset email:', err.message);

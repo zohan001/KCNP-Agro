@@ -24,7 +24,7 @@ let transporter = null;
  */
 function getTransporter() {
     if (transporter) return transporter;
-    if (!config.mailConfigured()) return null;
+    if (!(config.mail.host && config.mail.user && config.mail.pass)) return null;
 
     transporter = nodemailer.createTransport({
         host: config.mail.host,
@@ -41,6 +41,54 @@ function getTransporter() {
     return transporter;
 }
 
+function parseFrom(raw) {
+    const m = String(raw || '').match(/^\s*(.*?)\s*<([^>]+)>\s*$/);
+    if (m) return { name: m[1].trim() || undefined, email: m[2].trim() };
+    return { email: String(raw || '').trim() };
+}
+
+/**
+ * Send via Brevo's HTTP API (port 443) — used as a fallback when SMTP
+ * (ports 465/587) is unreachable, which some hosts block.
+ *
+ * @returns {Promise<Object|null>} result object, or null if no API key.
+ */
+async function sendViaBrevoHttp(to, subject, text, html) {
+    const key = config.mail.apiKey;
+    if (!key) return null;
+
+    const sender = parseFrom(config.mail.from);
+    const body = {
+        sender: { name: sender.name, email: sender.email },
+        to: [{ email: to }],
+        subject,
+        textContent: text,
+        htmlContent: html
+    };
+
+    const ac = new AbortController();
+    const guard = setTimeout(() => ac.abort(), 12000);
+    try {
+        const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+            method: 'POST',
+            headers: {
+                'api-key': key,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(body),
+            signal: ac.signal
+        });
+        if (res.ok) return { status: 'sent' };
+        const detail = await res.text().catch(() => '');
+        return { status: 'error', code: 'Brevo HTTP ' + res.status + (detail ? ': ' + detail.slice(0, 140) : '') };
+    } catch (err) {
+        return { status: 'error', code: 'Brevo HTTP ' + (err.name === 'AbortError' ? 'timeout' : err.message) };
+    } finally {
+        clearTimeout(guard);
+    }
+}
+
 /**
  * Send a password reset email to the given address.
  *
@@ -49,12 +97,6 @@ function getTransporter() {
  * @returns {Promise<string>} 'unconfigured', 'sent' or 'error'
  */
 async function sendPasswordResetEmail(to, resetUrl) {
-    const transport = getTransporter();
-    if (!transport) {
-        console.warn('[Mailer] SMTP not configured — password reset email will not be sent.');
-        return { status: 'unconfigured' };
-    }
-
     const subject = 'Reset your KCNP Agro password';
 
     // Plain text body for simple clients
@@ -86,25 +128,45 @@ async function sendPasswordResetEmail(to, resetUrl) {
         </div>
     `;
 
-    try {
-        const guard = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error('SMTP send timed out')), 12000);
-        });
-        await Promise.race([
-            transport.sendMail({
-                from: config.mail.from,
-                to,
-                subject,
-                text,
-                html
-            }),
-            guard
-        ]);
-        return { status: 'sent' };
-    } catch (err) {
-        console.error('[Mailer] Failed to send password reset email:', err.message, err.address ? '-> ' + err.address + ':' + err.port : '');
-        return { status: 'error', code: (err.address ? err.address + ':' + err.port + ' ' : '') + (err.code || err.message) };
+    let httpError = null;
+    if (config.mail.apiKey) {
+        // Brevo HTTP API (port 443) is the reliable path on hosts that restrict SMTP egress.
+        const viaHttp = await sendViaBrevoHttp(to, subject, text, html);
+        if (viaHttp.status === 'sent') return viaHttp;
+        httpError = viaHttp.code;
+        console.error('[Mailer] Brevo HTTP failed:', httpError);
     }
+
+    const transport = getTransporter();
+    if (transport) {
+        try {
+            const guard = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('SMTP send timed out')), 12000);
+            });
+            await Promise.race([
+                transport.sendMail({
+                    from: config.mail.from,
+                    to,
+                    subject,
+                    text,
+                    html
+                }),
+                guard
+            ]);
+            return { status: 'sent' };
+        } catch (err) {
+            console.error('[Mailer] SMTP failed:', err.message, err.address ? '-> ' + err.address + ':' + err.port : '');
+        }
+    } else {
+        console.warn('[Mailer] SMTP not configured.');
+    }
+
+    if (config.mail.apiKey) {
+        console.error('[Mailer] Brevo HTTP already attempted above; all email paths failed.');
+        return { status: 'error', code: httpError || 'EALLFAILED' };
+    }
+    console.warn('[Mailer] No SMTP or Brevo key configured.');
+    return { status: 'unconfigured' };
 }
 
 module.exports = { sendPasswordResetEmail };

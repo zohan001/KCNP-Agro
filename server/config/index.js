@@ -46,11 +46,12 @@ module.exports = {
         secure: process.env.SMTP_SECURE === 'true',
         user: process.env.SMTP_USER || '',
         pass: process.env.SMTP_PASS || '',
-        from: process.env.MAIL_FROM || 'KCNP Agro <no-reply@kcnpagro.org>'
+        from: process.env.MAIL_FROM || 'KCNP Agro <no-reply@kcnpagro.org>',
+        apiKey: process.env.BREVO_API_KEY || ''
     },
 
-    // Whether SMTP credentials have been configured
+    // Whether any email delivery path has been configured (SMTP or Brevo HTTP API)
     mailConfigured() {
-        return Boolean(this.mail.host && this.mail.user && this.mail.pass);
+        return Boolean((this.mail.host && this.mail.user && this.mail.pass) || this.mail.apiKey);
     }
 };

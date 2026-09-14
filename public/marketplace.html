@@ -346,15 +346,29 @@
             }
         }
 
-        function fetchJSON(url, options = {}) {
+        function fetchJSON(url, options = {}, timeoutMs = 10000) {
             const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 10000);
+            const timeout = setTimeout(() => controller.abort(), timeoutMs);
             return fetch(url, { ...options, signal: controller.signal })
-                .then(res => res.json())
+                .then(res => {
+                    if (!res.ok) {
+                        return res.json().then(j => {
+                            throw new Error((j && j.message) || ('HTTP ' + res.status));
+                        });
+                    }
+                    return res.json();
+                })
                 .finally(() => clearTimeout(timeout));
         }
 
+        const RETRY_MAX = 5;
+        const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+
         async function loadListings() {
+            if (loadListings._timer) {
+                clearTimeout(loadListings._timer);
+                loadListings._timer = null;
+            }
             const search = document.getElementById('search-input').value.trim();
             const category = document.getElementById('category-filter').value;
             const params = new URLSearchParams();
@@ -362,17 +376,21 @@
             if (category) params.set('category', category);
             const url = `${API}/products?${params.toString()}`;
             try {
-                const data = await fetchJSON(url);
-                loadListings._retried = false;
+                const data = await fetchJSON(url, {}, 20000);
+                loadListings._attempts = 0;
                 renderListings(data.count ? data.data : []);
             } catch (err) {
                 console.error('Failed to load listings:', err);
+                const attempts = (loadListings._attempts = (loadListings._attempts || 0) + 1);
                 const grid = document.getElementById('listings-grid');
                 document.getElementById('listings-empty').classList.add('hidden');
-                grid.innerHTML = '<div class="col-span-full text-center py-16 text-red-400">Failed to load listings. Please make sure the server is running.</div>';
-                if (!loadListings._retried) {
-                    loadListings._retried = true;
-                    setTimeout(loadListings, 2500);
+                if (attempts <= RETRY_MAX) {
+                    grid.innerHTML = `<div class="col-span-full text-center py-16 text-amber-300">${t('mp_waking')} (${attempts}/${RETRY_MAX})</div>`;
+                    const delay = Math.min(30000, 2500 * Math.pow(2, attempts - 1));
+                    loadListings._timer = setTimeout(loadListings, delay);
+                } else {
+                    loadListings._attempts = 0;
+                    grid.innerHTML = `<div class="col-span-full text-center py-16 text-red-400">${t('mp_failed_listings')}</div>`;
                 }
             }
         }

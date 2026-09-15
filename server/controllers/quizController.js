@@ -1,11 +1,11 @@
 const Quiz = require('../models/Quiz');
 
 async function createQuiz(req, res) {
-    const { title, description, category, questions, published } = req.body;
+    const { title, titleSw, description, descriptionSw, category, questions, published } = req.body;
 
     try {
         const quiz = await Quiz.create({
-            title, description, category, questions, published
+            title, titleSw, description, descriptionSw, category, questions, published
         });
 
         return res.status(201).json({
@@ -25,14 +25,21 @@ async function createQuiz(req, res) {
 
 async function getQuizzes(req, res) {
     try {
-        const { category, page = 1, limit = 20 } = req.query;
-        const filter = { published: true };
+        const { category, page = 1, limit = 20, all } = req.query;
+        const isAdmin = req.user && req.user.role === 'admin';
+        const filter = {};
+        if (all === '1' && isAdmin) {
+            // admin content view: include drafts
+        } else {
+            filter.published = true;
+        }
 
         if (category) filter.category = category;
 
         const skip = (parseInt(page) - 1) * parseInt(limit);
+        const quizProjection = isAdmin && all === '1' ? {} : '-questions.correctIndex';
         const [quizzes, total] = await Promise.all([
-            Quiz.find(filter).sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit)).select('-questions.correctIndex'),
+            Quiz.find(filter).sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit)).select(quizProjection),
             Quiz.countDocuments(filter)
         ]);
 
@@ -54,8 +61,10 @@ async function getQuizzes(req, res) {
 }
 
 async function getQuiz(req, res) {
+    const isAdmin = req.user && req.user.role === 'admin';
+    const select = req.query.admin === '1' && isAdmin ? '' : '-questions.correctIndex';
     try {
-        const quiz = await Quiz.findById(req.params.id).select('-questions.correctIndex');
+        const quiz = await Quiz.findById(req.params.id).select(select);
         if (!quiz) {
             return res.status(404).json({
                 success: false,
@@ -117,7 +126,7 @@ async function updateQuiz(req, res) {
             });
         }
 
-        const allowed = ['title', 'description', 'category', 'questions', 'published'];
+        const allowed = ['title', 'titleSw', 'description', 'descriptionSw', 'category', 'questions', 'published'];
         allowed.forEach(field => {
             if (req.body[field] !== undefined) quiz[field] = req.body[field];
         });

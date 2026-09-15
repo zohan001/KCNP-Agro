@@ -24,7 +24,7 @@ const {
     validateQuiz
 } = require('../middleware/validation');
 
-const { authenticate, authorize } = require('../middleware/auth');
+const { authenticate, optionalAuthenticate, authorize } = require('../middleware/auth');
 
 // ==============================
 // Contact Message Routes
@@ -70,7 +70,7 @@ router.get('/market-insights', marketInsightsController.getMarketInsights);
 // Article / Knowledge Base Routes
 // ==============================
 router.post('/articles', authenticate, authorize('admin'), validateArticle, articleController.createArticle);
-router.get('/articles', articleController.getArticles);
+router.get('/articles', optionalAuthenticate, articleController.getArticles);
 router.get('/articles/:id', articleController.getArticle);
 router.put('/articles/:id', authenticate, authorize('admin'), articleController.updateArticle);
 router.delete('/articles/:id', authenticate, authorize('admin'), articleController.deleteArticle);
@@ -79,8 +79,8 @@ router.delete('/articles/:id', authenticate, authorize('admin'), articleControll
 // Quiz / Self-Assessment Routes
 // ==============================
 router.post('/quizzes', authenticate, authorize('admin'), validateQuiz, quizController.createQuiz);
-router.get('/quizzes', quizController.getQuizzes);
-router.get('/quizzes/:id', quizController.getQuiz);
+router.get('/quizzes', optionalAuthenticate, quizController.getQuizzes);
+router.get('/quizzes/:id', optionalAuthenticate, quizController.getQuiz);
 router.post('/quizzes/:id/submit', quizController.submitQuiz);
 router.put('/quizzes/:id', authenticate, authorize('admin'), quizController.updateQuiz);
 router.delete('/quizzes/:id', authenticate, authorize('admin'), quizController.deleteQuiz);

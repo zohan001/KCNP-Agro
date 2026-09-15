@@ -69,7 +69,7 @@
                         <button type="button" data-tab="users" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Users</button>
                         <button type="button" data-tab="subscriptions" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Payments</button>
                         <button type="button" data-tab="listings" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Listings</button>
-                        <button type="button" data-tab="audit" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Audit Log</button>
+                        <button type="button" data-tab="education" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Education</button>
                     </div>
 
                     <!-- Tab panels -->
@@ -77,6 +77,19 @@
                     <section id="panel-subscriptions" class="admin-panel glass-card rounded-2xl p-6 md:p-8 hidden"></section>
                     <section id="panel-listings" class="admin-panel glass-card rounded-2xl p-6 md:p-8 hidden"></section>
                     <section id="panel-audit" class="admin-panel glass-card rounded-2xl p-6 md:p-8 hidden"></section>
+                    <section id="panel-education" class="admin-panel glass-card rounded-2xl p-6 md:p-8 hidden">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+                            <div class="flex flex-wrap gap-2" id="edu-subtabs">
+                                <button type="button" data-ektab="articles" class="text-sm font-semibold px-4 py-2 rounded-lg bg-primary-600 text-white">Articles</button>
+                                <button type="button" data-ektab="quizzes" class="text-sm font-semibold px-4 py-2 rounded-lg bg-white/5 text-gray-300 hover:bg-white/10">Quizzes</button>
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="button" id="edu-new" class="cta-btn px-4 py-2 rounded-lg text-white font-semibold text-sm">New Article</button>
+                                <button type="button" id="edu-cancel" class="hidden px-4 py-2 rounded-lg bg-white/5 text-gray-300 hover:bg-white/10 text-sm font-semibold">Cancel</button>
+                            </div>
+                        </div>
+                        <div id="edu-view"></div>
+                    </section>
                 </div>
 
             </div>
@@ -138,7 +151,7 @@
                     b.className = 'admin-tab px-4 py-2 rounded-lg text-sm font-semibold ' +
                         (on ? 'bg-primary-600 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10');
                 });
-                ['users', 'subscriptions', 'listings', 'audit'].forEach(function (nm) {
+                ['users', 'subscriptions', 'listings', 'audit', 'education'].forEach(function (nm) {
                     var p = document.getElementById('panel-' + nm);
                     if (p) p.classList.toggle('hidden', nm !== name);
                 });
@@ -146,6 +159,7 @@
                 else if (name === 'subscriptions') loadSubscriptions();
                 else if (name === 'listings') loadListings();
                 else if (name === 'audit') loadAudit();
+                else if (name === 'education') loadEduView();
             }
 
             function loadOverview() {
@@ -345,6 +359,274 @@
                 }).catch(function () { panel.innerHTML = '<div class="text-red-300 text-sm text-center py-10">Network error.</div>'; });
             }
 
+            var eduTab = 'articles';
+            var ARTICLE_CATS = ['climate-smart-farming', 'water-management', 'soil-health', 'crop-diversification', 'carbon-credits', 'market-access', 'policy', 'general'];
+            var QUIZ_CATS = ['climate-basics', 'soil-management', 'water-conservation', 'crop-planning', 'carbon-footprint', 'sustainability', 'general'];
+
+            var inputCls = 'w-full bg-dark-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary-500';
+            var labelCls = 'block text-xs uppercase tracking-wide text-gray-400 mb-1 mt-4 first:mt-0';
+
+            function setEdu(t) {
+                eduTab = t;
+                document.querySelectorAll('[data-ektab]').forEach(function (b) {
+                    var on = b.getAttribute('data-ektab') === t;
+                    b.className = 'text-sm font-semibold px-4 py-2 rounded-lg ' +
+                        (on ? 'bg-primary-600 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10');
+                });
+                document.getElementById('edu-cancel').classList.add('hidden');
+                document.getElementById('edu-new').textContent = t === 'articles' ? 'New Article' : 'New Quiz';
+                loadEduView();
+            }
+
+            function loadEduView() {
+                if (eduTab === 'articles') loadArticles();
+                else loadQuizzes();
+            }
+
+            function eduNote(msg) {
+                return '<div class="text-gray-400 text-sm text-center py-10">' + esc(msg) + '</div>';
+            }
+
+            function loadArticles() {
+                var view = document.getElementById('edu-view');
+                view.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">Loading articles...</div>';
+                api('/articles?all=1').then(function (r) {
+                    if (!r.data.success) { view.innerHTML = eduNote('Failed to load articles.'); return; }
+                    var arts = r.data.data;
+                    if (!arts.length) { view.innerHTML = eduNote('No articles yet. Click "New Article" to write your first one.'); return; }
+                    view.innerHTML = '<div class="overflow-x-auto"><table class="w-full text-sm"><thead>' +
+                        '<tr class="text-left text-gray-400 uppercase tracking-wide text-xs">' +
+                        '<th class="pb-3 pr-3">Title</th><th class="pb-3 pr-3">Category</th><th class="pb-3 pr-3">Author</th><th class="pb-3 pr-3">Status</th><th class="pb-3 pr-3">Updated</th><th class="pb-3">Actions</th>' +
+                        '</tr></thead><tbody>' + arts.map(function (a) {
+                            var st = a.published
+                                ? '<span class="text-primary-300 font-semibold">PUBLISHED</span>'
+                                : '<span class="text-gray-500">DRAFT</span>';
+                            return '<tr class="border-t border-white/5">' +
+                                '<td class="py-3 pr-3 text-white">' + esc(a.title) + '<span class="block text-xs text-gray-500">' + esc(a.summary || '') + '</span></td>' +
+                                '<td class="py-3 pr-3 text-gray-400 text-xs">' + esc(a.category) + '</td>' +
+                                '<td class="py-3 pr-3 text-gray-400 text-xs">' + esc(a.author || '—') + '</td>' +
+                                '<td class="py-3 pr-3">' + st + '</td>' +
+                                '<td class="py-3 pr-3 text-gray-500 text-xs">' + fmtDate(a.updatedAt) + '</td>' +
+                                '<td class="py-3">' +
+                                '<button data-edit="' + a._id + '" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Edit</button>' +
+                                (a.published
+                                    ? '<button data-pub="' + a._id + '" data-val="false" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Unpublish</button>'
+                                    : '<button data-pub="' + a._id + '" data-val="true" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Publish</button>') +
+                                '<button data-del="' + a._id + '" class="text-[11px] px-2 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20">Delete</button>' +
+                                '</td></tr>';
+                        }).join('') + '</tbody></table></div>';
+
+                    view.querySelectorAll('[data-edit]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            api('/articles/' + b.getAttribute('data-edit')).then(function (r) {
+                                if (r.data.success && r.data.data && r.data.data.article) articleEditor(r.data.data.article);
+                            });
+                        });
+                    });
+                    view.querySelectorAll('[data-pub]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            api('/articles/' + b.getAttribute('data-pub'), { method: 'PUT', body: { published: b.getAttribute('data-val') === 'true' } })
+                                .then(function () { loadArticles(); });
+                        });
+                    });
+                    view.querySelectorAll('[data-del]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            if (!confirm('Delete this article permanently?')) return;
+                            api('/articles/' + b.getAttribute('data-del'), { method: 'DELETE' })
+                                .then(function () { loadArticles(); loadOverview(); });
+                        });
+                    });
+                }).catch(function () { view.innerHTML = eduNote('Network error.'); });
+            }
+
+            function loadQuizzes() {
+                var view = document.getElementById('edu-view');
+                view.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">Loading quizzes...</div>';
+                api('/quizzes?all=1').then(function (r) {
+                    if (!r.data.success) { view.innerHTML = eduNote('Failed to load quizzes.'); return; }
+                    var qs = r.data.data;
+                    if (!qs.length) { view.innerHTML = eduNote('No quizzes yet. Click "New Quiz" to create one.'); return; }
+                    view.innerHTML = '<div class="overflow-x-auto"><table class="w-full text-sm"><thead>' +
+                        '<tr class="text-left text-gray-400 uppercase tracking-wide text-xs">' +
+                        '<th class="pb-3 pr-3">Title</th><th class="pb-3 pr-3">Category</th><th class="pb-3 pr-3">Questions</th><th class="pb-3 pr-3">Status</th><th class="pb-3 pr-3">Updated</th><th class="pb-3">Actions</th>' +
+                        '</tr></thead><tbody>' + qs.map(function (q) {
+                            var st = q.published
+                                ? '<span class="text-primary-300 font-semibold">PUBLISHED</span>'
+                                : '<span class="text-gray-500">DRAFT</span>';
+                            return '<tr class="border-t border-white/5">' +
+                                '<td class="py-3 pr-3 text-white">' + esc(q.title) + '<span class="block text-xs text-gray-500">' + esc(q.description || '') + '</span></td>' +
+                                '<td class="py-3 pr-3 text-gray-400 text-xs">' + esc(q.category) + '</td>' +
+                                '<td class="py-3 pr-3 text-gray-300">' + (q.questions || []).length + '</td>' +
+                                '<td class="py-3 pr-3">' + st + '</td>' +
+                                '<td class="py-3 pr-3 text-gray-500 text-xs">' + fmtDate(q.updatedAt) + '</td>' +
+                                '<td class="py-3">' +
+                                '<button data-edit="' + q._id + '" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Edit</button>' +
+                                (q.published
+                                    ? '<button data-pub="' + q._id + '" data-val="false" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Unpublish</button>'
+                                    : '<button data-pub="' + q._id + '" data-val="true" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Publish</button>') +
+                                '<button data-del="' + q._id + '" class="text-[11px] px-2 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20">Delete</button>' +
+                                '</td></tr>';
+                        }).join('') + '</tbody></table></div>';
+
+                    view.querySelectorAll('[data-edit]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            api('/quizzes/' + b.getAttribute('data-edit') + '?admin=1').then(function (r) {
+                                if (r.data.success && r.data.data && r.data.data.quiz) quizEditor(r.data.data.quiz);
+                            });
+                        });
+                    });
+                    view.querySelectorAll('[data-pub]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            api('/quizzes/' + b.getAttribute('data-pub'), { method: 'PUT', body: { published: b.getAttribute('data-val') === 'true' } })
+                                .then(function () { loadQuizzes(); });
+                        });
+                    });
+                    view.querySelectorAll('[data-del]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            if (!confirm('Delete this quiz permanently?')) return;
+                            api('/quizzes/' + b.getAttribute('data-del'), { method: 'DELETE' })
+                                .then(function () { loadQuizzes(); loadOverview(); });
+                        });
+                    });
+                }).catch(function () { view.innerHTML = eduNote('Network error.'); });
+            }
+
+            function editorWrap(title, inner) {
+                document.getElementById('edu-cancel').classList.remove('hidden');
+                document.getElementById('edu-view').innerHTML =
+                    '<div class="max-w-3xl mx-auto"><h3 class="font-heading text-xl font-bold text-white mb-4">' + title + '</h3>' + inner +
+                    '<div class="flex gap-3 mt-6"><button type="button" id="edu-save" class="cta-btn px-6 py-2.5 rounded-xl text-white font-semibold text-sm">Save</button>' +
+                    '<button type="button" id="edu-discard" class="px-6 py-2.5 rounded-xl bg-white/5 text-gray-300 hover:bg-white/10 text-sm font-semibold">Discard</button></div></div>';
+                document.getElementById('edu-discard').addEventListener('click', loadEduView);
+            }
+
+            function catSelect(cats, cur) {
+                return '<select id="ed-cat" class="' + inputCls + '">' + cats.map(function (c) {
+                        return '<option value="' + c + '"' + (c === cur ? ' selected' : '') + '>' + c + '</option>';
+                    }).join('') + '</select>';
+            }
+
+            function articleEditor(a) {
+                a = a || {};
+                var inner =
+                    '<label class="' + labelCls + '">Title (English)</label><input id="ed-title" class="' + inputCls + '" value="' + esc(a.title || '') + '" placeholder="e.g. Crop Rotation for Coastal Soils">' +
+                    '<label class="' + labelCls + '">Title (Kiswahili)</label><input id="ed-titleSw" class="' + inputCls + '" value="' + esc(a.titleSw || '') + '">' +
+                    '<label class="' + labelCls + '">Category</label>' + catSelect(ARTICLE_CATS, a.category || 'general') +
+                    '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">' +
+                    '<div><label class="' + labelCls + '">Author</label><input id="ed-author" class="' + inputCls + '" value="' + esc(a.author || '') + '" placeholder="KCNP Agro Team"></div>' +
+                    '<div class="flex items-end"><label class="flex items-center gap-2 text-sm text-gray-300 cursor-pointer"><input type="checkbox" id="ed-published"' + (a.published ? ' checked' : '') + ' class="accent-primary-500 w-4 h-4"> Published</label></div>' +
+                    '</div>' +
+                    '<label class="' + labelCls + '">Summary (English)</label><textarea id="ed-summary" class="' + inputCls + '" rows="2">' + esc(a.summary || '') + '</textarea>' +
+                    '<label class="' + labelCls + '">Summary (Kiswahili)</label><textarea id="ed-summarySw" class="' + inputCls + '" rows="2">' + esc(a.summarySw || '') + '</textarea>' +
+                    '<label class="' + labelCls + '">Content (English) — HTML allowed, at least 50 characters</label><textarea id="ed-content" class="' + inputCls + '" rows="10">' + esc(a.content || '') + '</textarea>' +
+                    '<label class="' + labelCls + '">Content (Kiswahili)</label><textarea id="ed-contentSw" class="' + inputCls + '" rows="8">' + esc(a.contentSw || '') + '</textarea>';
+                editorWrap(a._id ? 'Edit Article' : 'New Article', inner);
+                document.getElementById('edu-save').addEventListener('click', function () {
+                    var body = {
+                        title: document.getElementById('ed-title').value.trim(),
+                        titleSw: document.getElementById('ed-titleSw').value.trim(),
+                        category: document.getElementById('ed-cat').value,
+                        author: document.getElementById('ed-author').value.trim(),
+                        published: document.getElementById('ed-published').checked,
+                        summary: document.getElementById('ed-summary').value.trim(),
+                        summarySw: document.getElementById('ed-summarySw').value.trim(),
+                        content: document.getElementById('ed-content').value.trim(),
+                        contentSw: document.getElementById('ed-contentSw').value.trim()
+                    };
+                    if (!body.title || !body.content) { alert('Title and content are required.'); return; }
+                    var path = a._id ? '/articles/' + a._id : '/articles';
+                    var method = a._id ? 'PUT' : 'POST';
+                    api(path, { method: method, body: body }).then(function (r) {
+                        alert(r.data.message || 'Saved.');
+                        if (r.data.success) { loadEduView(); loadOverview(); }
+                    });
+                });
+            }
+
+            function quizEditor(q) {
+                q = q || {};
+                var inner =
+                    '<label class="' + labelCls + '">Quiz title (English)</label><input id="ed-title" class="' + inputCls + '" value="' + esc(q.title || '') + '">' +
+                    '<label class="' + labelCls + '">Quiz title (Kiswahili)</label><input id="ed-titleSw" class="' + inputCls + '" value="' + esc(q.titleSw || '') + '">' +
+                    '<label class="' + labelCls + '">Category</label>' + catSelect(QUIZ_CATS, q.category || 'general') +
+                    '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">' +
+                    '<div><label class="' + labelCls + '">Description (English)</label><textarea id="ed-desc" class="' + inputCls + '" rows="2">' + esc(q.description || '') + '</textarea></div>' +
+                    '<div><label class="' + labelCls + '">Description (Kiswahili)</label><textarea id="ed-descSw" class="' + inputCls + '" rows="2">' + esc(q.descriptionSw || '') + '</textarea></div>' +
+                    '</div>' +
+                    '<div class="flex items-end mt-4"><label class="flex items-center gap-2 text-sm text-gray-300 cursor-pointer"><input type="checkbox" id="ed-published"' + (q.published ? ' checked' : '') + ' class="accent-primary-500 w-4 h-4"> Published</label></div>' +
+                    '<div class="flex items-center justify-between mt-6 mb-3"><h4 class="font-heading text-lg font-bold text-white">Questions</h4>' +
+                    '<button type="button" id="q-add" class="text-[11px] px-3 py-1.5 rounded bg-primary-500/10 text-primary-300 hover:bg-primary-500/20 font-semibold">+ Add Question</button></div>' +
+                    '<div id="q-list"></div>';
+                editorWrap(q._id ? 'Edit Quiz' : 'New Quiz', inner);
+                document.getElementById('q-add').addEventListener('click', function () { addQRow(); });
+                (q.questions || []).forEach(function (qq) { addQRow(qq); });
+                if (!(q.questions || []).length) addQRow();
+                document.getElementById('edu-save').addEventListener('click', function () {
+                    var rows = document.getElementById('q-list').querySelectorAll('.quiz-q');
+                    var questions = [];
+                    rows.forEach(function (row) {
+                        var en = row.querySelector('.q-en').value.trim();
+                        if (!en) return;
+                        var oen = row.querySelector('.q-oen').value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+                        var corr = parseInt(row.querySelector('.q-corr').value, 10) || 1;
+                        var question = {
+                            question: en,
+                            questionSw: row.querySelector('.q-sw').value.trim(),
+                            options: oen.length >= 2 ? oen : null,
+                            correctIndex: Math.min(Math.max(corr, 1), Math.max(oen.length, 1)) - 1,
+                            explanation: row.querySelector('.q-ex').value.trim(),
+                            explanationSw: row.querySelector('.q-exsw').value.trim()
+                        };
+                        var osw = row.querySelector('.q-osw').value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+                        if (osw.length) question.optionsSw = osw;
+                        questions.push(question);
+                    });
+                    var body = {
+                        title: document.getElementById('ed-title').value.trim(),
+                        titleSw: document.getElementById('ed-titleSw').value.trim(),
+                        category: document.getElementById('ed-cat').value,
+                        description: document.getElementById('ed-desc').value.trim(),
+                        descriptionSw: document.getElementById('ed-descSw').value.trim(),
+                        published: document.getElementById('ed-published').checked,
+                        questions: questions
+                    };
+                    if (!body.title) { alert('Quiz title is required.'); return; }
+                    if (!body.questions.length) { alert('At least one complete question is required.'); return; }
+                    var path = q._id ? '/quizzes/' + q._id : '/quizzes';
+                    var method = q._id ? 'PUT' : 'POST';
+                    api(path, { method: method, body: body }).then(function (r) {
+                        alert(r.data.message || 'Saved.');
+                        if (r.data.success) { loadEduView(); loadOverview(); }
+                    });
+                });
+            }
+
+            var qSeq = 0;
+            function addQRow(qq) {
+                qq = qq || {};
+                var labelTwo = 'text-xs text-gray-500 mb-1';
+                var row = document.createElement('div');
+                row.className = 'quiz-q border border-white/10 rounded-xl p-4 mb-4 bg-dark-900/40';
+                row.innerHTML =
+                    '<div class="flex justify-between items-center mb-3"><span class="text-xs font-bold uppercase tracking-wide text-gray-400">Question ' + (document.getElementById('q-list').children.length + 1) + '</span>' +
+                    '<button type="button" class="q-remove text-[11px] px-2 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20">Remove</button></div>' +
+                    '<input class="q-en ' + inputCls + '" placeholder="Question (English)" value="' + esc(qq.question || '') + '">' +
+                    '<input class="q-sw ' + inputCls + ' mt-2" placeholder="Question (Kiswahili)" value="' + esc(qq.questionSw || '') + '">' +
+                    '<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">' +
+                    '<div><p class="' + labelTwo + '">Options (English) — one per line</p>' +
+                    '<textarea class="q-oen ' + inputCls + '" rows="4">' + esc((qq.options || []).join('\n')) + '</textarea>' +
+                    '<label class="' + labelTwo + ' mt-2">Correct option (line number)</label><input type="number" class="q-corr ' + inputCls + '" min="1" value="' + ((qq.correctIndex !== undefined && qq.correctIndex + 1) || 1) + '"></div>' +
+                    '<div><p class="' + labelTwo + '">Options (Kiswahili) — one per line</p>' +
+                    '<textarea class="q-osw ' + inputCls + '" rows="4">' + esc((qq.optionsSw || []).join('\n')) + '</textarea></div>' +
+                    '</div>' +
+                    '<input class="q-ex ' + inputCls + ' mt-2" placeholder="Explanation (English)" value="' + esc(qq.explanation || '') + '">' +
+                    '<input class="q-exsw ' + inputCls + ' mt-2" placeholder="Explanation (Kiswahili)" value="' + esc(qq.explanationSw || '') + '">';
+                document.getElementById('q-list').appendChild(row);
+                row.querySelector('.q-remove').addEventListener('click', function () {
+                    if (document.getElementById('q-list').children.length > 1) row.remove();
+                });
+            }
+
             function init() {
                 var auth = getAuth();
                 if (!auth.token || !auth.user || auth.user.role !== 'admin') {
@@ -363,6 +645,14 @@
                 document.querySelectorAll('.admin-tab').forEach(function (b) {
                     b.addEventListener('click', function () { switchTab(b.getAttribute('data-tab')); });
                 });
+                document.querySelectorAll('[data-ektab]').forEach(function (b) {
+                    b.addEventListener('click', function () { setEdu(b.getAttribute('data-ektab')); });
+                });
+                document.getElementById('edu-new').addEventListener('click', function () {
+                    if (eduTab === 'articles') articleEditor();
+                    else quizEditor();
+                });
+                document.getElementById('edu-cancel').addEventListener('click', loadEduView);
                 loadOverview();
                 switchTab('users');
             }

@@ -2,11 +2,11 @@ const Article = require('../models/Article');
 const mongoose = require('mongoose');
 
 async function createArticle(req, res) {
-    const { title, content, summary, category, tags, author, published } = req.body;
+    const { title, titleSw, summary, summarySw, content, contentSw, category, tags, author, published } = req.body;
 
     try {
         const article = await Article.create({
-            title, content, summary, category, tags, author, published
+            title, titleSw, summary, summarySw, content, contentSw, category, tags, author, published
         });
 
         return res.status(201).json({
@@ -25,8 +25,14 @@ async function createArticle(req, res) {
 
 async function getArticles(req, res) {
     try {
-        const { category, search, page = 1, limit = 20 } = req.query;
-        const filter = { published: true };
+        const { category, search, page = 1, limit = 20, all } = req.query;
+        const isAdmin = req.user && req.user.role === 'admin';
+        const filter = {};
+        if (all === '1' && isAdmin) {
+            // admin content view: include drafts
+        } else {
+            filter.published = true;
+        }
 
         if (category) filter.category = category;
         if (search) filter.$text = { $search: search };
@@ -95,7 +101,7 @@ async function updateArticle(req, res) {
             });
         }
 
-        const allowed = ['title', 'content', 'summary', 'category', 'tags', 'author', 'published'];
+        const allowed = ['title', 'titleSw', 'summary', 'summarySw', 'content', 'contentSw', 'category', 'tags', 'author', 'published'];
         allowed.forEach(field => {
             if (req.body[field] !== undefined) article[field] = req.body[field];
         });

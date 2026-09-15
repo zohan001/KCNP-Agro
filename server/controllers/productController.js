@@ -2,11 +2,32 @@ const Product = require('../models/Product');
 const ListingEvent = require('../models/ListingEvent');
 const { attachEventCounts } = require('./marketInsightsController');
 const { logAudit } = require('../db/database');
+const { getPlans } = require('./paymentController');
+
+/**
+ * Farmers must hold an active subscription (or an admin grant) to post or
+ * edit listings. Traders and admins are exempt.
+ */
+function requireActiveMembership(req) {
+    if (!req.user || req.user.role === 'admin' || req.user.role === 'trader') return null;
+    const m = req.user.membership;
+    if (m && m.status === 'active' && m.expiresAt && new Date(m.expiresAt) > new Date()) return null;
+    return {
+        code: 'SUBSCRIPTION_REQUIRED',
+        message: 'An active subscription is required to post listings. Choose a plan and subscribe.',
+        data: { plans: getPlans() }
+    };
+}
 
 async function createProduct(req, res) {
     const { title, description, category, price, unit, location, contactEmail, contactPhone, image } = req.body;
 
     try {
+        const subReq = requireActiveMembership(req);
+        if (subReq) {
+            return res.status(402).json({ success: false, ...subReq });
+        }
+
         const product = await Product.create({
             title, description, category, price, unit, location,
             contactEmail, contactPhone, image,
@@ -119,6 +140,11 @@ async function updateProduct(req, res) {
                 success: false,
                 message: 'You can only edit your own listings.'
             });
+        }
+
+        const subReq = requireActiveMembership(req);
+        if (subReq) {
+            return res.status(402).json({ success: false, ...subReq });
         }
 
         const allowed = ['title', 'description', 'category', 'price', 'unit', 'location', 'contactEmail', 'contactPhone', 'image', 'active'];

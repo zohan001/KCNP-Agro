@@ -9,6 +9,8 @@ const articleController = require('../controllers/articleController');
 const quizController = require('../controllers/quizController');
 const statsController = require('../controllers/statsController');
 const marketInsightsController = require('../controllers/marketInsightsController');
+const paymentController = require('../controllers/paymentController');
+const adminController = require('../controllers/adminController');
 
 const {
     validateContactMessage,
@@ -42,6 +44,8 @@ router.get('/newsletter', newsletterController.getSubscribers);
 router.post('/auth/register', validateRegister, authController.register);
 router.post('/auth/login', validateLogin, authController.login);
 router.get('/auth/profile', authenticate, authController.getProfile);
+router.post('/auth/activate', authController.activate);
+router.post('/auth/resend-activation', authController.resendActivation);
 router.post('/auth/forgot-password', validateForgotPassword, authController.forgotPassword);
 router.post('/auth/reset-password', validateResetPassword, authController.resetPassword);
 
@@ -85,6 +89,30 @@ router.delete('/quizzes/:id', authenticate, authorize('admin'), quizController.d
 // Stats
 // ==============================
 router.get('/stats', statsController.getStats);
+
+// ==============================
+// Subscriptions / Payments
+// ==============================
+router.get('/plans', paymentController.getPlansHandler);
+router.get('/my/membership', authenticate, paymentController.getMyMembership);
+router.post('/payment/request', authenticate, authorize('farmer', 'admin'), paymentController.requestPayment);
+
+// ==============================
+// Super Admin
+// ==============================
+router.get('/admin/overview', authenticate, authorize('admin'), adminController.overview);
+router.get('/admin/users', authenticate, authorize('admin'), adminController.listUsers);
+router.put('/admin/users/:id', authenticate, authorize('admin'), adminController.updateUser);
+router.delete('/admin/users/:id', authenticate, authorize('admin'), adminController.deleteUser);
+router.get('/admin/subscriptions', authenticate, authorize('admin'), adminController.listSubscriptions);
+router.post('/admin/subscriptions/:id/approve', authenticate, authorize('admin'),
+    (req, res) => adminController.setSubscriptionStatus(req, res, 'active'));
+router.post('/admin/subscriptions/:id/deny', authenticate, authorize('admin'),
+    (req, res) => adminController.setSubscriptionStatus(req, res, 'denied'));
+router.get('/admin/listings', authenticate, authorize('admin'), adminController.listProducts);
+router.put('/admin/listings/:id', authenticate, authorize('admin'), adminController.updateListing);
+router.delete('/admin/listings/:id', authenticate, authorize('admin'), adminController.deleteListing);
+router.get('/admin/audit-log', authenticate, authorize('admin'), adminController.auditLog);
 
 // ==============================
 // Health Check

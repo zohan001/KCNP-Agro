@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KCNP Agro super admin control panel.">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Super Admin | KCNP Agro</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <script>
+        document.documentElement.classList.add('js');
+        function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }
+    </script>
+    <script src="/js/ux.js" defer></script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-white/5">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" role="navigation" aria-label="Admin navigation">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="/" class="flex items-center gap-2 group" aria-label="KCNP Agro Home">
+                    <img src="/logo.jpg" alt="KCNP Agro logo" class="w-10 h-10 rounded-xl object-cover transition-transform duration-300 group-hover:scale-110" width="40" height="40">
+                    <span class="font-heading font-bold text-xl text-white">KCNP<span class="text-primary-400">Agro</span></span>
+                </a>
+                <div class="flex items-center gap-6">
+                    <span class="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full bg-red-500/10 text-red-300 border border-red-500/30">Admin</span>
+                    <a href="/dashboard" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300">Dashboard</a>
+                    <a href="/" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300">Site</a>
+                    <button id="logout-btn" type="button" class="cta-btn inline-flex items-center px-4 py-2 rounded-xl text-white font-semibold text-sm">Logout</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content" class="pt-20 md:pt-24">
+        <section class="relative py-12 md:py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+
+                <!-- Unauthorized / not logged in -->
+                <div id="admin-guard" class="hidden max-w-xl mx-auto text-center glass-card rounded-2xl p-10">
+                    <h1 class="font-heading text-2xl font-bold text-white mb-3">Restricted area</h1>
+                    <p class="text-gray-400 text-sm mb-6">This control panel is reserved for KCNP Agro administrators. Please log in with an admin account.</p>
+                    <a href="/login" class="cta-btn inline-block px-6 py-3 rounded-xl text-white font-semibold text-sm">Login</a>
+                </div>
+
+                <div id="admin-app" class="hidden">
+                    <!-- Title -->
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+                        <div>
+                            <h1 class="font-heading text-3xl md:text-4xl font-bold text-white">Super Admin Dashboard</h1>
+                            <p class="text-gray-400 text-sm mt-1">Everything happens here — users, listings, payments, audit.</p>
+                        </div>
+                        <button id="refresh-btn" type="button" class="cta-btn px-5 py-2.5 rounded-xl text-white font-semibold text-sm">Refresh</button>
+                    </div>
+
+                    <!-- Overview cards -->
+                    <div id="overview-cards" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10"></div>
+
+                    <!-- Tabs -->
+                    <div class="flex flex-wrap gap-2 mb-6" id="admin-tabs" role="tablist">
+                        <button type="button" data-tab="users" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Users</button>
+                        <button type="button" data-tab="subscriptions" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Payments</button>
+                        <button type="button" data-tab="listings" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Listings</button>
+                        <button type="button" data-tab="audit" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Audit Log</button>
+                    </div>
+
+                    <!-- Tab panels -->
+                    <section id="panel-users" class="admin-panel glass-card rounded-2xl p-6 md:p-8"></section>
+                    <section id="panel-subscriptions" class="admin-panel glass-card rounded-2xl p-6 md:p-8 hidden"></section>
+                    <section id="panel-listings" class="admin-panel glass-card rounded-2xl p-6 md:p-8 hidden"></section>
+                    <section id="panel-audit" class="admin-panel glass-card rounded-2xl p-6 md:p-8 hidden"></section>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <script>
+        (function () {
+            'use strict';
+            var API = '/api';
+
+            function getAuth() {
+                try {
+                    var u = JSON.parse(localStorage.getItem('user') || 'null');
+                    var t = localStorage.getItem('kcnp_token');
+                    return { user: u, token: t };
+                } catch (e) { return { user: null, token: null }; }
+            }
+
+            function esc(s) {
+                return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
+            }
+
+            function fmtDate(d) {
+                if (!d) return '—';
+                var dt = new Date(d);
+                return isNaN(dt) ? '—' : dt.toLocaleString();
+            }
+
+            function api(path, options) {
+                options = options || {};
+                var headers = { 'Authorization': 'Bearer ' + getAuth().token };
+                if (options.body) {
+                    headers['Content-Type'] = 'application/json';
+                    options.body = JSON.stringify(options.body);
+                }
+                return fetch(API + path, Object.assign({}, options, { headers: headers }))
+                    .then(function (r) { return r.json().then(function (d) { return { status: r.status, data: d }; }); });
+            }
+
+            var activeTab = 'users';
+
+            function switchTab(name) {
+                activeTab = name;
+                document.querySelectorAll('.admin-tab').forEach(function (b) {
+                    var on = b.getAttribute('data-tab') === name;
+                    b.className = 'admin-tab px-4 py-2 rounded-lg text-sm font-semibold ' +
+                        (on ? 'bg-primary-600 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10');
+                });
+                ['users', 'subscriptions', 'listings', 'audit'].forEach(function (nm) {
+                    var p = document.getElementById('panel-' + nm);
+                    if (p) p.classList.toggle('hidden', nm !== name);
+                });
+                if (name === 'users') loadUsers();
+                else if (name === 'subscriptions') loadSubscriptions();
+                else if (name === 'listings') loadListings();
+                else if (name === 'audit') loadAudit();
+            }
+
+            function loadOverview() {
+                var wrap = document.getElementById('overview-cards');
+                api('/admin/overview').then(function (r) {
+                    if (!r.data.success) return;
+                    var d = r.data.data;
+                    var cards = [
+                        { label: 'Total users', value: d.totalUsers, cls: 'text-white' },
+                        { label: 'Pending payments', value: d.pendingPayments, cls: d.pendingPayments > 0 ? 'text-accent-400' : 'text-primary-400' },
+                        { label: 'Active subs', value: d.activeSubs, cls: 'text-primary-400' },
+                        { label: 'Listings', value: d.activeListings + ' / ' + d.listings, cls: 'text-white' },
+                        { label: 'Farmers', value: d.farmers, cls: 'text-primary-400' },
+                        { label: 'Traders', value: d.traders, cls: 'text-accent-400' },
+                        { label: 'Admins', value: d.admins, cls: 'text-red-400' },
+                        { label: 'Articles', value: d.articles, cls: 'text-gray-200' }
+                    ];
+                    wrap.innerHTML = cards.map(function (c) {
+                        return '<div class="glass-card rounded-xl p-5 text-center">' +
+                            '<div class="text-2xl font-heading font-extrabold ' + c.cls + ' mb-1">' + c.value + '</div>' +
+                            '<p class="text-[11px] sm:text-xs text-gray-400 uppercase tracking-wide">' + c.label + '</p></div>';
+                    }).join('');
+                }).catch(function () {});
+            }
+
+            function loadUsers() {
+                var panel = document.getElementById('panel-users');
+                panel.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">Loading users...</div>';
+                api('/admin/users').then(function (r) {
+                    if (!r.data.success) { panel.innerHTML = '<div class="text-red-300 text-sm text-center py-10">Failed to load users.</div>'; return; }
+                    var users = r.data.data;
+                    if (!users.length) { panel.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">No users yet.</div>'; return; }
+                    panel.innerHTML = '<div class="overflow-x-auto"><table class="w-full text-sm"><thead>' +
+                        '<tr class="text-left text-gray-400 uppercase tracking-wide text-xs">' +
+                        '<th class="pb-3 pr-3">Name</th><th class="pb-3 pr-3">Email</th><th class="pb-3 pr-3">Role</th><th class="pb-3 pr-3">Status</th><th class="pb-3 pr-3">Membership</th><th class="pb-3 pr-3">Joined</th><th class="pb-3">Actions</th>' +
+                        '</tr></thead><tbody>' + users.map(function (u) {
+                            var me = u._id === (getAuth().user && getAuth().user._id);
+                            var badge = u.isActive
+                                ? '<span class="text-primary-300 font-semibold">Active</span>'
+                                : '<span class="text-red-300 font-semibold">Inactive</span>';
+                            var m = u.membership || {};
+                            var status = m.status === 'active'
+                                ? '<span class="text-primary-300 font-semibold">' + (m.plan || '').toUpperCase() + '</span>'
+                                : (m.status === 'pending' ? '<span class="text-accent-300">Pending</span>' : '<span class="text-gray-500">' + (m.status || 'none') + '</span>');
+                            var roleSel = '<select data-role="' + u._id + '" class="bg-dark-900 border border-white/10 rounded-lg text-xs px-2 py-1.5 text-white">' +
+                                ['farmer', 'trader', 'admin'].map(function (r) {
+                                    return '<option value="' + r + '"' + (u.role === r ? ' selected' : '') + '>' + r + '</option>';
+                                }).join('') + '</select>';
+                            return '<tr class="border-t border-white/5">' +
+                                '<td class="py-3 pr-3 text-white">' + esc(u.name) + '</td>' +
+                                '<td class="py-3 pr-3 text-gray-400">' + esc(u.email) + '</td>' +
+                                '<td class="py-3 pr-3">' + roleSel + '</td>' +
+                                '<td class="py-3 pr-3">' + badge + '</td>' +
+                                '<td class="py-3 pr-3">' + status + '</td>' +
+                                '<td class="py-3 pr-3 text-gray-500 text-xs">' + fmtDate(u.createdAt) + '</td>' +
+                                '<td class="py-3">' +
+                                (m.status !== 'active' ? '<button data-grant="' + u._id + '" class="text-[11px] px-2 py-1 rounded bg-primary-500/10 text-primary-300 hover:bg-primary-500/20 mr-1">Grant</button>' : '') +
+                                (me ? '' : (u.isActive
+                                    ? '<button data-toggle="' + u._id + '" data-target="false" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Deactivate</button>'
+                                    : '<button data-toggle="' + u._id + '" data-target="true" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Activate</button>')) +
+                                (me ? '' : '<button data-del="' + u._id + '" class="text-[11px] px-2 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20">Delete</button>') +
+                                '</td></tr>';
+                        }).join('') + '</tbody></table></div>';
+
+                    panel.querySelectorAll('select[data-role]').forEach(function (s) {
+                        s.addEventListener('change', function () {
+                            api('/admin/users/' + s.getAttribute('data-role'), { method: 'PUT', body: { role: s.value } })
+                                .then(function () { loadOverview(); });
+                        });
+                    });
+                    panel.querySelectorAll('[data-toggle]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            api('/admin/users/' + b.getAttribute('data-toggle'), { method: 'PUT', body: { isActive: b.getAttribute('data-target') === 'true' } })
+                                .then(function () { loadUsers(); loadOverview(); });
+                        });
+                    });
+                    panel.querySelectorAll('[data-grant]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            if (!confirm('Grant the demo Grower plan (active 12 months) to this farmer?')) return;
+                            api('/admin/users/' + b.getAttribute('data-grant'), { method: 'PUT', body: { grantMembership: { plan: 'grower', periodMonths: 12 } } })
+                                .then(function (r) { alert(r.data.message || 'Done.'); loadUsers(); loadOverview(); });
+                        });
+                    });
+                    panel.querySelectorAll('[data-del]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            if (!confirm('Delete this user permanently? This cannot be undone.')) return;
+                            api('/admin/users/' + b.getAttribute('data-del'), { method: 'DELETE' })
+                                .then(function () { loadUsers(); loadOverview(); });
+                        });
+                    });
+                }).catch(function () { panel.innerHTML = '<div class="text-red-300 text-sm text-center py-10">Network error.</div>'; });
+            }
+
+            function loadSubscriptions() {
+                var panel = document.getElementById('panel-subscriptions');
+                panel.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">Loading payments...</div>';
+                api('/admin/subscriptions').then(function (r) {
+                    if (!r.data.success) { panel.innerHTML = '<div class="text-red-300 text-sm text-center">Failed to load payments.</div>'; return; }
+                    var subs = r.data.data;
+                    if (!subs.length) { panel.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">No payment requests yet.</div>'; return; }
+                    panel.innerHTML = '<div class="overflow-x-auto"><table class="w-full text-sm"><thead>' +
+                        '<tr class="text-left text-gray-400 uppercase tracking-wide text-xs">' +
+                        '<th class="pb-3 pr-3">Farmer</th><th class="pb-3 pr-3">Plan</th><th class="pb-3 pr-3">Amount</th><th class="pb-3 pr-3">M-Pesa</th><th class="pb-3 pr-3">Status</th><th class="pb-3 pr-3">Expires</th><th class="pb-3">Action</th>' +
+                        '</tr></thead><tbody>' + subs.map(function (s) {
+                            var st = s.status === 'active' ? '<span class="text-primary-300 font-semibold">ACTIVE</span>'
+                                : s.status === 'pending' ? '<span class="text-accent-300 font-semibold">PENDING</span>'
+                                : '<span class="text-gray-500">' + s.status.toUpperCase() + '</span>';
+                            var actions = s.status === 'pending'
+                                ? '<button data-approve="' + s._id + '" class="text-[11px] px-2.5 py-1 rounded bg-primary-600 text-white hover:bg-primary-500 mr-1 font-semibold">Verify & Approve</button>' +
+                                  '<button data-deny="' + s._id + '" class="text-[11px] px-2.5 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20">Deny</button>'
+                                : '<span class="text-gray-600 text-xs">—</span>';
+                            return '<tr class="border-t border-white/5">' +
+                                '<td class="py-3 pr-3 text-white">' + esc((s.user && s.user.name) || '—') + '<span class="block text-xs text-gray-500">' + esc((s.user && s.user.email) || '') + '</span></td>' +
+                                '<td class="py-3 pr-3 text-gray-300">' + s.plan + '</td>' +
+                                '<td class="py-3 pr-3 text-white">KES ' + s.amount.toLocaleString() + '</td>' +
+                                '<td class="py-3 pr-3 text-gray-300">' + esc(s.mpesaPhone || '—') + '</td>' +
+                                '<td class="py-3 pr-3">' + st + '</td>' +
+                                '<td class="py-3 pr-3 text-gray-500 text-xs">' + fmtDate(s.expiresAt) + '</td>' +
+                                '<td class="py-3">' + actions + '</td></tr>';
+                        }).join('') + '</tbody></table></div>';
+
+                    panel.querySelectorAll('[data-approve]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            api('/admin/subscriptions/' + b.getAttribute('data-approve') + '/approve', { method: 'POST' })
+                                .then(function () { loadSubscriptions(); loadUsers(); loadOverview(); });
+                        });
+                    });
+                    panel.querySelectorAll('[data-deny]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            if (!confirm('Deny this payment?')) return;
+                            api('/admin/subscriptions/' + b.getAttribute('data-deny') + '/deny', { method: 'POST' })
+                                .then(function () { loadSubscriptions(); loadUsers(); loadOverview(); });
+                        });
+                    });
+                }).catch(function () { panel.innerHTML = '<div class="text-red-300 text-sm text-center py-10">Network error.</div>'; });
+            }
+
+            function loadListings() {
+                var panel = document.getElementById('panel-listings');
+                panel.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">Loading listings...</div>';
+                api('/admin/listings').then(function (r) {
+                    if (!r.data.success) { panel.innerHTML = '<div class="text-red-300 text-sm text-center">Failed to load listings.</div>'; return; }
+                    var items = r.data.data;
+                    if (!items.length) { panel.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">No listings yet.</div>'; return; }
+                    panel.innerHTML = '<div class="overflow-x-auto"><table class="w-full text-sm"><thead>' +
+                        '<tr class="text-left text-gray-400 uppercase tracking-wide text-xs">' +
+                        '<th class="pb-3 pr-3">Title</th><th class="pb-3 pr-3">Seller</th><th class="pb-3 pr-3">Price</th><th class="pb-3 pr-3">Status</th><th class="pb-3">Actions</th>' +
+                        '</tr></thead><tbody>' + items.map(function (p) {
+                            var st = p.active ? '<span class="text-primary-300 font-semibold">LIVE</span>' : '<span class="text-gray-500">HIDDEN</span>';
+                            return '<tr class="border-t border-white/5">' +
+                                '<td class="py-3 pr-3 text-white">' + esc(p.title) + '</td>' +
+                                '<td class="py-3 pr-3 text-gray-400 text-xs">' + esc((p.seller && (p.seller.name || p.seller.email)) || '—') + '</td>' +
+                                '<td class="py-3 pr-3 text-gray-300">KES ' + esc(p.price) + ' / ' + esc(p.unit || '') + '</td>' +
+                                '<td class="py-3 pr-3">' + st + '</td>' +
+                                '<td class="py-3">' +
+                                (p.active
+                                    ? '<button data-hide="' + p._id + '" class="text-[11px] px-2.5 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Hide</button>'
+                                    : '<button data-show="' + p._id + '" class="text-[11px] px-2.5 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Show</button>') +
+                                '<button data-del="' + p._id + '" class="text-[11px] px-2.5 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20">Delete</button>' +
+                                '</td></tr>';
+                        }).join('') + '</tbody></table></div>';
+
+                    function act(id, active) {
+                        return api('/admin/listings/' + id, { method: 'PUT', body: { active: active } })
+                            .then(function () { loadListings(); loadOverview(); });
+                    }
+                    panel.querySelectorAll('[data-hide]').forEach(function (b) {
+                        b.addEventListener('click', function () { act(b.getAttribute('data-hide'), false); });
+                    });
+                    panel.querySelectorAll('[data-show]').forEach(function (b) {
+                        b.addEventListener('click', function () { act(b.getAttribute('data-show'), true); });
+                    });
+                    panel.querySelectorAll('[data-del]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            if (!confirm('Delete this listing permanently?')) return;
+                            api('/admin/listings/' + b.getAttribute('data-del'), { method: 'DELETE' })
+                                .then(function () { loadListings(); loadOverview(); });
+                        });
+                    });
+                }).catch(function () { panel.innerHTML = '<div class="text-red-300 text-sm text-center py-10">Network error.</div>'; });
+            }
+
+            function loadAudit() {
+                var panel = document.getElementById('panel-audit');
+                panel.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">Loading audit log...</div>';
+                api('/admin/audit-log').then(function (r) {
+                    if (!r.data.success) { panel.innerHTML = '<div class="text-red-300 text-sm text-center">Failed to load audit log.</div>'; return; }
+                    var entries = r.data.data;
+                    if (!entries.length) { panel.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">No audit entries yet.</div>'; return; }
+                    panel.innerHTML = '<div class="overflow-x-auto"><table class="w-full text-sm"><thead>' +
+                        '<tr class="text-left text-gray-400 uppercase tracking-wide text-xs"><th class="pb-3 pr-3">Time</th><th class="pb-3 pr-3">Action</th><th class="pb-3">Details</th></tr>' +
+                        '</thead><tbody>' + entries.map(function (e) {
+                            return '<tr class="border-t border-white/5"><td class="py-2.5 pr-3 text-gray-500 text-xs">' + fmtDate(e.createdAt) + '</td>' +
+                                '<td class="py-2.5 pr-3 text-white font-semibold">' + esc(e.action) + '</td>' +
+                                '<td class="py-2.5 text-gray-400 text-xs">' + esc(e.details) + '</td></tr>';
+                        }).join('') + '</tbody></table></div>';
+                }).catch(function () { panel.innerHTML = '<div class="text-red-300 text-sm text-center py-10">Network error.</div>'; });
+            }
+
+            function init() {
+                var auth = getAuth();
+                if (!auth.token || !auth.user || auth.user.role !== 'admin') {
+                    document.getElementById('admin-guard').classList.remove('hidden');
+                    return;
+                }
+                document.getElementById('admin-app').classList.remove('hidden');
+                document.getElementById('logout-btn').addEventListener('click', function () {
+                    localStorage.removeItem('kcnp_token');
+                    localStorage.removeItem('user');
+                    window.location.href = '/login';
+                });
+                document.getElementById('refresh-btn').addEventListener('click', function () {
+                    loadOverview();
+                    switchTab(activeTab);
+                });
+                document.querySelectorAll('.admin-tab').forEach(function (b) {
+                    b.addEventListener('click', function () { switchTab(b.getAttribute('data-tab')); });
+                });
+                loadOverview();
+                switchTab('users');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
+    </script>
+
+    <footer class="border-t border-white/5 py-8" role="contentinfo">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="text-gray-600 text-xs sm:text-sm">&copy; <span id="current-year"></span> KCNP Agro. Administrative control panel.</p>
+            <a href="/" class="text-gray-500 hover:text-primary-400 text-xs sm:text-sm transition-colors">Back to website</a>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

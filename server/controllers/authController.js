@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/User');
 const config = require('../config');
-const { sendPasswordResetEmail } = require('../services/mailer');
+const { sendPasswordResetEmail, sendActivationEmail } = require('../services/mailer');
 const { logAudit } = require('../db/database');
 
 function generateToken(user) {
@@ -11,6 +11,17 @@ function generateToken(user) {
     });
 }
 
+function hashToken(raw) {
+    return crypto.createHash('sha256').update(raw).digest('hex');
+}
+
+/**
+ * Register a new account. The account is created in a pending state and an
+ * activation email is sent. If email delivery is unavailable, the activation
+ * link is returned so the flow still works.
+ *
+ * @route POST /api/auth/register
+ */
 async function register(req, res) {
     const { name, email, password, role } = req.body;
 
@@ -23,13 +34,41 @@ async function register(req, res) {
             });
         }
 
-        const user = await User.create({ name, email, password, role });
-        const token = generateToken(user);
+        const rawToken = crypto.randomBytes(32).toString('hex');
+        const user = await User.create({
+            name,
+            email,
+            password,
+            role,
+            isActive: false,
+            activationToken: hashToken(rawToken),
+            activationExpires: new Date(Date.now() + 48 * 60 * 60 * 1000) // 48 hours
+        });
 
+        const baseUrl = config.frontendUrl || `${req.protocol}://${req.get('host')}`;
+        const activationUrl = `${baseUrl}/activate?token=${rawToken}`;
+
+        const emailed = await sendActivationEmail(email, activationUrl);
+
+        const publicUser = user.toJSON();
+        if (emailed.status === 'sent') {
+            logAudit('USER_REGISTERED', `Registered pending user ${email}`)
+                .catch(err => console.error('[Audit] Failed to log:', err.message));
+            return res.status(201).json({
+                success: true,
+                message: 'Account created. We sent an activation link to your email — click it to activate your account.',
+                data: { user: publicUser, activationSent: true }
+            });
+        }
+
+        // Email could not be delivered — surface the activation link so the flow still works.
+        console.log('[Auth] Activation link (email not delivered):', activationUrl);
+        logAudit('USER_REGISTERED', `Registered pending user ${email}`)
+            .catch(err => console.error('[Audit] Failed to log:', err.message));
         return res.status(201).json({
             success: true,
-            message: 'Account created successfully.',
-            data: { user, token }
+            message: 'Account created. Email delivery is unavailable, so your activation link is shown below.',
+            data: { user: publicUser, activationSent: false, activationLink: activationUrl }
         });
     } catch (err) {
         console.error('[Auth] Registration failed:', err.message);
@@ -60,6 +99,14 @@ async function login(req, res) {
             });
         }
 
+        if (!user.isActive) {
+            return res.status(403).json({
+                success: false,
+                code: 'ACTIVATION_REQUIRED',
+                message: 'Your account is not activated yet. Please check your inbox for the activation email.'
+            });
+        }
+
         const token = generateToken(user);
 
         return res.status(200).json({
@@ -81,6 +128,97 @@ async function getProfile(req, res) {
         success: true,
         data: { user: req.user }
     });
+}
+
+/**
+ * Activate an account using the token from the activation email.
+ *
+ * @route POST /api/auth/activate  { token }
+ */
+async function activate(req, res) {
+    const { token } = req.body;
+
+    try {
+        const tokenHash = hashToken(String(token || ''));
+        const user = await User.findOne({
+            activationToken: tokenHash,
+            activationExpires: { $gt: new Date() }
+        }).select('+activationToken +activationExpires');
+
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: 'This activation link is invalid or has expired. Please request a new one.'
+            });
+        }
+
+        user.isActive = true;
+        user.activationToken = undefined;
+        user.activationExpires = undefined;
+        await user.save();
+
+        logAudit('USER_ACTIVATED', `Activated account ${user.email}`)
+            .catch(err => console.error('[Audit] Failed to log:', err.message));
+
+        return res.status(200).json({
+            success: true,
+            message: 'Your account has been activated. You can now log in.'
+        });
+    } catch (err) {
+        console.error('[Auth] Activate failed:', err.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to activate your account. Please try again.'
+        });
+    }
+}
+
+/**
+ * Resend the activation email to a pending account.
+ *
+ * @route POST /api/auth/resend-activation  { email }
+ */
+async function resendActivation(req, res) {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email }).select('+activationToken +activationExpires');
+        if (!user || user.isActive) {
+            // Keep responses uniform — do not reveal account status.
+            return res.status(200).json({
+                success: true,
+                message: 'If that email is registered and pending activation, a new activation link has been sent.'
+            });
+        }
+
+        const rawToken = crypto.randomBytes(32).toString('hex');
+        user.activationToken = hashToken(rawToken);
+        user.activationExpires = new Date(Date.now() + 48 * 60 * 60 * 1000);
+        await user.save();
+
+        const baseUrl = config.frontendUrl || `${req.protocol}://${req.get('host')}`;
+        const activationUrl = `${baseUrl}/activate?token=${rawToken}`;
+
+        const emailed = await sendActivationEmail(email, activationUrl);
+        if (emailed.status !== 'sent') {
+            return res.status(200).json({
+                success: true,
+                message: 'A new activation link has been generated.',
+                data: { activationLink: activationUrl }
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'If that email is registered and pending activation, a new activation link has been sent.'
+        });
+    } catch (err) {
+        console.error('[Auth] Resend activation failed:', err.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to resend the activation link. Please try again.'
+        });
+    }
 }
 
 /**
@@ -198,4 +336,4 @@ async function resetPassword(req, res) {
     }
 }
 
-module.exports = { register, login, getProfile, forgotPassword, resetPassword };
+module.exports = { register, login, getProfile, activate, resendActivation, forgotPassword, resetPassword };

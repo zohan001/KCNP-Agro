@@ -56,7 +56,40 @@ async function initializeDatabase() {
     // Ensure indexes are built for models with unique constraints
     // (e.g., NewsletterSubscriber email unique index)
     await Promise.all(Object.values(mongoose.models).map(model => model.init()));
+    await ensureDemoAccounts();
     console.log('[DB] MongoDB indexes initialized.');
+}
+
+/**
+ * Idempotently ensure demo/seed accounts stay usable:
+ *  - seed users are active (isActive true)
+ *  - the demo farmer holds an active membership so the marketplace demo works
+ */
+async function ensureDemoAccounts() {
+    try {
+        const User = require('../models/User');
+        const emails = ['admin@kcnpagro.org', 'farmer@example.com', 'trader@example.com'];
+        const update = { $set: { isActive: true } };
+        if (User.updateMany) {
+            await User.updateMany({ email: { $in: emails } }, update);
+        }
+        const farmer = await User.findOne({ email: 'farmer@example.com' }).lean();
+        if (farmer && (!farmer.membership || farmer.membership.status !== 'active' ||
+            !farmer.membership.expiresAt || new Date(farmer.membership.expiresAt) <= new Date())) {
+            await User.updateOne({ email: 'farmer@example.com' }, {
+                $set: {
+                    membership: {
+                        plan: 'grower',
+                        status: 'active',
+                        expiresAt: new Date(Date.now() + 13 * 30 * 24 * 60 * 60 * 1000)
+                    }
+                }
+            });
+            console.log('[DB] Demo farmer membership ensured.');
+        }
+    } catch (err) {
+        console.error('[DB] ensureDemoAccounts failed:', err.message);
+    }
 }
 
 /**

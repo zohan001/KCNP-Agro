@@ -32,6 +32,7 @@
                     <a href="/marketplace" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_marketplace">Marketplace</span></a>
                     <a href="/education" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_education">Education</span></a>
                     <a href="/market-insights" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_insights">Market Insights</span></a>
+                    <a href="/pricing" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_pricing">Pricing</span></a>
                     <a href="/dashboard" class="text-sm font-medium text-primary-400 transition-colors duration-300"><span data-i18n="nav_dashboard">Dashboard</span></a>
                     <span id="nav-auth-desktop" class="hidden md:inline-flex"></span>
                 </div>
@@ -47,6 +48,7 @@
                     <a href="/marketplace" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_marketplace">Marketplace</span></a>
                     <a href="/education" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_education">Education</span></a>
                     <a href="/market-insights" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_insights">Market Insights</span></a>
+                    <a href="/pricing" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_pricing">Pricing</span></a>
                     <a href="/dashboard" class="block px-4 py-3 rounded-lg text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_dashboard">Dashboard</span></a>
                     <div id="nav-auth-mobile" class="pt-2 px-4"></div>
                 </div>
@@ -73,26 +75,6 @@
                     </a>
                 </div>
 
-                <!-- Live stats -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
-                    <div class="glass-card rounded-xl p-5 text-center reveal">
-                        <div id="stat-farmers" class="text-3xl sm:text-4xl font-heading font-extrabold text-primary-400 mb-1">-</div>
-                        <p class="text-xs sm:text-sm text-gray-400 uppercase tracking-wide"><span data-i18n="stat_farmers">Farmers</span></p>
-                    </div>
-                    <div class="glass-card rounded-xl p-5 text-center reveal">
-                        <div id="stat-traders" class="text-3xl sm:text-4xl font-heading font-extrabold text-accent-400 mb-1">-</div>
-                        <p class="text-xs sm:text-sm text-gray-400 uppercase tracking-wide"><span data-i18n="stat_traders">Traders</span></p>
-                    </div>
-                    <div class="glass-card rounded-xl p-5 text-center reveal">
-                        <div id="stat-listings" class="text-3xl sm:text-4xl font-heading font-extrabold text-primary-400 mb-1">-</div>
-                        <p class="text-xs sm:text-sm text-gray-400 uppercase tracking-wide"><span data-i18n="stat_listings">Live Listings</span></p>
-                    </div>
-                    <div class="glass-card rounded-xl p-5 text-center reveal">
-                        <div id="stat-articles" class="text-3xl sm:text-4xl font-heading font-extrabold text-accent-400 mb-1">-</div>
-                        <p class="text-xs sm:text-sm text-gray-400 uppercase tracking-wide"><span data-i18n="stat_articles">Knowledge Articles</span></p>
-                    </div>
-                </div>
-
                 <!-- Market Insights -->
                 <div class="glass-card rounded-2xl p-6 md:p-8 mb-12 reveal">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
@@ -109,6 +91,18 @@
 
                 <!-- Farmer panel -->
                 <div id="farmer-panel" class="hidden">
+                    <div id="membership-card" class="glass-card rounded-2xl p-6 md:p-8 mb-8 reveal">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                            <div>
+                                <h2 class="font-heading text-2xl font-bold text-white" data-i18n="d_membership">My Membership</h2>
+                                <p id="membership-status" class="text-gray-400 text-sm mt-1">Loading your subscription...</p>
+                            </div>
+                            <a href="/pricing" id="membership-cta" class="cta-btn inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-white font-semibold text-sm w-full sm:w-auto">
+                                <span data-i18n="d_membership_subscribe">Subscribe Now</span>
+                            </a>
+                        </div>
+                    </div>
+
                     <div class="flex items-center justify-between mb-6">
                         <h2 data-i18n="d_my" class="font-heading text-2xl font-bold text-white">My Listings</h2>
                         <div class="flex items-center gap-4">
@@ -138,6 +132,7 @@
                         <h2 class="font-heading text-2xl font-bold text-white mb-3">Admin Overview</h2>
                         <p class="text-gray-400 mb-6 max-w-xl mx-auto">You have full access. Manage marketplace content from the API and keep the knowledge base fresh.</p>
                         <div class="flex flex-wrap justify-center gap-4">
+                            <a href="/admin" class="cta-btn px-6 py-3 rounded-xl text-white font-semibold text-sm">Open Super Admin Dashboard</a>
                             <a href="/education" class="cta-btn px-6 py-3 rounded-xl text-white font-semibold text-sm">Manage Education</a>
                             <a href="/marketplace" class="cta-btn px-6 py-3 rounded-xl text-white font-semibold text-sm">View Marketplace</a>
                         </div>
@@ -367,24 +362,33 @@
                 farmer.classList.remove('hidden');
                 cta.classList.remove('hidden');
                 hint.textContent = 'Manage your listings, post produce, and reach traders directly.';
+                loadMembership();
                 loadMyListings();
             }
         }
 
-        async function loadStats() {
+        async function loadMembership() {
+            const statusEl = document.getElementById('membership-status');
+            const cta = document.getElementById('membership-cta');
             try {
-                const data = await fetchJSON(`${API}/stats`);
-                if (!data.success) return;
-                const s = data.data;
-                document.getElementById('stat-farmers').textContent = s.farmers;
-                document.getElementById('stat-traders').textContent = s.traders;
-                document.getElementById('stat-listings').textContent = s.listings;
-                document.getElementById('stat-articles').textContent = s.articles;
+                const data = await fetchJSON(`${API}/my/membership`);
+                const m = data.data && data.data.membership;
+                if (m && m.status === 'active' && m.expiresAt && new Date(m.expiresAt) > new Date()) {
+                    const d = new Date(m.expiresAt);
+                    statusEl.innerHTML = '<span class="text-primary-300 font-semibold">Active</span> — ' +
+                        P('expires') + ' ' + d.toLocaleDateString() +
+                        ' <span class="text-gray-500">(' + (m.plan || '').toUpperCase() + ')</span>';
+                    cta.innerHTML = '<span class="font-semibold">' + P('Renew / Upgrade') + '</span>';
+                } else if (m && m.status === 'pending') {
+                    statusEl.innerHTML = '<span class="text-accent-300 font-semibold">' + P('Pending payment') + '</span> — ' +
+                        P('an admin is verifying your M-Pesa payment. Keep an eye on your phone.');
+                    cta.innerHTML = '<span class="font-semibold">' + P('Check status') + '</span>';
+                } else {
+                    statusEl.innerHTML = '<span class="text-red-300 font-semibold">' + P('No active subscription') + '</span> — ' +
+                        P('subscribe to post and sell your produce.');
+                }
             } catch (err) {
-                document.getElementById('stat-farmers').textContent = '0';
-                document.getElementById('stat-traders').textContent = '0';
-                document.getElementById('stat-listings').textContent = '0';
-                document.getElementById('stat-articles').textContent = '0';
+                statusEl.textContent = P('Subscription status unavailable.');
             }
         }
 
@@ -459,7 +463,6 @@
                 });
                 if (data.success) {
                     loadMyListings();
-                    loadStats();
                 }
             } catch (err) {
                 alert(P('Failed to delete. Please try again.'));
@@ -512,7 +515,6 @@
             document.getElementById('signed-in-as').innerHTML = `Signed in as ${roleBadge(role)}`;
             setupAuthNav();
             showRoleView(role);
-            loadStats();
             loadInsights();
 
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');

@@ -32,6 +32,7 @@
                     <a href="/marketplace" class="text-sm font-medium text-primary-400 transition-colors duration-300"><span data-i18n="nav_marketplace">Marketplace</span></a>
                     <a href="/education" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_education">Education</span></a>
                     <a href="/market-insights" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_insights">Market Insights</span></a>
+                    <a href="/pricing" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_pricing">Pricing</span></a>
                     <span id="nav-auth-desktop" class="hidden md:inline-flex"></span>
                 </div>
                 <div class="hidden md:block">
@@ -51,6 +52,7 @@
                     <a href="/marketplace" class="block px-4 py-3 rounded-lg text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_marketplace">Marketplace</span></a>
                     <a href="/education" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_education">Education</span></a>
                     <a href="/market-insights" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_insights">Market Insights</span></a>
+                    <a href="/pricing" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_pricing">Pricing</span></a>
                     <div id="nav-auth-mobile" class="pt-2 px-4"></div>
                 </div>
             </div>
@@ -506,7 +508,10 @@
                     loadListings();
                 } else {
                     const first = data.errors && data.errors[0] && data.errors[0].message;
-                    fail(first || t('mp_failed'));
+                    const msg = first || (data.message ? P(data.message) : t('mp_failed'));
+                    status.className = 'mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm text-center';
+                    status.innerHTML = msg + ' <a href="/pricing" class="underline font-semibold text-primary-300">' + P('Subscribe now') + '</a>';
+                    status.classList.remove('hidden');
                 }
             } catch (err) {
                 fail(t('mp_network'));

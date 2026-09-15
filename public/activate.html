@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Login to KCNP Agro - Climate Smart Agriculture & Trade">
-    <title>Login | KCNP Agro</title>
+    <meta name="description" content="Activate your KCNP Agro account.">
+    <title>Activate Account | KCNP Agro</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -33,10 +33,11 @@
                     <a href="/education" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_education">Education</span></a>
                     <a href="/market-insights" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_insights">Market Insights</span></a>
                     <a href="/pricing" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_pricing">Pricing</span></a>
+                    <a href="/login" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_login">Login</span></a>
                 </div>
                 <div class="hidden md:block">
-                    <a href="/register" class="cta-btn inline-flex items-center px-5 py-2.5 rounded-xl text-white font-semibold text-sm">
-                        <span>Sign Up</span>
+                    <a href="/login" class="cta-btn inline-flex items-center px-5 py-2.5 rounded-xl text-white font-semibold text-sm">
+                        <span>Login</span>
                     </a>
                 </div>
                 <button id="mobile-menu-btn" class="hamburger md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -53,7 +54,7 @@
                     <a href="/market-insights" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_insights">Market Insights</span></a>
                     <a href="/pricing" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_pricing">Pricing</span></a>
                     <div class="pt-2 px-4">
-                        <a href="/register" class="cta-btn block text-center px-5 py-3 rounded-xl text-white font-semibold text-sm">Sign Up</a>
+                        <a href="/login" class="cta-btn block text-center px-5 py-3 rounded-xl text-white font-semibold text-sm"><span data-i18n="nav_login">Login</span></a>
                     </div>
                 </div>
             </div>
@@ -62,47 +63,36 @@
 
     <main id="main-content" class="pt-20 md:pt-24">
         <section class="relative min-h-[80vh] flex items-center justify-center py-12 md:py-16">
-            <div class="hero-orb-2" aria-hidden="true"></div>
+            <div class="hero-orb-1" aria-hidden="true"></div>
             <div class="max-w-md w-full mx-auto px-4 sm:px-6 relative">
                 <div class="text-center mb-8 reveal">
-                    <span class="inline-block text-sm font-semibold text-primary-400 uppercase tracking-widest mb-4" data-i18n="p_eyebrow_login">Welcome Back</span>
-                    <h1 data-i18n="p_login" class="font-heading text-3xl font-bold text-white mb-2">Login to <span class="gradient-text">KCNP Agro</span></h1>
-                    <p data-i18n="p_login_sub" class="text-gray-400 text-sm">Access the marketplace and education center</p>
+                    <span class="inline-block text-sm font-semibold text-primary-400 uppercase tracking-widest mb-4" data-i18n="p_eyebrow_recovery">Account Activation</span>
+                    <h1 data-i18n="p_activate" class="font-heading text-3xl font-bold text-white mb-2">Activate Your <span class="gradient-text">Account</span></h1>
+                    <p data-i18n="p_activate_sub" class="text-gray-400 text-sm">Verify your email to start using KCNP Agro.</p>
                 </div>
 
-                <div id="registered-banner" class="hidden mb-5 p-4 rounded-xl bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm text-center" role="status">
-                    Account created successfully! Please log in with your new credentials.
+                <div id="invalid-token" class="hidden mb-5 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm text-center" role="alert">
+                    No activation token found in the link. Please request a new activation link.
                 </div>
 
-                <form id="login-form" class="glass-card rounded-2xl p-6 sm:p-8 reveal" novalidate>
-                    <div class="mb-5">
-                        <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email Address <span class="text-red-400">*</span></label>
-                        <input type="email" id="email" required autocomplete="email" placeholder="you@example.com" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
-                        <p id="email-error" class="text-red-400 text-xs mt-1 hidden" role="alert"></p>
-                    </div>
-                    <div class="mb-6">
-                        <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Password <span class="text-red-400">*</span></label>
-                        <input type="password" id="password" required autocomplete="current-password" placeholder="Enter your password" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
-                        <p id="password-error" class="text-red-400 text-xs mt-1 hidden" role="alert"></p>
-                    </div>
-
-                    <div class="flex justify-end -mt-4 mb-4">
-                        <a href="/forgot-password" class="text-xs text-primary-400 hover:text-primary-300 font-semibold">Forgot password?</a>
-                    </div>
-
-                    <button type="submit" class="cta-btn w-full py-4 rounded-xl text-white font-bold text-base flex items-center justify-center gap-2">
-                        <span id="submit-text" data-i18n="btn_login">Login</span>
-                        <svg id="submit-spinner" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                <div id="activating-box" class="glass-card rounded-2xl p-6 sm:p-8 reveal text-center">
+                    <div class="flex flex-col items-center gap-4">
+                        <svg id="submit-spinner" class="w-8 h-8 animate-spin text-primary-400" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                         </svg>
-                    </button>
+                        <p id="activating-text" class="text-gray-300 text-sm">Activating your account...</p>
+                    </div>
+                </div>
 
-                    <div id="form-error" class="hidden mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm text-center" role="alert"></div>
-                </form>
+                <div id="result-box" class="hidden glass-card rounded-2xl p-6 sm:p-8 reveal text-center">
+                    <div id="result-msg" class="text-sm"></div>
+                    <a id="result-login-link" href="/login" class="cta-btn hidden mt-6 inline-block px-6 py-3 rounded-xl text-white font-semibold text-sm">Login</a>
+                    <button id="result-home-btn" type="button" onclick="window.location.href='/'" class="hidden mt-6 px-6 py-3 rounded-xl bg-white/5 text-gray-300 hover:bg-white/10 text-sm font-semibold">Back to Home</button>
+                </div>
 
                 <p class="text-center text-gray-500 text-sm mt-6">
-                    Don't have an account? <a href="/register" class="text-primary-400 hover:text-primary-300 font-semibold">Create one</a>
+                    <a href="/login" class="text-primary-400 hover:text-primary-300 font-semibold">Back to login</a>
                 </p>
             </div>
         </section>
@@ -237,19 +227,6 @@
 
 
     <script>
-        // Session helpers: try localStorage first, always mirror to a cookie
-        // so the app keeps working even when localStorage is blocked.
-        function saveSession(token, user) {
-            const json = JSON.stringify(user);
-            try {
-                localStorage.setItem('token', token);
-                localStorage.setItem('user', json);
-            } catch (e) { /* storage unavailable - cookies are the fallback */ }
-            const same = 'path=/; max-age=604800; SameSite=Lax';
-            document.cookie = 'kcnp_token=' + encodeURIComponent(token) + '; ' + same;
-            document.cookie = 'kcnp_user=' + encodeURIComponent(json) + '; ' + same;
-        }
-
         function postJson(url, body) {
             const timeoutMs = 10000;
             return new Promise((resolve, reject) => {
@@ -269,84 +246,69 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            if (new URLSearchParams(window.location.search).get('registered') === '1') {
-                const banner = document.getElementById('registered-banner');
-                if (banner) banner.classList.remove('hidden');
+        const token = new URLSearchParams(window.location.search).get('token') || '';
+        const invalidBox = document.getElementById('invalid-token');
+        const activatingBox = document.getElementById('activating-box');
+        const activatingText = document.getElementById('activating-text');
+        const resultBox = document.getElementById('result-box');
+        const resultMsg = document.getElementById('result-msg');
+        const resultLoginLink = document.getElementById('result-login-link');
+        const resultHomeBtn = document.getElementById('result-home-btn');
+
+        function showResult(ok, message) {
+            activatingBox.classList.add('hidden');
+            resultMsg.textContent = P(message);
+            resultMsg.className = ok
+                ? 'text-sm text-primary-300'
+                : 'text-sm text-red-300';
+            resultBox.classList.remove('hidden');
+            if (ok) {
+                resultLoginLink.classList.remove('hidden');
+                setTimeout(() => { window.location.href = '/login'; }, 2500);
+            } else {
+                resultHomeBtn.classList.remove('hidden');
             }
-        });
+        }
 
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }
-            const email = document.getElementById('email');
-            const password = document.getElementById('password');
-            const formError = document.getElementById('form-error');
-            const submitText = document.getElementById('submit-text');
-            const submitSpinner = document.getElementById('submit-spinner');
-
-            formError.classList.add('hidden');
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email.value)) {
-                document.getElementById('email-error').textContent = P('Please enter a valid email address.');
-                document.getElementById('email-error').classList.remove('hidden');
-                email.classList.add('border-red-500');
-                return;
-            }
-
-            submitText.textContent = P('Logging in...');
-            submitSpinner.classList.remove('hidden');
-
-            try {
-                const { res, data } = await postJson('/api/auth/login', {
-                    email: email.value,
-                    password: password.value
-                });
-                submitText.textContent = P('Login');
-                submitSpinner.classList.add('hidden');
-
-                if (res.ok && data.success) {
-                    saveSession(data.data.token, data.data.user);
-                    formError.className = 'mt-4 p-4 rounded-xl bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm text-center';
-                    formError.textContent = P('Login successful! Taking you to your dashboard...');
-                    formError.classList.remove('hidden');
-                    window.location.href = '/dashboard';
-                } else {
-                    formError.textContent = data.message ? P(data.message) : P('Login failed. Please try again.');
-                    if (data.code === 'ACTIVATION_REQUIRED' && email) {
-                        const resend = document.createElement('button');
-                        resend.type = 'button';
-                        resend.className = 'mt-3 text-xs underline text-primary-400 hover:text-primary-300';
-                        resend.textContent = P('Resend activation email');
-                        resend.onclick = async () => {
-                            resend.disabled = true;
-                            resend.textContent = P('Sending...');
-                            try {
-                                const r = await fetch('/api/auth/resend-activation', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({ email: email })
-                                });
-                                const d = await r.json();
-                                resend.textContent = P(d.message || 'If that email is registered, a new activation link has been sent.');
-                            } catch {
-                                resend.textContent = P('Network error. Please try again.');
-                            }
-                        };
-                        formError.appendChild(document.createElement('br'));
-                        formError.appendChild(resend);
+        if (!token || token.length < 16) {
+            activatingBox.classList.add('hidden');
+            invalidBox.classList.remove('hidden');
+        } else {
+            activatingText.textContent = P('Activating your account...');
+            postJson('/api/auth/activate', { token })
+                .then(({ res, data }) => {
+                    if (res.ok && data.success) {
+                        showResult(true, data.message || 'Your account has been activated. You can now log in.');
+                    } else {
+                        showResult(false, data.message || 'Failed to activate your account. Please try again.');
                     }
-                    formError.classList.remove('hidden');
-                }
-            } catch (err) {
-                submitText.textContent = P('Login');
-                submitSpinner.classList.add('hidden');
-                formError.textContent = (err && err.name === 'AbortError') ? P('Login timed out. Please try again.') : P('Network error. Please try again.');
-                formError.classList.remove('hidden');
-            }
-        });
+                })
+                .catch(() => showResult(false, 'Network error. Please try again.'))
+                .finally(() => {
+                    if (typeof submitSpinner !== 'undefined') submitSpinner.classList.add('hidden');
+                });
+        }
 
         document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                const isOpen = mobileMenu.classList.contains('open');
+                if (isOpen) {
+                    mobileMenu.classList.remove('open');
+                    mobileMenu.classList.add('closed');
+                    mobileMenuBtn.classList.remove('active');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                } else {
+                    mobileMenu.classList.remove('closed');
+                    mobileMenu.classList.add('open');
+                    mobileMenuBtn.classList.add('active');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'true');
+                }
+            });
+        }
     </script>
     <!-- Assist: call for help + language toggle (low-literacy support) -->
     <a href="tel:+254745756470" class="fab-help" aria-label="Call for help">

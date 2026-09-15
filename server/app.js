@@ -134,7 +134,10 @@ function createApp() {
         ['/dashboard', 'dashboard.html'],
         ['/forgot-password', 'forgot-password.html'],
         ['/reset-password', 'reset-password.html'],
-        ['/market-insights', 'market-insights.html']
+        ['/market-insights', 'market-insights.html'],
+        ['/pricing', 'pricing.html'],
+        ['/activate', 'activate.html'],
+        ['/admin', 'admin.html']
     ];
     pageRoutes.forEach(([pathName, file]) => {
         app.get([pathName, `${pathName}/`], (req, res) => {

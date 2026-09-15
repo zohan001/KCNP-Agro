@@ -6,8 +6,8 @@ const Quiz = require('../models/Quiz');
 async function getStats(req, res) {
     try {
         const [farmers, traders, listings, articles, quizzes] = await Promise.all([
-            User.countDocuments({ role: 'farmer' }),
-            User.countDocuments({ role: 'trader' }),
+            User.countDocuments({ role: 'farmer', isActive: true }),
+            User.countDocuments({ role: 'trader', isActive: true }),
             Product.countDocuments({ active: true }),
             Article.countDocuments({ published: true }),
             Quiz.countDocuments({ published: true })

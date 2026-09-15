@@ -32,6 +32,7 @@
                     <a href="/marketplace" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_marketplace">Marketplace</span></a>
                     <a href="/education" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_education">Education</span></a>
                     <a href="/market-insights" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_insights">Market Insights</span></a>
+                    <a href="/pricing" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_pricing">Pricing</span></a>
                     <a href="/login" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_login">Login</span></a>
                 </div>
                 <div class="hidden md:block">
@@ -51,6 +52,7 @@
                     <a href="/marketplace" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_marketplace">Marketplace</span></a>
                     <a href="/education" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_education">Education</span></a>
                     <a href="/market-insights" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_insights">Market Insights</span></a>
+                    <a href="/pricing" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_pricing">Pricing</span></a>
                     <div class="pt-2 px-4">
                         <a href="/login" class="cta-btn block text-center px-5 py-3 rounded-xl text-white font-semibold text-sm"><span data-i18n="nav_login">Login</span></a>
                     </div>
@@ -308,13 +310,20 @@
                 submitSpinner.classList.add('hidden');
 
                 if (res.ok && data.success) {
-                    formError.className = 'mt-4 p-4 rounded-xl bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm text-center';
-                    formError.textContent = 'Account created! Redirecting you to login...';
-                    formError.classList.remove('hidden');
-                    setTimeout(() => { window.location.href = '/login?registered=1'; }, 1200);
+                    if (data.data && data.data.activationLink) {
+                        formError.className = 'mt-4 p-4 rounded-xl bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm text-center';
+                        formError.innerHTML = P(data.message) + ' <a href="' + data.data.activationLink + '" class="underline font-semibold">' + P('Click here to activate') + '</a>';
+                        formError.classList.remove('hidden');
+                        setTimeout(() => { window.location.href = '/login?registered=1'; }, 6000);
+                    } else {
+                        formError.className = 'mt-4 p-4 rounded-xl bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm text-center';
+                        formError.textContent = P('Account created! We sent an activation link to your email — click it to activate your account.');
+                        formError.classList.remove('hidden');
+                        setTimeout(() => { window.location.href = '/login?registered=1'; }, 1200);
+                    }
                 } else {
                     formError.className = 'mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm text-center';
-                    formError.textContent = data.message || 'Registration failed. Please try again.';
+                    formError.textContent = P(data.message || P('Registration failed. Please try again.'));
                     formError.classList.remove('hidden');
                 }
             } catch (err) {

@@ -1,0 +1,258 @@
+const User = require('../models/User');
+const Product = require('../models/Product');
+const Article = require('../models/Article');
+const Subscription = require('../models/Subscription');
+const AuditLog = require('../models/AuditLog');
+const { logAudit } = require('../db/database');
+const { PLANS } = require('./paymentController');
+
+/**
+ * Everything behind this controller is protected by authenticate + authorize('admin').
+ */
+
+/**
+ * GET /api/admin/overview — summary cards for the admin dashboard.
+ */
+async function overview(req, res) {
+    try {
+        const [
+            farmers, traders, admins, listings, activeListings, articles,
+            pendingPayments, activeSubs, totalUsers
+        ] = await Promise.all([
+            User.countDocuments({ role: 'farmer', isActive: true }),
+            User.countDocuments({ role: 'trader', isActive: true }),
+            User.countDocuments({ role: 'admin' }),
+            Product.countDocuments({}),
+            Product.countDocuments({ active: true }),
+            Article.countDocuments({}),
+            Subscription.countDocuments({ status: 'pending' }),
+            Subscription.countDocuments({ status: 'active' }),
+            User.countDocuments({})
+        ]);
+        return res.status(200).json({
+            success: true,
+            data: { farmers, traders, admins, listings, activeListings, articles, pendingPayments, activeSubs, totalUsers }
+        });
+    } catch (err) {
+        console.error('[Admin] Overview failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to load the admin overview.' });
+    }
+}
+
+/**
+ * GET /api/admin/users — all users with their membership info.
+ */
+async function listUsers(req, res) {
+    try {
+        const users = await User.find({}).sort({ createdAt: -1 }).limit(300).lean();
+        return res.status(200).json({ success: true, count: users.length, data: users });
+    } catch (err) {
+        console.error('[Admin] List users failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to load users.' });
+    }
+}
+
+/**
+ * PUT /api/admin/users/:id — change role, activation, or grant/renew membership.
+ * Allowed body fields: { role?, isActive?, grantMembership: { plan?, periodMonths? } }
+ */
+async function updateUser(req, res) {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+
+        if (req.params.id === String(req.user._id) && (req.body.role && req.body.role !== 'admin' || req.body.isActive === false)) {
+            return res.status(400).json({ success: false, message: 'You cannot demote or deactivate yourself.' });
+        }
+
+        if (req.body.role && ['farmer', 'trader', 'admin'].includes(req.body.role)) {
+            user.role = req.body.role;
+        }
+        if (typeof req.body.isActive === 'boolean') {
+            user.isActive = req.body.isActive;
+        }
+        if (req.body.grantMembership) {
+            const plan = req.body.grantMembership.plan || user.membership.plan;
+            const periodMonths = req.body.grantMembership.periodMonths || (PLANS[plan] ? PLANS[plan].periodMonths : 12);
+            const p = PLANS[plan] || PLANS.grower;
+            user.membership = {
+                plan: p.id,
+                status: 'active',
+                expiresAt: new Date(Date.now() + periodMonths * 30 * 24 * 60 * 60 * 1000)
+            };
+            await Subscription.create({
+                user: user._id,
+                plan: p.id,
+                amount: p.price,
+                periodMonths: p.periodMonths,
+                status: 'active',
+                expiresAt: user.membership.expiresAt,
+                paidAt: new Date(),
+                approvedBy: req.user._id,
+                mpesaRef: 'GRANT'
+            });
+        }
+        if (req.body.expireMembership) {
+            user.membership.status = 'expired';
+            user.membership.expiresAt = new Date();
+        }
+
+        await user.save();
+        logAudit('ADMIN_USER_UPDATE', `Updated user ${user.email}`).catch(() => {});
+        return res.status(200).json({ success: true, message: 'User updated.', data: { user: user.toJSON() } });
+    } catch (err) {
+        console.error('[Admin] Update user failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to update the user.' });
+    }
+}
+
+/**
+ * DELETE /api/admin/users/:id — hard delete a user.
+ */
+async function deleteUser(req, res) {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+        if (req.params.id === String(req.user._id)) {
+            return res.status(400).json({ success: false, message: 'You cannot delete your own account.' });
+        }
+        await User.findByIdAndDelete(req.params.id);
+        await Subscription.deleteMany({ user: req.params.id }).catch(() => {});
+        logAudit('ADMIN_USER_DELETE', `Deleted user ${user.email}`).catch(() => {});
+        return res.status(200).json({ success: true, message: 'User deleted.' });
+    } catch (err) {
+        console.error('[Admin] Delete user failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to delete the user.' });
+    }
+}
+
+/**
+ * GET /api/admin/subscriptions — all payments with user info.
+ */
+async function listSubscriptions(req, res) {
+    try {
+        const subs = await Subscription.find({})
+            .sort({ createdAt: -1 })
+            .limit(300)
+            .populate('user', 'name email role')
+            .lean();
+        return res.status(200).json({ success: true, count: subs.length, data: subs });
+    } catch (err) {
+        console.error('[Admin] List subscriptions failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to load subscriptions.' });
+    }
+}
+
+async function setSubscriptionStatus(req, res, status) {
+    try {
+        const sub = await Subscription.findById(req.params.id);
+        if (!sub) return res.status(404).json({ success: false, message: 'Payment not found.' });
+
+        sub.status = status;
+        if (status === 'active') {
+            sub.paidAt = new Date();
+            sub.expiresAt = new Date(Date.now() + sub.periodMonths * 30 * 24 * 60 * 60 * 1000);
+            sub.approvedBy = req.user._id;
+            await User.findByIdAndUpdate(sub.user, {
+                membership: { plan: sub.plan, status: 'active', expiresAt: sub.expiresAt }
+            });
+        } else if (status === 'denied' || status === 'cancelled') {
+            // Only reset membership if the user has no other active subscription.
+            const active = await Subscription.findOne({
+                user: sub.user, status: 'active', _id: { $ne: sub._id }
+            });
+            if (!active) {
+                await User.findByIdAndUpdate(sub.user, {
+                    'membership.status': 'none',
+                    'membership.plan': null,
+                    'membership.expiresAt': null
+                });
+            }
+        }
+        await sub.save();
+        logAudit('ADMIN_SUB_UPDATE', `Payment ${status}: ${sub.plan} for ${sub.user}`).catch(() => {});
+        return res.status(200).json({ success: true, message: `Payment ${status}.`, data: { subscription: sub } });
+    } catch (err) {
+        console.error('[Admin] Payment update failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to update the payment.' });
+    }
+}
+
+/**
+ * GET /api/admin/listings — every marketplace listing (incl. hidden).
+ */
+async function listProducts(req, res) {
+    try {
+        const products = await Product.find({})
+            .sort({ createdAt: -1 })
+            .limit(300)
+            .populate('seller', 'name email')
+            .lean();
+        return res.status(200).json({ success: true, count: products.length, data: products });
+    } catch (err) {
+        console.error('[Admin] List products failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to load listings.' });
+    }
+}
+
+/**
+ * PUT /api/admin/listings/:id — show/hide or edit a listing.
+ */
+async function updateListing(req, res) {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) return res.status(404).json({ success: false, message: 'Listing not found.' });
+        if (typeof req.body.active === 'boolean') product.active = req.body.active;
+        ['title', 'description', 'price', 'unit', 'category', 'location'].forEach(f => {
+            if (req.body[f] !== undefined) product[f] = req.body[f];
+        });
+        await product.save();
+        logAudit('ADMIN_LISTING_UPDATE', `Listing ${product.title}`).catch(() => {});
+        return res.status(200).json({ success: true, message: 'Listing updated.', data: { product } });
+    } catch (err) {
+        console.error('[Admin] Update listing failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to update the listing.' });
+    }
+}
+
+/**
+ * DELETE /api/admin/listings/:id
+ */
+async function deleteListing(req, res) {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) return res.status(404).json({ success: false, message: 'Listing not found.' });
+        await Product.findByIdAndDelete(req.params.id);
+        logAudit('ADMIN_LISTING_DELETE', `Listing ${product.title}`).catch(() => {});
+        return res.status(200).json({ success: true, message: 'Listing deleted.' });
+    } catch (err) {
+        console.error('[Admin] Delete listing failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to delete the listing.' });
+    }
+}
+
+/**
+ * GET /api/admin/audit-log — recent audit events.
+ */
+async function auditLog(req, res) {
+    try {
+        const entries = await AuditLog.find({}).sort({ createdAt: -1 }).limit(80).lean();
+        return res.status(200).json({ success: true, count: entries.length, data: entries });
+    } catch (err) {
+        console.error('[Admin] Audit log failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to load the audit log.' });
+    }
+}
+
+module.exports = {
+    overview,
+    listUsers,
+    updateUser,
+    deleteUser,
+    listSubscriptions,
+    listProducts,
+    updateListing,
+    deleteListing,
+    auditLog,
+    setSubscriptionStatus
+};

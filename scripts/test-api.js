@@ -11,6 +11,11 @@
  */
 
 require('dotenv').config();
+// Keep tests hermetic: never attempt live email delivery during tests.
+process.env.BREVO_API_KEY = '';
+process.env.SMTP_HOST = '';
+process.env.SMTP_PORT = '';
+process.env.MAIL_FROM = 'KCNP Agro <noreply@kcnpagro.org>';
 const createApp = require('../server/app');
 
 const request = (path, options = {}) => {
@@ -42,6 +47,7 @@ const request = (path, options = {}) => {
 
 (async () => {
     const { connectDB, initializeDatabase, closeDatabase } = require('../server/db/database');
+    const User = require('../server/models/User');
 
     console.log('=== Verdant Agro API Integration Tests ===\n');
 
@@ -119,7 +125,7 @@ const request = (path, options = {}) => {
         console.log(`[9] Static index ${res.status}: content-type=${res.body.contentType || 'n/a'}`);
         console.assert(res.status === 200, 'Static index should be 200');
 
-        // 10. Register a user
+        // 10. Register a user (activation email link returned when email is unconfigured)
         const email = `user_${Date.now()}@test.com`;
         res = await request('/api/auth/register', {
             method: 'POST',
@@ -127,10 +133,36 @@ const request = (path, options = {}) => {
         });
         console.log(`[10] Register ${res.status}: ${res.body.message}`);
         console.assert(res.status === 201, 'Register should be 201');
-        console.assert(res.body.data && res.body.data.token, 'Register should return a token');
+        console.assert(res.body.data && res.body.data.activationLink, 'Register should return an activation link fallback');
         console.assert(res.body.data.user.role === 'trader', 'Role should be saved');
-        const userToken = res.body.data.token;
+        console.assert(res.body.data.user.isActive === false, 'New users should start inactive');
+        const activationToken = new URL(res.body.data.activationLink).searchParams.get('token');
         const userId = res.body.data.user._id;
+
+        // 10a. Login blocked before activation
+        res = await request('/api/auth/login', {
+            method: 'POST',
+            body: { email, password: 'secret123' }
+        });
+        console.log(`[10a] Login before activation ${res.status}: expect 403`);
+        console.assert(res.status === 403, 'Login before activation should be 403');
+        console.assert(res.body.code === 'ACTIVATION_REQUIRED', 'Login should flag ACTIVATION_REQUIRED');
+
+        // 10b. Activate the account
+        res = await request('/api/auth/activate', {
+            method: 'POST',
+            body: { token: activationToken }
+        });
+        console.log(`[10b] Activate ${res.status}: ${res.body.message}`);
+        console.assert(res.status === 200, 'Activate should be 200');
+
+        // 10c. Activate again -> invalid
+        res = await request('/api/auth/activate', {
+            method: 'POST',
+            body: { token: activationToken }
+        });
+        console.log(`[10c] Activate reuse ${res.status}: expect 400`);
+        console.assert(res.status === 400, 'Reusing an activation token should fail');
 
         // 11. Register duplicate
         res = await request('/api/auth/register', {
@@ -156,6 +188,7 @@ const request = (path, options = {}) => {
         console.log(`[12] Login ${res.status}: ${res.body.message}`);
         console.assert(res.status === 200, 'Login should be 200');
         console.assert(res.body.data && res.body.data.token, 'Login should return a token');
+        const userToken = res.body.data.token;
 
         // 13. Login invalid password
         res = await request('/api/auth/login', {
@@ -182,10 +215,92 @@ const request = (path, options = {}) => {
         });
         console.log(`[15b] Register farmer ${res.status}: role=${res.body.data && res.body.data.user && res.body.data.user.role}`);
         console.assert(res.status === 201, 'Register farmer should be 201');
-        const farmerToken = res.body.data.token;
         const farmerId = res.body.data.user._id;
+        const fActivation = new URL(res.body.data.activationLink).searchParams.get('token');
+        await request('/api/auth/activate', { method: 'POST', body: { token: fActivation } });
 
-        // 15c. 16. Create a product listing as a TRADER -> forbidden
+        // 15c. Farmer login (after activation), then grant an active subscription
+        res = await request('/api/auth/login', {
+            method: 'POST',
+            body: { email: res.body.data.user.email, password: 'secret123' }
+        });
+        const farmerToken = res.body.data.token;
+        const Subscription = require('../server/models/Subscription');
+        await Subscription.create({
+            user: farmerId,
+            plan: 'grower',
+            amount: 3000,
+            periodMonths: 6,
+            status: 'active',
+            expiresAt: new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000)
+        });
+        await User.findByIdAndUpdate(farmerId, { membership: { plan: 'grower', status: 'active', expiresAt: new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000) } });
+
+        // 15d. Farmer WITHOUT an active subscription cannot post -> 402
+        res = await request('/api/auth/register', {
+            method: 'POST',
+            body: { name: 'No Sub Farmer', email: `nosub_${Date.now()}@test.com`, password: 'secret123', role: 'farmer' }
+        });
+        const noSubActivation = new URL(res.body.data.activationLink).searchParams.get('token');
+        await request('/api/auth/activate', { method: 'POST', body: { token: noSubActivation } });
+        const noSubLogin = await request('/api/auth/login', {
+            method: 'POST',
+            body: { email: res.body.data.user.email, password: 'secret123' }
+        });
+        res = await request('/api/products', {
+            method: 'POST',
+            token: noSubLogin.body.data.token,
+            body: { title: 'No Sub Gate Test', description: 'This listing should be blocked by the subscription gate before validation passes.', category: 'produce', price: 5, unit: 'kg', location: 'Mombasa', contactEmail: 'x@x.com', contactPhone: '+254700000000' }
+        });
+        console.log(`[15d] Create product without subscription ${res.status}: expect 402`);
+        console.assert(res.status === 402, 'Farmer without subscription should be 402');
+        console.assert(res.body.code === 'SUBSCRIPTION_REQUIRED', 'Should flag SUBSCRIPTION_REQUIRED');
+
+        // 15e. Public plans endpoint
+        res = await request('/api/plans');
+        console.log(`[15e] Plans ${res.status}: plans=${res.body.data && res.body.data.length}`);
+        console.assert(res.status === 200, 'Plans should be 200');
+        console.assert(Array.isArray(res.body.data) && res.body.data.length >= 3, 'Plans should list 3 plans');
+
+        // 15f. Payment request creates a pending payment
+        res = await request('/api/payment/request', {
+            method: 'POST',
+            token: noSubLogin.body.data.token,
+            body: { plan: 'starter', phone: '0712 345 678' }
+        });
+        console.log(`[15f] Payment request ${res.status}: ${res.body.message}`);
+        console.assert(res.status === 201, 'Payment request should be 201');
+        console.assert(res.body.data.payment && res.body.data.payment.status === 'pending', 'Payment should be pending');
+
+        // 15g. Admin approves the pending payment -> membership becomes active
+        const admin = await User.create({
+            name: 'Admin Early',
+            email: `admin_early_${Date.now()}@test.com`,
+            password: 'adminpass123',
+            role: 'admin'
+        });
+        const adminToken = require('jsonwebtoken').sign(
+            { id: admin._id, role: admin.role },
+            require('../server/config').jwt.secret,
+            { expiresIn: '1h' }
+        );
+        const pendingSub = res.body.data.payment;
+        res = await request(`/api/admin/subscriptions/${pendingSub._id}/approve`, {
+            method: 'POST',
+            token: adminToken
+        });
+        console.log(`[15g] Admin approve payment ${res.status}`);
+        console.assert(res.status === 200 && res.body.data.subscription.status === 'active', 'Approved payment should be active');
+        res = await request('/api/products', {
+            method: 'POST',
+            token: noSubLogin.body.data.token,
+            body: { title: 'Now Active Listing', description: 'Subscription approved so posting should now work on the marketplace.', category: 'produce', price: 5, unit: 'kg', location: 'Mombasa', contactEmail: 'x@x.com', contactPhone: '+254700000000' }
+        });
+        console.log(`[15h] Post after approval ${res.status}: expect 201`);
+        console.assert(res.status === 201, 'Farmer with active subscription should post 201');
+        await request(`/api/products/${res.body.data.product._id}`, { method: 'DELETE', token: noSubLogin.body.data.token });
+
+        // 16. Create a product listing as a TRADER -> forbidden
         res = await request('/api/products', {
             method: 'POST',
             body: { title: 'Trader Cannot Post', description: 'Traders buy, they do not sell.', category: 'produce', price: 1, unit: 'kg', location: 'Mombasa', contactEmail: 'trader@test.com' },
@@ -320,19 +435,7 @@ const request = (path, options = {}) => {
         console.log(`[22] Create article as user ${res.status}: expect 403`);
         console.assert(res.status === 403, 'Create article as non-admin should be 403');
 
-        // 23. Seed admin user and create article
-        const User = require('../server/models/User');
-        const admin = await User.create({
-            name: 'Admin User',
-            email: `admin_${Date.now()}@test.com`,
-            password: 'adminpass123',
-            role: 'admin'
-        });
-        const adminToken = require('jsonwebtoken').sign(
-            { id: admin._id, role: admin.role },
-            require('../server/config').jwt.secret,
-            { expiresIn: '1h' }
-        );
+        // 23. Create article as admin (reuses adminToken from earlier)
         res = await request('/api/articles', {
             method: 'POST',
             token: adminToken,

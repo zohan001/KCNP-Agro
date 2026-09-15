@@ -35,6 +35,23 @@ const userSchema = new mongoose.Schema(
         passwordResetExpires: {
             type: Date,
             select: false
+        },
+        isActive: {
+            type: Boolean,
+            default: true
+        },
+        activationToken: {
+            type: String,
+            select: false
+        },
+        activationExpires: {
+            type: Date,
+            select: false
+        },
+        membership: {
+            plan: { type: String, enum: ['starter', 'grower', 'pro'], default: null },
+            status: { type: String, enum: ['none', 'pending', 'active', 'expired'], default: 'none' },
+            expiresAt: { type: Date, default: null }
         }
     },
     { timestamps: true }
@@ -52,6 +69,8 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 userSchema.methods.toJSON = function () {
     const obj = this.toObject();
     delete obj.password;
+    delete obj.activationToken;
+    delete obj.activationExpires;
     return obj;
 };
 

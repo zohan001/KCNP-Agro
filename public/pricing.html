@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KCNP Agro farmer subscription plans - sell your produce on the coastal marketplace.">
+    <title>Pricing | KCNP Agro</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <script src="/js/ux.js" defer></script>
+</head>
+<body class="bg-dark-900 text-white font-sans antialiased" style="font-family: Inter, system-ui, sans-serif;">
+    <script>
+        document.documentElement.classList.add('js');
+        function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }
+    </script>
+
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-white/5">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" role="navigation" aria-label="Main navigation">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="/" class="flex items-center gap-2 group" aria-label="KCNP Agro Home">
+                    <img src="/logo.jpg" alt="KCNP Agro logo" class="w-10 h-10 rounded-xl object-cover transition-transform duration-300 group-hover:scale-110" width="40" height="40">
+                    <span class="font-heading font-bold text-xl text-white">KCNP<span class="text-primary-400">Agro</span></span>
+                </a>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="/" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_home">Home</span></a>
+                    <a href="/marketplace" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_marketplace">Marketplace</span></a>
+                    <a href="/education" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_education">Education</span></a>
+                    <a href="/market-insights" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_insights">Market Insights</span></a>
+                    <a href="/pricing" class="text-sm font-medium text-primary-400 transition-colors duration-300"><span data-i18n="nav_pricing">Pricing</span></a>
+                    <span id="nav-auth-desktop" class="hidden md:inline-flex"></span>
+                </div>
+                <button id="mobile-menu-btn" class="hamburger md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <span class="block w-6 h-0.5 bg-white rounded-full"></span>
+                    <span class="block w-6 h-0.5 bg-white rounded-full"></span>
+                    <span class="block w-6 h-0.5 bg-white rounded-full"></span>
+                </button>
+            </div>
+            <div id="mobile-menu" class="mobile-menu closed md:hidden pb-4" role="menu">
+                <div class="flex flex-col gap-2 pt-2">
+                    <a href="/" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_home">Home</span></a>
+                    <a href="/marketplace" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_marketplace">Marketplace</span></a>
+                    <a href="/education" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_education">Education</span></a>
+                    <a href="/market-insights" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_insights">Market Insights</span></a>
+                    <a href="/pricing" class="block px-4 py-3 rounded-lg text-primary-400 hover:bg-white/5 transition-all duration-300" role="menuitem"><span data-i18n="nav_pricing">Pricing</span></a>
+                    <div id="nav-auth-mobile" class="pt-2 px-4"></div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content" class="pt-20 md:pt-24">
+        <section class="relative py-12 md:py-16">
+            <div class="hero-orb-1" aria-hidden="true"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+
+                <!-- Header -->
+                <div class="text-center mb-12 reveal">
+                    <span data-i18n="pr_eyebrow" class="inline-block text-sm font-semibold text-primary-400 uppercase tracking-widest mb-3">Farmer Membership</span>
+                    <h1 class="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3">
+                        <span data-i18n="pr_title">Simple, Affordable Plans</span>
+                    </h1>
+                    <p data-i18n="pr_sub" class="text-gray-400 text-base max-w-2xl mx-auto">
+                        Sell your produce directly to traders. Prices are in Kenyan Shillings and paid by M-Pesa — the cost of a single chicken per month.
+                    </p>
+                </div>
+
+                <!-- Plans (rendered from /api/plans) -->
+                <div id="plans-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-14">
+                    <div class="glass-card rounded-2xl p-8 text-center animate-pulse">
+                        <div class="text-gray-400 text-sm">Loading plans...</div>
+                    </div>
+                </div>
+
+                <!-- How it works -->
+                <section class="glass-card rounded-2xl p-6 md:p-8 mb-14 reveal">
+                    <h2 data-i18n="pr_how_title" class="font-heading text-2xl font-bold text-white mb-6">How It Works</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="text-center">
+                            <div class="w-10 h-10 mx-auto rounded-xl bg-primary-500/10 text-primary-400 flex items-center justify-center font-bold text-lg mb-3">1</div>
+                            <p class="text-sm text-gray-300" data-i18n="pr_step1">Choose a plan and enter your M-Pesa number.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-10 h-10 mx-auto rounded-xl bg-primary-500/10 text-primary-400 flex items-center justify-center font-bold text-lg mb-3">2</div>
+                            <p class="text-sm text-gray-300" data-i18n="pr_step2">Pay the amount via M-Pesa to our paybill.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-10 h-10 mx-auto rounded-xl bg-primary-500/10 text-primary-400 flex items-center justify-center font-bold text-lg mb-3">3</div>
+                            <p class="text-sm text-gray-300" data-i18n="pr_step3">Our team verifies your payment.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-10 h-10 mx-auto rounded-xl bg-primary-500/10 text-primary-400 flex items-center justify-center font-bold text-lg mb-3">4</div>
+                            <p class="text-sm text-gray-300" data-i18n="pr_step4">Your subscription activates and you start selling.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Request payment -->
+                <section id="request-panel" class="glass-card rounded-2xl p-6 md:p-8 mb-14 reveal">
+                    <h2 data-i18n="pr_request_title" class="font-heading text-2xl font-bold text-white mb-2">Request a Subscription</h2>
+                    <p data-i18n="pr_request_sub" class="text-gray-400 text-sm mb-6 max-w-2xl">Fill in the plan and your M-Pesa number. We will start a payment verification and activate your membership as soon as it is confirmed.</p>
+
+                    <form id="payment-form" class="grid grid-cols-1 md:grid-cols-2 gap-5 items-end" novalidate>
+                        <div>
+                            <label for="pay-plan" class="block text-sm font-medium text-gray-300 mb-2"><span data-i18n="pr_plan_label">Plan</span> <span class="text-red-400">*</span></label>
+                            <select id="pay-plan" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white text-sm">
+                                <option value="starter" data-i18n="pr_plan_starter">Starter — 800 KES / month</option>
+                                <option value="grower" data-i18n="pr_plan_grower">Grower — 3,000 KES / 6 months</option>
+                                <option value="pro" data-i18n="pr_plan_pro">Pro Farmer — 5,000 KES / 12 months</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="pay-phone" class="block text-sm font-medium text-gray-300 mb-2"><span data-i18n="pr_mpesa_phone">M-Pesa phone number</span> <span class="text-red-400">*</span></label>
+                            <input type="tel" id="pay-phone" placeholder="07XX XXX XXX" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm">
+                        </div>
+                        <div class="md:col-span-2">
+                            <button type="submit" class="cta-btn w-full md:w-auto px-8 py-3 rounded-xl text-white font-semibold text-sm">
+                                <span id="pay-submit-text" data-i18n="pr_pay_btn">Request Payment</span>
+                            </button>
+                        </div>
+                    </form>
+                    <p id="pay-result" class="hidden mt-5 p-4 rounded-xl text-sm text-center" role="status"></p>
+                    <p id="pay-login-hint" class="hidden mt-5 p-4 rounded-xl bg-accent-500/10 border border-accent-500/20 text-accent-300 text-sm text-center">
+                        <span data-i18n="pr_login_hint">You need to be logged in as a farmer to subscribe.</span>
+                        <a href="/login" class="underline font-semibold"><span data-i18n="nav_login">Login</span></a>
+                    </p>
+                </section>
+
+                <!-- What happens when it expires -->
+                <section class="glass-card rounded-2xl p-6 md:p-8 reveal">
+                    <h2 data-i18n="pr_expiry_title" class="font-heading text-2xl font-bold text-white mb-3">What happens when a plan expires?</h2>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li>• <span data-i18n="pr_expiry_1">Your existing listings stay visible, and buyers can still contact you.</span></li>
+                        <li>• <span data-i18n="pr_expiry_2">You can no longer post new listings or edit existing ones.</span></li>
+                        <li>• <span data-i18n="pr_expiry_3">Renew with the same plan or upgrade — just request a new payment.</span></li>
+                        <li>• <span data-i18n="pr_expiry_4">Browsing the marketplace, learning articles and market insights stay free forever.</span></li>
+                    </ul>
+                </section>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-white/5 py-12 md:py-16" role="contentinfo">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+
+                <!-- Column 1: Brand -->
+                <div class="lg:col-span-1">
+                    <a href="/" class="flex items-center gap-2 mb-4" aria-label="KCNP Agro Home">
+                        <img src="/logo.jpg" alt="KCNP Agro logo" class="w-10 h-10 rounded-xl object-cover" width="40" height="40">
+                        <span class="font-heading font-bold text-xl text-white">KCNP<span class="text-primary-400">Agro</span></span>
+                    </a>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6">
+                        Promoting climate smart agriculture and trade initiatives for sustainable economic growth worldwide.
+                    </p>
+                    <div class="flex gap-3">
+                        <a href="https://x.com/Zohanally" target="_blank" rel="noopener" class="social-link w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-primary-400 hover:bg-white/10" aria-label="Follow us on Twitter">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/in/kabul-matano-826b89284/" target="_blank" rel="noopener" class="social-link w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-primary-400 hover:bg-white/10" aria-label="Follow us on LinkedIn">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                                                                    </div>
+                </div>
+
+                <!-- Column 2: Quick Links -->
+                <div>
+                    <h3 data-i18n="f_quick" class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="/marketplace" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_marketplace">Marketplace</span></a></li>
+                        <li><a href="/education" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_education">Education</span></a></li>
+                        <li><a href="/dashboard" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_dashboard">Dashboard</span></a></li>
+                        <li><a href="/login" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_login">Login</span></a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Services -->
+                <div>
+                    <h3 data-i18n="f_services" class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Services</h3>
+                    <ul class="space-y-3">
+                        <li><a href="/education" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Climate Smart Farming</a></li>
+                        <li><a href="/marketplace" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Trade Facilitation</a></li>
+                        <li><a href="/marketplace" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Supply Chain</a></li>
+                        <li><a href="/education" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Capacity Building</a></li>
+                        <li><a href="/education" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Carbon Credits</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Stay Updated -->
+                <div>
+                    <h3 data-i18n="f_stay" class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Stay Updated</h3>
+                    <p class="text-gray-500 text-sm mb-4">Subscribe to our newsletter for the latest updates on climate-smart agriculture.</p>
+                    <form id="newsletter-form" class="flex gap-2">
+                        <label for="newsletter-email" class="sr-only">Email for newsletter</label>
+                        <input
+                            type="email"
+                            id="newsletter-email"
+                            name="newsletter-email"
+                            required
+                            placeholder="Your email"
+                            class="flex-1 px-4 py-2.5 rounded-lg bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all"
+                        >
+                        <button type="submit" class="px-4 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-medium hover:bg-primary-500 transition-colors" aria-label="Subscribe to newsletter">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bottom bar -->
+            <div class="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p class="text-gray-600 text-xs sm:text-sm">
+                    &copy; <span id="current-year"></span> KCNP Agro. <span data-i18n="f_rights">All rights reserved.</span>
+                </p>
+                <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-gray-600 text-xs sm:text-sm">
+                    <a href="mailto:kabulmatano027@gmail.com" class="hover:text-primary-400 transition-colors">kabulmatano027@gmail.com</a>
+                    <a href="tel:+254745756470" class="hover:text-primary-400 transition-colors">+254 745 756 470</a>
+                    <span>Mombasa, Kenya</span>
+                </div>
+                <div class="flex gap-6">
+                    <a href="#" onclick="KCNP && KCNP.showTour(); return false;" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_howto">How to Use</span></a>
+                    <a href="/privacy" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_privacy">Privacy Policy</span></a>
+                    <a href="/terms" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_terms">Terms of Service</span></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Assist: call for help + language toggle (low-literacy support) -->
+    <a href="tel:+254745756470" class="fab-help" aria-label="Call for help">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.4 21 3 13.6 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.25 1.01l-2.2 2.2z"/></svg>
+        <span class="fab-help-label" data-i18n="btn_help">Help</span>
+    </a>
+    <button id="lang-toggle" type="button" class="lang-fab" aria-label="Switch language">SW</button>
+
+    <!-- Reveal safety net -->
+    <script>
+        (function () {
+            function revealAll() {
+                var els = document.querySelectorAll('.reveal:not(.active)');
+                for (var i = 0; i < els.length; i++) els[i].classList.add('active');
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function () { setTimeout(revealAll, 900); });
+            } else {
+                setTimeout(revealAll, 900);
+            }
+        })();
+    </script>
+
+    <!-- Pricing app script -->
+    <script>
+        (function () {
+            'use strict';
+            var api = '/api';
+
+            function t(key) {
+                return (window.KCNP && window.KCNP.t) ? window.KCNP.t(key) : key;
+            }
+            function P(s) {
+                return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s;
+            }
+            function getToken() {
+                try { return localStorage.getItem('kcnp_token'); } catch (e) { return null; }
+            }
+            function fmt(n) {
+                return Number(n).toLocaleString();
+            }
+
+            var PLAN_DESCRIPTIONS = {
+                starter: 'pr_plan_starter_desc',
+                grower: 'pr_plan_grower_desc',
+                pro: 'pr_plan_pro_desc'
+            };
+            var PLAN_BADGES = { grower: 'popular', pro: 'best-value' };
+
+            function renderPlans(plans) {
+                var grid = document.getElementById('plans-grid');
+                var html = plans.map(function (p) {
+                    var price = fmt(p.price);
+                    var per = p.periodMonths === 1 ? '/' + t('pr_per_month') : '/' + p.periodMonths + ' ' + t('pr_months');
+                    var badge = PLAN_BADGES[p.id];
+                    return '<article class="glass-card rounded-2xl p-8 text-center reveal relative">' +
+                        (badge ? '<span class="absolute top-4 right-4 text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-full ' + (badge === 'popular' ? 'bg-primary-500/15 text-primary-300' : 'bg-accent-500/15 text-accent-300') + '">' + t('pr_' + badge) + '</span>' : '') +
+                        '<h3 class="font-heading text-xl font-bold text-white mb-1">' + p.name + '</h3>' +
+                        '<p class="text-gray-500 text-xs mb-5">' + t(PLAN_DESCRIPTIONS[p.id] || 'pr_plan_desc') + '</p>' +
+                        '<div class="text-4xl font-heading font-extrabold text-primary-400 mb-1">KES ' + price + '</div>' +
+                        '<p class="text-gray-400 text-sm mb-6">' + per + '</p>' +
+                        '<button type="button" data-plan="' + p.id + '" class="cta-btn w-full px-6 py-3 rounded-xl text-white font-semibold text-sm btn-pick-plan">' + t('pr_choose') + '</button>' +
+                        '</article>';
+                }).join('');
+                grid.innerHTML = html;
+                grid.querySelectorAll('.btn-pick-plan').forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        document.getElementById('pay-plan').value = btn.getAttribute('data-plan');
+                        if (!getToken()) {
+                            document.getElementById('pay-login-hint').classList.remove('hidden');
+                        }
+                        document.getElementById('request-panel').scrollIntoView({ behavior: 'smooth' });
+                    });
+                });
+            }
+
+            function loadPlans() {
+                var grid = document.getElementById('plans-grid');
+                fetch(api + '/plans').then(function (r) { return r.json(); }).then(function (d) {
+                    if (d.success && Array.isArray(d.data) && d.data.length) {
+                        renderPlans(d.data);
+                    } else {
+                        grid.innerHTML = '<div class="col-span-full text-center text-gray-400 text-sm">' + t('pr_load_failed') + '</div>';
+                    }
+                }).catch(function () {
+                    grid.innerHTML = '<div class="col-span-full text-center text-gray-400 text-sm">' + P('Network error. Please try again.') + '</div>';
+                });
+            }
+
+            function resultBox(ok, msg) {
+                var box = document.getElementById('pay-result');
+                box.className = 'mt-5 p-4 rounded-xl text-sm text-center ' + (ok ? 'bg-primary-500/10 border border-primary-500/20 text-primary-300' : 'bg-red-500/10 border border-red-500/20 text-red-300');
+                box.textContent = msg;
+                box.classList.remove('hidden');
+            }
+
+            function initForm() {
+                var form = document.getElementById('payment-form');
+                if (!form) return;
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    var phone = document.getElementById('pay-phone').value.trim();
+                    var plan = document.getElementById('pay-plan').value;
+                    var submitText = document.getElementById('pay-submit-text');
+                    var token = getToken();
+                    if (!token) {
+                        document.getElementById('pay-login-hint').classList.remove('hidden');
+                        resultBox(false, P('Please log in as a farmer first.'));
+                        return;
+                    }
+                    if (phone.replace(/[^0-9]/g, '').length < 9) {
+                        resultBox(false, P('Please provide a valid M-Pesa number.'));
+                        return;
+                    }
+                    submitText.textContent = P('Sending...');
+                    fetch(api + '/payment/request', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                        body: JSON.stringify({ plan: plan, phone: phone })
+                    }).then(function (r) { return r.json(); }).then(function (d) {
+                        submitText.textContent = t('pr_pay_btn');
+                        if (d.success) {
+                            resultBox(true, P(d.message) || P('Payment request received.'));
+                        } else {
+                            resultBox(false, P(d.message) || P('Failed to create the payment request.'));
+                        }
+                    }).catch(function () {
+                        submitText.textContent = t('pr_pay_btn');
+                        resultBox(false, P('Network error. Please try again.'));
+                    });
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', function () { loadPlans(); initForm(); });
+        })();
+    </script>
+
+</body>
+</html>

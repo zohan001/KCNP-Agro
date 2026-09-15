@@ -90,11 +90,50 @@ async function sendViaBrevoHttp(to, subject, text, html) {
 }
 
 /**
+ * Send a transactional email through the best available channel
+ * (Brevo HTTP API first, then SMTP). Returns { status, code }.
+ */
+async function deliver(to, subject, text, html) {
+    let httpError = null;
+    if (config.mail.apiKey) {
+        const viaHttp = await sendViaBrevoHttp(to, subject, text, html);
+        if (viaHttp.status === 'sent') return viaHttp;
+        httpError = viaHttp.code;
+        console.error('[Mailer] Brevo HTTP failed:', httpError);
+    }
+
+    const transport = getTransporter();
+    if (transport) {
+        try {
+            const guard = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('SMTP send timed out')), 12000);
+            });
+            await Promise.race([
+                transport.sendMail({ from: config.mail.from, to, subject, text, html }),
+                guard
+            ]);
+            return { status: 'sent' };
+        } catch (err) {
+            console.error('[Mailer] SMTP failed:', err.message, err.address ? '-> ' + err.address + ':' + err.port : '');
+        }
+    } else {
+        console.warn('[Mailer] SMTP not configured.');
+    }
+
+    if (config.mail.apiKey) {
+        console.error('[Mailer] Brevo HTTP already attempted above; all email paths failed.');
+        return { status: 'error', code: httpError || 'EALLFAILED' };
+    }
+    console.warn('[Mailer] No SMTP or Brevo key configured.');
+    return { status: 'unconfigured' };
+}
+
+/**
  * Send a password reset email to the given address.
  *
  * @param {string} to - Recipient email address
  * @param {string} resetUrl - Full reset link including the token
- * @returns {Promise<string>} 'unconfigured', 'sent' or 'error'
+ * @returns {Promise<Object>} { status, code }
  */
 async function sendPasswordResetEmail(to, resetUrl) {
     const subject = 'Reset your KCNP Agro password';
@@ -128,45 +167,47 @@ async function sendPasswordResetEmail(to, resetUrl) {
         </div>
     `;
 
-    let httpError = null;
-    if (config.mail.apiKey) {
-        // Brevo HTTP API (port 443) is the reliable path on hosts that restrict SMTP egress.
-        const viaHttp = await sendViaBrevoHttp(to, subject, text, html);
-        if (viaHttp.status === 'sent') return viaHttp;
-        httpError = viaHttp.code;
-        console.error('[Mailer] Brevo HTTP failed:', httpError);
-    }
-
-    const transport = getTransporter();
-    if (transport) {
-        try {
-            const guard = new Promise((_, reject) => {
-                setTimeout(() => reject(new Error('SMTP send timed out')), 12000);
-            });
-            await Promise.race([
-                transport.sendMail({
-                    from: config.mail.from,
-                    to,
-                    subject,
-                    text,
-                    html
-                }),
-                guard
-            ]);
-            return { status: 'sent' };
-        } catch (err) {
-            console.error('[Mailer] SMTP failed:', err.message, err.address ? '-> ' + err.address + ':' + err.port : '');
-        }
-    } else {
-        console.warn('[Mailer] SMTP not configured.');
-    }
-
-    if (config.mail.apiKey) {
-        console.error('[Mailer] Brevo HTTP already attempted above; all email paths failed.');
-        return { status: 'error', code: httpError || 'EALLFAILED' };
-    }
-    console.warn('[Mailer] No SMTP or Brevo key configured.');
-    return { status: 'unconfigured' };
+    return deliver(to, subject, text, html);
 }
 
-module.exports = { sendPasswordResetEmail };
+/**
+ * Send an account-activation email to the given address.
+ *
+ * @param {string} to - Recipient email address
+ * @param {string} activationUrl - Full activation link including the token
+ * @returns {Promise<Object>} { status, code }
+ */
+async function sendActivationEmail(to, activationUrl) {
+    const subject = 'Activate your KCNP Agro account';
+
+    const text = [
+        'Hello,',
+        '',
+        'Welcome to KCNP Agro! Your account is ready, but you need to activate it first.',
+        'Click the link below to verify your email. This link is valid for 48 hours.',
+        '',
+        activationUrl,
+        '',
+        'If you did not create this account, you can safely ignore this email.',
+        '',
+        'Regards,',
+        'The KCNP Agro Team'
+    ].join('\n');
+
+    const html = `
+        <div style="font-family: Arial, Helvetica, sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;">
+            <h2 style="color: #16a34a; margin: 0 0 16px;">Welcome to KCNP Agro</h2>
+            <p style="color: #334155; line-height: 1.6;">Hello,</p>
+            <p style="color: #334155; line-height: 1.6;">Your account has been created. To finish setting it up, please verify your email address by clicking the button below.</p>
+            <p style="color: #64748b; font-size: 13px; line-height: 1.6;">This link is valid for <strong>48 hours</strong>. If you did not create this account, you can safely ignore this email.</p>
+            <div style="text-align: center; margin: 24px 0;">
+                <a href="${activationUrl}" style="display: inline-block; background: #16a34a; color: #ffffff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">Activate My Account</a>
+            </div>
+            <p style="color: #94a3b8; font-size: 12px; line-height: 1.6; border-top: 1px solid #e2e8f0; padding-top: 12px;">If the button does not work, copy and paste this link into your browser:<br><a href="${activationUrl}" style="color: #16a34a; word-break: break-all;">${activationUrl}</a></p>
+        </div>
+    `;
+
+    return deliver(to, subject, text, html);
+}
+
+module.exports = { sendPasswordResetEmail, sendActivationEmail };

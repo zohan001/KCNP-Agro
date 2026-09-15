@@ -599,6 +599,13 @@ if (require.main === module) {
             for (const u of SEED_USERS) {
                 const existing = await User.findOne({ email: u.email });
                 if (!existing) {
+                    if (u.role === 'farmer' && u.email === 'farmer@example.com') {
+                        u.membership = {
+                            plan: 'grower',
+                            status: 'active',
+                            expiresAt: new Date(Date.now() + 13 * 30 * 24 * 60 * 60 * 1000)
+                        };
+                    }
                     await User.create(u);
                     console.log(`[User] Created ${u.name} (${u.role})`);
                 }

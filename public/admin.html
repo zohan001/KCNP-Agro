@@ -88,11 +88,21 @@
             'use strict';
             var API = '/api';
 
+            function readStored(name) {
+                try {
+                    const v = localStorage.getItem(name);
+                    if (v !== null && v !== undefined) return v;
+                } catch (e) { /* storage unavailable */ }
+                const m = document.cookie.match('(?:^|; )' + name + '=([^;]*)');
+                return m ? decodeURIComponent(m[1]) : null;
+            }
+
             function getAuth() {
                 try {
-                    var u = JSON.parse(localStorage.getItem('user') || 'null');
-                    var t = localStorage.getItem('kcnp_token');
-                    return { user: u, token: t };
+                    var tk = readStored('kcnp_token') || readStored('token');
+                    var us = readStored('kcnp_user') || readStored('user');
+                    var u = us ? JSON.parse(us) : null;
+                    return { user: u, token: tk };
                 } catch (e) { return { user: null, token: null }; }
             }
 
@@ -343,8 +353,7 @@
                 }
                 document.getElementById('admin-app').classList.remove('hidden');
                 document.getElementById('logout-btn').addEventListener('click', function () {
-                    localStorage.removeItem('kcnp_token');
-                    localStorage.removeItem('user');
+                    ['kcnp_token', 'kcnp_user', 'token', 'user'].forEach(function (k) { localStorage.removeItem(k); });
                     window.location.href = '/login';
                 });
                 document.getElementById('refresh-btn').addEventListener('click', function () {

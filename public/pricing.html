@@ -271,8 +271,22 @@
             function P(s) {
                 return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s;
             }
+            function readStored(name) {
+                try {
+                    const v = localStorage.getItem(name);
+                    if (v !== null && v !== undefined) return v;
+                } catch (e) { /* storage unavailable */ }
+                const m = document.cookie.match('(?:^|; )' + name + '=([^;]*)');
+                return m ? decodeURIComponent(m[1]) : null;
+            }
             function getToken() {
-                try { return localStorage.getItem('kcnp_token'); } catch (e) { return null; }
+                return readStored('kcnp_token') || readStored('token');
+            }
+            function getAuthUser() {
+                try {
+                    var us = readStored('kcnp_user') || readStored('user');
+                    return us ? JSON.parse(us) : null;
+                } catch (e) { return null; }
             }
             function fmt(n) {
                 return Number(n).toLocaleString();
@@ -304,7 +318,8 @@
                 grid.querySelectorAll('.btn-pick-plan').forEach(function (btn) {
                     btn.addEventListener('click', function () {
                         document.getElementById('pay-plan').value = btn.getAttribute('data-plan');
-                        if (!getToken()) {
+                        var au = getAuthUser();
+                        if (!getToken() || (au && au.role !== 'farmer')) {
                             document.getElementById('pay-login-hint').classList.remove('hidden');
                         }
                         document.getElementById('request-panel').scrollIntoView({ behavior: 'smooth' });
@@ -341,7 +356,8 @@
                     var plan = document.getElementById('pay-plan').value;
                     var submitText = document.getElementById('pay-submit-text');
                     var token = getToken();
-                    if (!token) {
+                    var au = getAuthUser();
+                    if (!token || !au || au.role !== 'farmer') {
                         document.getElementById('pay-login-hint').classList.remove('hidden');
                         resultBox(false, P('Please log in as a farmer first.'));
                         return;

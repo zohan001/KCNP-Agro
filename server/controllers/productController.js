@@ -6,7 +6,9 @@ const { getPlans } = require('./paymentController');
 
 /**
  * Farmers must hold an active subscription (or an admin grant) to post or
- * edit listings. Traders and admins are exempt.
+ * edit listings. Only farmers can create/update listings — admins manage and
+ * traders/buyers do not sell on the marketplace (routes are guarded by
+ * authorize('farmer') upstream, this only enforces the subscription gate).
  */
 function requireActiveMembership(req) {
     if (!req.user || req.user.role === 'admin' || req.user.role === 'trader') return null;

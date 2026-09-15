@@ -509,9 +509,13 @@
                 } else {
                     const first = data.errors && data.errors[0] && data.errors[0].message;
                     const msg = first || (data.message ? P(data.message) : t('mp_failed'));
-                    status.className = 'mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm text-center';
-                    status.innerHTML = msg + ' <a href="/pricing" class="underline font-semibold text-primary-300">' + P('Subscribe now') + '</a>';
-                    status.classList.remove('hidden');
+                    if (data.code === 'SUBSCRIPTION_REQUIRED') {
+                        status.className = 'mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm text-center';
+                        status.innerHTML = msg + ' <a href="/pricing" class="underline font-semibold text-primary-300">' + P('Subscribe now') + '</a>';
+                        status.classList.remove('hidden');
+                    } else {
+                        fail(msg);
+                    }
                 }
             } catch (err) {
                 fail(t('mp_network'));

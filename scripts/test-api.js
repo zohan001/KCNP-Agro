@@ -343,6 +343,24 @@ const request = (path, options = {}) => {
         console.assert(typeof res.body.data.farmers === 'number', 'Stats farmers should be a number');
         console.assert(res.body.data.listings >= 1, 'Stats listings should include created listing');
 
+        // 16d. Create a product listing as an ADMIN -> forbidden (admins manage, they do not sell)
+        res = await request('/api/products', {
+            method: 'POST',
+            body: { title: 'Admin Cannot Post', description: 'Admins manage the platform, only farmers sell produce.', category: 'produce', price: 1, unit: 'kg', location: 'Mombasa', contactEmail: 'admin@test.com', contactPhone: '+254700000000' },
+            token: adminToken
+        });
+        console.log(`[16d] Create product as admin ${res.status}: expect 403`);
+        console.assert(res.status === 403, 'Admin creating a product should be 403');
+
+        // 16e. Trader updating a product -> forbidden
+        res = await request(`/api/products/${productId}`, {
+            method: 'PUT',
+            token: userToken,
+            body: { price: 99 }
+        });
+        console.log(`[16e] Trader update product ${res.status}: expect 403`);
+        console.assert(res.status === 403, 'Trader updating a product should be 403');
+
         // 17. Create product missing required fields (with a farmer token)
         res = await request('/api/products', {
             method: 'POST',

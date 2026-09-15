@@ -52,11 +52,11 @@ router.post('/auth/reset-password', validateResetPassword, authController.resetP
 // ==============================
 // Product / Marketplace Routes
 // ==============================
-router.post('/products', authenticate, authorize('farmer', 'admin'), validateProduct, productController.createProduct);
+router.post('/products', authenticate, authorize('farmer'), validateProduct, productController.createProduct);
 router.get('/products', productController.getProducts);
 router.get('/products/my', authenticate, productController.getMyProducts);
 router.get('/products/:id', productController.getProduct);
-router.put('/products/:id', authenticate, productController.updateProduct);
+router.put('/products/:id', authenticate, authorize('farmer'), productController.updateProduct);
 router.delete('/products/:id', authenticate, productController.deleteProduct);
 
 // Buyer demand signals (public, lightweight)

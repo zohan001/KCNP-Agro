@@ -65,7 +65,7 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 reveal">
                     <div>
                         <span id="signed-in-as" class="inline-block text-sm font-semibold text-accent-400 uppercase tracking-widest mb-2"></span>
-                        <h1 class="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">
+                        <h1 id="welcome-title" class="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">
                             Welcome, <span id="user-name" class="gradient-text">Friend</span>
                         </h1>
                         <p id="role-hint" class="text-gray-400 text-base">Loading your dashboard...</p>
@@ -137,6 +137,34 @@
                             <a href="/marketplace" class="cta-btn px-6 py-3 rounded-xl text-white font-semibold text-sm">View Marketplace</a>
                         </div>
                     </div>
+                </div>
+
+                <!-- Feedback / Testimonial panel (farmers + traders only) -->
+                <div id="feedback-panel" class="hidden mt-10 glass-card rounded-2xl p-6 md:p-8 reveal">
+                    <h2 data-i18n="d_feedback_title" class="font-heading text-2xl font-bold text-white mb-2">Share your experience</h2>
+                    <p data-i18n="d_feedback_sub" class="text-gray-400 text-sm mb-5">Let others know what KCNP Agro has done for you. Your testimonial becomes visible after an admin approves it.</p>
+                    <form id="testimonial-form" class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end" novalidate>
+                        <div class="sm:col-span-3">
+                            <label for="test-rating" class="block text-sm font-medium text-gray-300 mb-1"><span data-i18n="d_feedback_rating">Rating</span></label>
+                            <div id="test-rating" class="flex gap-1 mt-1">
+                                <button type="button" data-rate="1" class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 hover:bg-accent-500/20 hover:border-accent-500/30 flex items-center justify-center text-accent-400 font-bold text-sm cursor-pointer">1</button>
+                                <button type="button" data-rate="2" class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 hover:bg-accent-500/20 hover:border-accent-500/30 flex items-center justify-center text-accent-400 font-bold text-sm cursor-pointer">2</button>
+                                <button type="button" data-rate="3" class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 hover:bg-accent-500/20 hover:border-accent-500/30 flex items-center justify-center text-accent-400 font-bold text-sm cursor-pointer">3</button>
+                                <button type="button" data-rate="4" class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 hover:bg-accent-500/20 hover:border-accent-500/30 flex items-center justify-center text-accent-400 font-bold text-sm cursor-pointer">4</button>
+                                <button type="button" data-rate="5" class="w-8 h-8 rounded-lg bg-accent-500/20 border border-accent-500/30 flex items-center justify-center text-accent-400 font-bold text-sm cursor-pointer">5</button>
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="test-message" class="block text-sm font-medium text-gray-300 mb-1"><span data-i18n="d_feedback_msg">Your testimonial</span></label>
+                            <textarea id="test-message" rows="4" maxlength="1000" placeholder="e.g. I used KCNP Agro to find a trader for my mangoes within two days..." class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm"></textarea>
+                        </div>
+                        <div class="sm:col-span-3 flex items-center gap-4">
+                            <button type="submit" class="cta-btn px-6 py-3 rounded-xl text-white font-semibold text-sm w-full sm:w-auto">
+                                <span data-i18n="d_feedback_submit">Submit testimonial</span>
+                            </button>
+                            <p id="feedback-result" class="text-sm"></p>
+                        </div>
+                    </form>
                 </div>
             </div>
         </section>
@@ -344,23 +372,29 @@
             const admin = document.getElementById('admin-panel');
             const cta = document.getElementById('post-listing-cta');
             const hint = document.getElementById('role-hint');
+            const welcomeTitle = document.getElementById('welcome-title');
+            const feedback = document.getElementById('feedback-panel');
 
             farmer.classList.add('hidden');
             trader.classList.add('hidden');
             admin.classList.add('hidden');
             cta.classList.add('hidden');
+            welcomeTitle.classList.remove('hidden');
+            feedback.classList.add('hidden');
 
             if (role === 'trader') {
                 trader.classList.remove('hidden');
+                feedback.classList.remove('hidden');
                 hint.textContent = 'Browse produce and products from farmers, then reach out to buy.';
                 loadTraderListings();
             } else if (role === 'admin') {
                 admin.classList.remove('hidden');
-                cta.classList.remove('hidden');
+                welcomeTitle.classList.add('hidden');
                 hint.textContent = 'Full platform overview and management access.';
             } else {
                 farmer.classList.remove('hidden');
                 cta.classList.remove('hidden');
+                feedback.classList.remove('hidden');
                 hint.textContent = 'Manage your listings, post produce, and reach traders directly.';
                 loadMembership();
                 loadMyListings();
@@ -551,6 +585,61 @@
 
             document.getElementById('current-year').textContent = new Date().getFullYear();
         });
+    </script>
+
+    <!-- Feedback / testimonial form logic -->
+    <script>
+        (function () {
+            var selectedRating = 5;
+            function getToken() {
+                try {
+                    var t = localStorage.getItem('kcnp_token') || localStorage.getItem('token');
+                    if (t) return t;
+                } catch (e) {}
+                var m = document.cookie.match('(?:^|; )kcnp_token=([^;]*)');
+                return m ? decodeURIComponent(m[1]) : null;
+            }
+            document.getElementById('test-rating').addEventListener('click', function (e) {
+                var btn = e.target.closest('[data-rate]');
+                if (!btn) return;
+                selectedRating = parseInt(btn.getAttribute('data-rate'), 10) || 5;
+                document.querySelectorAll('#test-rating [data-rate]').forEach(function (b, idx) {
+                    if (idx < selectedRating) {
+                        b.classList.remove('bg-white/5', 'border-white/10');
+                        b.classList.add('bg-accent-500/20', 'border-accent-500/30');
+                    } else {
+                        b.classList.add('bg-white/5', 'border-white/10');
+                        b.classList.remove('bg-accent-500/20', 'border-accent-500/30');
+                    }
+                });
+            });
+
+            var form = document.getElementById('testimonial-form');
+            if (!form) return;
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                var token = getToken();
+                var resultEl = document.getElementById('feedback-result');
+                var msg = document.getElementById('test-message').value.trim();
+                if (!token) { resultEl.innerHTML = '<span class="text-red-400">Please log in first to submit a testimonial.</span>'; return; }
+                if (msg.length < 5) { resultEl.innerHTML = '<span class="text-red-400">Please write at least 5 characters.</span>'; return; }
+                resultEl.innerHTML = '<span class="text-gray-400">Submitting...</span>';
+                fetch('/api/testimonials', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify({ message: msg, rating: selectedRating })
+                }).then(function (r) { return r.json(); }).then(function (d) {
+                    if (d.success) {
+                        resultEl.innerHTML = '<span class="text-primary-400">' + (d.message || 'Testimonial submitted.') + '</span>';
+                        document.getElementById('test-message').value = '';
+                    } else {
+                        resultEl.innerHTML = '<span class="text-red-400">' + (d.message || 'Failed.') + '</span>';
+                    }
+                }).catch(function () {
+                    resultEl.innerHTML = '<span class="text-red-400">Network error. Please try again.</span>';
+                });
+            });
+        })();
     </script>
     <!-- Assist: call for help + language toggle (low-literacy support) -->
     <a href="tel:+254745756470" class="fab-help" aria-label="Call for help">

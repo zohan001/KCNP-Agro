@@ -2,6 +2,7 @@ const User = require('../models/User');
 const Product = require('../models/Product');
 const Article = require('../models/Article');
 const Subscription = require('../models/Subscription');
+const Testimonial = require('../models/Testimonial');
 const AuditLog = require('../models/AuditLog');
 const { logAudit } = require('../db/database');
 const { PLANS } = require('./paymentController');
@@ -244,6 +245,64 @@ async function auditLog(req, res) {
     }
 }
 
+/**
+ * GET /api/admin/testimonials — all submitted testimonials (any status).
+ */
+async function listTestimonials(req, res) {
+    try {
+        const testimonials = await Testimonial.find({})
+            .sort({ createdAt: -1 })
+            .limit(300)
+            .populate('user', 'name email role')
+            .lean();
+        return res.status(200).json({ success: true, count: testimonials.length, data: testimonials });
+    } catch (err) {
+        console.error('[Admin] List testimonials failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to load testimonials.' });
+    }
+}
+
+/**
+ * PUT /api/admin/testimonials/:id — approve/reject and toggle featured.
+ * Body: { status?: 'pending'|'approved'|'rejected', featured?: boolean }
+ */
+async function updateTestimonial(req, res) {
+    try {
+        const testimonial = await Testimonial.findById(req.params.id);
+        if (!testimonial) return res.status(404).json({ success: false, message: 'Testimonial not found.' });
+
+        if (req.body.status && ['pending', 'approved', 'rejected'].includes(req.body.status)) {
+            testimonial.status = req.body.status;
+        }
+        if (typeof req.body.featured === 'boolean') {
+            testimonial.featured = req.body.featured;
+        }
+
+        await testimonial.save();
+        logAudit('ADMIN_TESTIMONIAL_UPDATE', `Testimonial by ${testimonial.name} → ${testimonial.status}`).catch(() => {});
+        return res.status(200).json({ success: true, message: 'Testimonial updated.', data: { testimonial } });
+    } catch (err) {
+        console.error('[Admin] Update testimonial failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to update the testimonial.' });
+    }
+}
+
+/**
+ * DELETE /api/admin/testimonials/:id
+ */
+async function deleteTestimonial(req, res) {
+    try {
+        const testimonial = await Testimonial.findById(req.params.id);
+        if (!testimonial) return res.status(404).json({ success: false, message: 'Testimonial not found.' });
+        await Testimonial.findByIdAndDelete(req.params.id);
+        logAudit('ADMIN_TESTIMONIAL_DELETE', `Deleted testimonial by ${testimonial.name}`).catch(() => {});
+        return res.status(200).json({ success: true, message: 'Testimonial deleted.' });
+    } catch (err) {
+        console.error('[Admin] Delete testimonial failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to delete the testimonial.' });
+    }
+}
+
 module.exports = {
     overview,
     listUsers,
@@ -254,5 +313,8 @@ module.exports = {
     updateListing,
     deleteListing,
     auditLog,
-    setSubscriptionStatus
+    setSubscriptionStatus,
+    listTestimonials,
+    updateTestimonial,
+    deleteTestimonial
 };

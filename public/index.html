@@ -126,9 +126,9 @@
                 <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1595246140625-573b715d11dc?auto=format&fit=crop&w=2000&q=70')"></div>
                 <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2000&q=70')"></div>
                 <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=2000&q=70')"></div>
-                <!-- Dark overlay so text stays readable on any photo -->
-                <div class="absolute inset-0 bg-dark-900/75"></div>
-                <div class="absolute inset-0 bg-gradient-to-b from-dark-900/70 via-transparent to-dark-900/90"></div>
+                <!-- Lighter overlay so the photos stay visible while text remains readable -->
+                <div class="absolute inset-0 bg-dark-900/40"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-dark-900/50 via-transparent to-dark-900/60"></div>
             </div>
 
             <!-- Background decorative orbs -->
@@ -196,22 +196,22 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                     <!-- Stat 1 -->
                     <div class="text-center reveal">
-                        <div class="stat-number text-3xl sm:text-4xl md:text-5xl font-heading font-extrabold mb-2" id="stat-farmers" data-target="500">500</div>
+                        <div class="stat-number text-3xl sm:text-4xl md:text-5xl font-heading font-extrabold mb-2" id="stat-farmers" data-target="31">31</div>
                         <p class="text-sm sm:text-base text-gray-400">Farmers on Platform</p>
                     </div>
                     <!-- Stat 2 -->
                     <div class="text-center reveal">
-                        <div class="stat-number text-3xl sm:text-4xl md:text-5xl font-heading font-extrabold mb-2" id="stat-traders" data-target="12">12</div>
+                        <div class="stat-number text-3xl sm:text-4xl md:text-5xl font-heading font-extrabold mb-2" id="stat-traders" data-target="10">10</div>
                         <p class="text-sm sm:text-base text-gray-400">Traders on Platform</p>
                     </div>
                     <!-- Stat 3 -->
                     <div class="text-center reveal">
-                        <div class="stat-number text-3xl sm:text-4xl md:text-5xl font-heading font-extrabold mb-2" id="stat-listings" data-target="30">30</div>
+                        <div class="stat-number text-3xl sm:text-4xl md:text-5xl font-heading font-extrabold mb-2" id="stat-listings" data-target="37">37</div>
                         <p class="text-sm sm:text-base text-gray-400">Active Market Listings</p>
                     </div>
                     <!-- Stat 4 -->
                     <div class="text-center reveal">
-                        <div class="stat-number text-3xl sm:text-4xl md:text-5xl font-heading font-extrabold mb-2" id="stat-articles" data-target="85">85</div>
+                        <div class="stat-number text-3xl sm:text-4xl md:text-5xl font-heading font-extrabold mb-2" id="stat-articles" data-target="8">8</div>
                         <p class="text-sm sm:text-base text-gray-400">Knowledge Articles</p>
                     </div>
                 </div>
@@ -508,79 +508,23 @@
                     <h2 id="testimonials-heading" class="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
                         Voices of <span class="gradient-text">Impact</span>
                     </h2>
-                    <p class="max-w-2xl mx-auto text-gray-400 text-base sm:text-lg">
-                        Hear from the communities and partners we work with across the globe.
+<p class="max-w-2xl mx-auto text-gray-400 text-base sm:text-lg">
+                        Real feedback from the farmers and traders using KCNP Agro.
                     </p>
                 </div>
 
-                <!-- Testimonials Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                    <!-- Testimonial 1 -->
-                    <article class="testimonial-card glass-card rounded-2xl p-8 reveal">
-                        <!-- Star rating -->
-                        <div class="flex gap-1 mb-4" aria-label="5 out of 5 stars">
-                            <svg class="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            <svg class="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            <svg class="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            <svg class="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            <svg class="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                        </div>
-                        <blockquote class="text-gray-300 text-sm sm:text-base leading-relaxed mb-6">
-                            "KCNP Agro transformed our farming practices. We've increased yields by 40%
-                            while reducing water usage significantly. Their climate-smart approach is truly revolutionary."
-                        </blockquote>
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white font-bold text-sm" aria-hidden="true">AM</div>
-                            <div>
-                                <p class="text-white font-semibold text-sm">Amina Mohammed</p>
-                                <p class="text-gray-500 text-xs">Farmer, Kenya</p>
-                            </div>
-                        </div>
-                    </article>
+                <!-- Testimonials Grid (loaded from the API) -->
+                <div id="testimonials-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                    <div class="text-center py-12 text-gray-500 col-span-full">
+                        <p data-i18n="tt_loading">Loading testimonials...</p>
+                    </div>
+                </div>
 
-                    <!-- Testimonial 2 -->
-                    <article class="testimonial-card glass-card rounded-2xl p-8 reveal">
-                        <div class="flex gap-1 mb-4" aria-label="5 out of 5 stars">
-                            <svg class="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            <svg class="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            <svg class="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            <svg class="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            <svg class="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                        </div>
-                        <blockquote class="text-gray-300 text-sm sm:text-base leading-relaxed mb-6">
-                            "The trade network KCNP Agro built has connected us directly to international
-                            buyers. Our income has doubled, and we no longer depend on exploitative middlemen."
-                        </blockquote>
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-accent-500 to-accent-700 flex items-center justify-center text-white font-bold text-sm" aria-hidden="true">RP</div>
-                            <div>
-                                <p class="text-white font-semibold text-sm">Rajesh Patel</p>
-                                <p class="text-gray-500 text-xs">Cooperative Leader, India</p>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Testimonial 3 -->
-                    <article class="testimonial-card glass-card rounded-2xl p-8 reveal">
-                        <div class="flex gap-1 mb-4" aria-label="5 out of 5 stars">
-                            <svg class="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            <svg class="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            <svg class="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            <svg class="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            <svg class="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                        </div>
-                        <blockquote class="text-gray-300 text-sm sm:text-base leading-relaxed mb-6">
-                            "As a policy researcher, I've seen few organizations deliver on their promises like
-                            KCNP Agro. Their data-driven approach to advocacy has influenced real legislative change."
-                        </blockquote>
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-accent-500 flex items-center justify-center text-white font-bold text-sm" aria-hidden="true">SO</div>
-                            <div>
-                                <p class="text-white font-semibold text-sm">Sarah Okonkwo</p>
-                                <p class="text-gray-500 text-xs">Policy Analyst, Nigeria</p>
-                            </div>
-                        </div>
-                    </article>
+                <!-- Share your experience CTA -->
+                <div class="text-center mt-12 reveal">
+                    <a href="/dashboard" class="cta-btn inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-white font-semibold text-sm sm:text-base">
+                        <span data-i18n="tt_cta">Share your experience</span>
+                    </a>
                 </div>
             </div>
         </section>
@@ -1063,6 +1007,49 @@
                 }
             };
             loadStats();
+
+            // ==============================
+            // 4b. Testimonials (real, approved feedback)
+            // ==============================
+            const esc = (s) => String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            const starSVG = (n) => {
+                let out = '', i;
+                for (i = 0; i < n; i++) out += '<svg class="w-4 h-4 text-accent-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+                return out;
+            };
+            const loadTestimonials = async () => {
+                const container = document.getElementById('testimonials-grid');
+                if (!container) return;
+                try {
+                    const ctrl = new AbortController();
+                    const timer = setTimeout(() => ctrl.abort(), 8000);
+                    const res = await fetch('/api/testimonials', { signal: ctrl.signal });
+                    clearTimeout(timer);
+                    const data = await res.json();
+                    if (!data.success || !data.data || data.data.length === 0) {
+                        container.innerHTML = '<div class="text-center py-12 text-gray-500 col-span-full"><p data-i18n="tt_empty">No testimonials yet. Be the first to share your experience with KCNP Agro.</p></div>';
+                        return;
+                    }
+                    const cards = data.data.slice(0, 9).map((t) => `
+                        <article class="testimonial-card glass-card rounded-2xl p-8 reveal">
+                            <div class="flex gap-1 mb-4" aria-label="${t.rating} out of 5 stars">${starSVG(Math.max(1, Math.min(5, t.rating)))}</div>
+                            <blockquote class="text-gray-300 text-sm sm:text-base leading-relaxed mb-6">"${esc(t.message)}"</blockquote>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white font-bold text-sm" aria-hidden="true">${esc((t.name || 'K').slice(0, 2).toUpperCase())}</div>
+                                <div>
+                                    <p class="text-white font-semibold text-sm">${esc(t.name || 'Farmer')}</p>
+                                    <p class="text-gray-500 text-xs">${esc(t.role === 'trader' ? 'Trader' : 'Farmer')}</p>
+                                </div>
+                            </div>
+                        </article>`).join('');
+                    container.innerHTML = cards;
+                } catch (err) {
+                    container.innerHTML = '<div class="text-center py-12 text-gray-500 col-span-full"><p data-i18n="tt_empty">No testimonials yet. Be the first to share your experience with KCNP Agro.</p></div>';
+                }
+            };
+            loadTestimonials();
 
             // ==============================
             // 5. Contact Form Validation

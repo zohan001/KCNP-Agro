@@ -70,6 +70,7 @@
                         <button type="button" data-tab="subscriptions" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Payments</button>
                         <button type="button" data-tab="listings" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Listings</button>
                         <button type="button" data-tab="education" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Education</button>
+                        <button type="button" data-tab="testimonials" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Testimonials</button>
                     </div>
 
                     <!-- Tab panels -->
@@ -90,6 +91,7 @@
                         </div>
                         <div id="edu-view"></div>
                     </section>
+                    <section id="panel-testimonials" class="admin-panel glass-card rounded-2xl p-6 md:p-8 hidden"></section>
                 </div>
 
             </div>
@@ -151,7 +153,7 @@
                     b.className = 'admin-tab px-4 py-2 rounded-lg text-sm font-semibold ' +
                         (on ? 'bg-primary-600 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10');
                 });
-                ['users', 'subscriptions', 'listings', 'audit', 'education'].forEach(function (nm) {
+                ['users', 'subscriptions', 'listings', 'audit', 'education', 'testimonials'].forEach(function (nm) {
                     var p = document.getElementById('panel-' + nm);
                     if (p) p.classList.toggle('hidden', nm !== name);
                 });
@@ -160,6 +162,7 @@
                 else if (name === 'listings') loadListings();
                 else if (name === 'audit') loadAudit();
                 else if (name === 'education') loadEduView();
+                else if (name === 'testimonials') loadTestimonials();
             }
 
             function loadOverview() {
@@ -356,6 +359,65 @@
                                 '<td class="py-2.5 pr-3 text-white font-semibold">' + esc(e.action) + '</td>' +
                                 '<td class="py-2.5 text-gray-400 text-xs">' + esc(e.details) + '</td></tr>';
                         }).join('') + '</tbody></table></div>';
+                }).catch(function () { panel.innerHTML = '<div class="text-red-300 text-sm text-center py-10">Network error.</div>'; });
+            }
+
+            function loadTestimonials() {
+                var panel = document.getElementById('panel-testimonials');
+                panel.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">Loading testimonials...</div>';
+                api('/admin/testimonials').then(function (r) {
+                    if (!r.data.success) { panel.innerHTML = '<div class="text-red-300 text-sm text-center">Failed to load testimonials.</div>'; return; }
+                    var items = r.data.data;
+                    if (!items.length) { panel.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">No testimonials yet — they appear here when farmers and traders share their experience.</div>'; return; }
+                    panel.innerHTML = '<div class="overflow-x-auto"><table class="w-full text-sm"><thead>' +
+                        '<tr class="text-left text-gray-400 uppercase tracking-wide text-xs">' +
+                        '<th class="pb-3 pr-3">From</th><th class="pb-3 pr-3">Rating</th><th class="pb-3 pr-3">Message</th><th class="pb-3">Status</th><th class="pb-3">Actions</th>' +
+                        '</tr></thead><tbody>' + items.map(function (t) {
+                            var st = t.status === 'approved'
+                                ? '<span class="text-primary-300 font-semibold">APPROVED</span>'
+                                : t.status === 'pending'
+                                    ? '<span class="text-accent-400 font-semibold">PENDING</span>'
+                                    : '<span class="text-red-300">REJECTED</span>';
+                            var feat = t.featured ? '★' : '';
+                            return '<tr class="border-t border-white/5 align-top">' +
+                                '<td class="py-3 pr-3 text-white text-xs">' + esc(t.name || (t.user && t.user.name) || '—') +
+                                '<br><span class="text-gray-500">' + esc(t.role || '') + ' · ' + (t.user ? esc(t.user.email || '') : '') + '</span></td>' +
+                                '<td class="py-3 pr-3 text-accent-400 font-semibold">' + (t.rating || 5) + '/5</td>' +
+                                '<td class="py-3 pr-3 text-gray-300 text-xs max-w-xs">"' + esc(t.message) + '"</td>' +
+                                '<td class="py-3 pr-3 text-xs whitespace-nowrap">' + st + ' ' + feat + '</td>' +
+                                '<td class="py-3 whitespace-nowrap">' +
+                                ((t.status === 'pending') ? '<button data-approve="' + t._id + '" class="text-[11px] px-2.5 py-1 rounded bg-primary-500/10 text-primary-300 hover:bg-primary-500/20 mr-1">Approve</button>' : '') +
+                                '<button data-reject="' + t._id + '" class="text-[11px] px-2.5 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20 mr-1">Reject</button>' +
+                                '<button data-feature="' + t._id + '" class="text-[11px] px-2.5 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">' + (t.featured ? 'Unfeature' : 'Feature') + '</button>' +
+                                '<button data-del="' + t._id + '" class="text-[11px] px-2.5 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20">Delete</button>' +
+                                '</td></tr>';
+                        }).join('') + '</tbody></table></div>';
+
+                    panel.querySelectorAll('[data-approve]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            api('/admin/testimonials/' + b.getAttribute('data-approve'), { method: 'PUT', body: { status: 'approved' } })
+                                .then(function () { loadTestimonials(); });
+                        });
+                    });
+                    panel.querySelectorAll('[data-reject]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            api('/admin/testimonials/' + b.getAttribute('data-reject'), { method: 'PUT', body: { status: 'rejected' } })
+                                .then(function () { loadTestimonials(); });
+                        });
+                    });
+                    panel.querySelectorAll('[data-feature]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            api('/admin/testimonials/' + b.getAttribute('data-feature'), { method: 'PUT', body: { featured: b.textContent.indexOf('Unfeature') === -1 } })
+                                .then(function () { loadTestimonials(); });
+                        });
+                    });
+                    panel.querySelectorAll('[data-del]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            if (!confirm('Delete this testimonial permanently?')) return;
+                            api('/admin/testimonials/' + b.getAttribute('data-del'), { method: 'DELETE' })
+                                .then(function () { loadTestimonials(); });
+                        });
+                    });
                 }).catch(function () { panel.innerHTML = '<div class="text-red-300 text-sm text-center py-10">Network error.</div>'; });
             }
 

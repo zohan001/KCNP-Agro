@@ -426,7 +426,20 @@
                 var mobileBtn = document.getElementById('mobile-menu-btn');
                 var mobileMenu = document.getElementById('mobile-menu');
                 if (mobileBtn && mobileMenu) {
-                    mobileBtn.addEventListener('click', function () { mobileMenu.classList.toggle('closed'); });
+                    mobileBtn.addEventListener('click', function () {
+                        var isOpen = mobileMenu.classList.contains('open');
+                        if (isOpen) {
+                            mobileMenu.classList.remove('open');
+                            mobileMenu.classList.add('closed');
+                            mobileBtn.classList.remove('active');
+                            mobileBtn.setAttribute('aria-expanded', 'false');
+                        } else {
+                            mobileMenu.classList.remove('closed');
+                            mobileMenu.classList.add('open');
+                            mobileBtn.classList.add('active');
+                            mobileBtn.setAttribute('aria-expanded', 'true');
+                        }
+                    });
                 }
                 document.addEventListener('kcnp:lang', load);
                 load();

@@ -686,7 +686,7 @@
             const role = (auth && auth.role) || null;
             const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
 
-            if (role === 'farmer' || role === 'admin') {
+            if (role === 'farmer') {
                 controls.classList.remove('hidden');
                 notice.classList.add('hidden');
             } else if (role === 'trader') {
@@ -697,8 +697,12 @@
             } else {
                 controls.classList.add('hidden');
                 formContainer.classList.add('hidden');
-                notice.innerHTML = `${t('np_login1')} <a href="/register" class="text-primary-400 hover:text-primary-300 font-semibold">${t('np_link_reg')}</a> ${t('np_or')} <a href="/login" class="text-primary-400 hover:text-primary-300 font-semibold">${t('np_link_login')}</a> ${t('np_login2')}`;
-                notice.classList.remove('hidden');
+                if (role === 'admin') {
+                    notice.classList.add('hidden');
+                } else {
+                    notice.innerHTML = `${t('np_login1')} <a href="/register" class="text-primary-400 hover:text-primary-300 font-semibold">${t('np_link_reg')}</a> ${t('np_or')} <a href="/login" class="text-primary-400 hover:text-primary-300 font-semibold">${t('np_link_login')}</a> ${t('np_login2')}`;
+                    notice.classList.remove('hidden');
+                }
             }
         }
 

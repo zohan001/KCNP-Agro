@@ -11,6 +11,7 @@ const statsController = require('../controllers/statsController');
 const marketInsightsController = require('../controllers/marketInsightsController');
 const paymentController = require('../controllers/paymentController');
 const adminController = require('../controllers/adminController');
+const testimonialController = require('../controllers/testimonialController');
 
 const {
     validateContactMessage,
@@ -98,12 +99,21 @@ router.get('/my/membership', authenticate, paymentController.getMyMembership);
 router.post('/payment/request', authenticate, authorize('farmer', 'admin'), paymentController.requestPayment);
 
 // ==============================
+// Testimonials / Feedback
+// ==============================
+router.post('/testimonials', authenticate, testimonialController.createTestimonial);
+router.get('/testimonials', testimonialController.getPublicTestimonials);
+
+// ==============================
 // Super Admin
 // ==============================
 router.get('/admin/overview', authenticate, authorize('admin'), adminController.overview);
 router.get('/admin/users', authenticate, authorize('admin'), adminController.listUsers);
 router.put('/admin/users/:id', authenticate, authorize('admin'), adminController.updateUser);
 router.delete('/admin/users/:id', authenticate, authorize('admin'), adminController.deleteUser);
+router.get('/admin/testimonials', authenticate, authorize('admin'), adminController.listTestimonials);
+router.put('/admin/testimonials/:id', authenticate, authorize('admin'), adminController.updateTestimonial);
+router.delete('/admin/testimonials/:id', authenticate, authorize('admin'), adminController.deleteTestimonial);
 router.get('/admin/subscriptions', authenticate, authorize('admin'), adminController.listSubscriptions);
 router.post('/admin/subscriptions/:id/approve', authenticate, authorize('admin'),
     (req, res) => adminController.setSubscriptionStatus(req, res, 'active'));

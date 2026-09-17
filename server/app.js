@@ -57,12 +57,13 @@ function createApp() {
         contentSecurityPolicy: {
             directives: {
                 defaultSrc: ["'self'"],
-                scriptSrc: ["'self'", "'unsafe-inline'"],
+                scriptSrc: ["'self'", "'unsafe-inline'", 'https://www.google.com', 'https://www.gstatic.com'],
                 scriptSrcAttr: ["'unsafe-inline'"],
                 styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
                 fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
-                imgSrc: ["'self'", 'data:', 'https://images.unsplash.com'],
+                imgSrc: ["'self'", 'data:', 'https://images.unsplash.com', 'https://www.google.com', 'https://www.gstatic.com'],
                 connectSrc: ["'self'"],
+                frameSrc: ["'self'", 'https://www.google.com'],
                 objectSrc: ["'none'"],
                 frameAncestors: ["'self'"],
                 baseUri: ["'self'"],

@@ -16,6 +16,7 @@
     <script>document.documentElement.classList.add('js');
         function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }</script>
     <script src="/js/ux.js" defer></script>
+    <script src="/js/recaptcha.js" defer></script>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -89,6 +90,8 @@
                     <div class="flex justify-end -mt-4 mb-4">
                         <a href="/forgot-password" class="text-xs text-primary-400 hover:text-primary-300 font-semibold">Forgot password?</a>
                     </div>
+
+                    <div id="login-captcha" class="mb-4" data-recaptcha></div>
 
                     <button type="submit" class="cta-btn w-full py-4 rounded-xl text-white font-bold text-base flex items-center justify-center gap-2">
                         <span id="submit-text" data-i18n="btn_login">Login</span>
@@ -270,6 +273,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            if (window.KCNPRecaptcha) window.KCNPRecaptcha.init();
             if (new URLSearchParams(window.location.search).get('registered') === '1') {
                 const banner = document.getElementById('registered-banner');
                 if (banner) banner.classList.remove('hidden');
@@ -298,9 +302,19 @@
             submitSpinner.classList.remove('hidden');
 
             try {
+                const capToken = (window.KCNPRecaptcha && window.KCNPRecaptcha.active()) ? window.KCNPRecaptcha.tokenFrom('login-captcha') : '';
+                if (!capToken) {
+                    submitText.textContent = P('Login');
+                    submitSpinner.classList.add('hidden');
+                    formError.textContent = P('Please verify you are not a robot.');
+                    formError.classList.remove('hidden');
+                    return;
+                }
+
                 const { res, data } = await postJson('/api/auth/login', {
                     email: email.value,
-                    password: password.value
+                    password: password.value,
+                    recaptchaToken: capToken
                 });
                 submitText.textContent = P('Login');
                 submitSpinner.classList.add('hidden');

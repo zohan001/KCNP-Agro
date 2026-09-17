@@ -26,6 +26,8 @@ const {
 } = require('../middleware/validation');
 
 const { authenticate, optionalAuthenticate, authorize } = require('../middleware/auth');
+const { requireRecaptcha } = require('../services/recaptcha');
+const config = require('../config');
 
 // ==============================
 // Contact Message Routes
@@ -42,13 +44,18 @@ router.get('/newsletter', newsletterController.getSubscribers);
 // ==============================
 // Auth Routes
 // ==============================
-router.post('/auth/register', validateRegister, authController.register);
-router.post('/auth/login', validateLogin, authController.login);
+router.post('/auth/register', validateRegister, requireRecaptcha, authController.register);
+router.post('/auth/login', validateLogin, requireRecaptcha, authController.login);
 router.get('/auth/profile', authenticate, authController.getProfile);
 router.post('/auth/activate', authController.activate);
 router.post('/auth/resend-activation', authController.resendActivation);
-router.post('/auth/forgot-password', validateForgotPassword, authController.forgotPassword);
-router.post('/auth/reset-password', validateResetPassword, authController.resetPassword);
+router.post('/auth/forgot-password', validateForgotPassword, requireRecaptcha, authController.forgotPassword);
+router.post('/auth/reset-password', validateResetPassword, requireRecaptcha, authController.resetPassword);
+
+// Public config helpers
+router.get('/recaptcha-config', (req, res) => {
+    res.status(200).json({ success: true, data: { siteKey: config.recaptcha.siteKey } });
+});
 
 // ==============================
 // Product / Marketplace Routes
@@ -96,7 +103,7 @@ router.get('/stats', statsController.getStats);
 // ==============================
 router.get('/plans', paymentController.getPlansHandler);
 router.get('/my/membership', authenticate, paymentController.getMyMembership);
-router.post('/payment/request', authenticate, authorize('farmer', 'admin'), paymentController.requestPayment);
+router.post('/payment/request', authenticate, authorize('farmer', 'admin'), requireRecaptcha, paymentController.requestPayment);
 router.post('/payment/otp', authenticate, authorize('farmer', 'admin'), paymentController.submitPaymentOtp);
 
 // ==============================

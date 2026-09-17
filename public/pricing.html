@@ -16,6 +16,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 
     <script src="/js/ux.js" defer></script>
+    <script src="/js/recaptcha.js" defer></script>
+    <script>
+        function initRecaptcha() { if (window.KCNPRecaptcha) window.KCNPRecaptcha.init(); }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initRecaptcha);
+        } else {
+            initRecaptcha();
+        }
+    </script>
 </head>
 <body class="bg-dark-900 text-white font-sans antialiased" style="font-family: Inter, system-ui, sans-serif;">
     <script>
@@ -130,6 +139,9 @@
                         <div>
                             <label for="pay-phone" class="block text-sm font-medium text-gray-300 mb-2"><span data-i18n="pr_mpesa_phone">M-Pesa phone number</span> <span class="text-red-400">*</span></label>
                             <input type="tel" id="pay-phone" placeholder="07XX XXX XXX" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm">
+                        </div>
+                        <div class="md:col-span-2">
+                            <div id="pay-captcha" class="mb-4" data-recaptcha></div>
                         </div>
                         <div class="md:col-span-2">
                             <button type="submit" class="cta-btn w-full md:w-auto px-8 py-3 rounded-xl text-white font-semibold text-sm">
@@ -439,10 +451,16 @@
                         return;
                     }
                     submitText.textContent = P('Sending...');
+                    var capToken = (window.KCNPRecaptcha && window.KCNPRecaptcha.active()) ? window.KCNPRecaptcha.tokenFrom('pay-captcha') : '';
+                    if (!capToken) {
+                        submitText.textContent = t('pr_pay_btn');
+                        resultBox(false, P('Please verify you are not a robot.'));
+                        return;
+                    }
                     fetch(api + '/payment/request', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-                        body: JSON.stringify({ plan: plan, phone: phone })
+                        body: JSON.stringify({ plan: plan, phone: phone, recaptchaToken: capToken })
                     }).then(function (r) { return r.json(); }).then(function (d) {
                         submitText.textContent = t('pr_pay_btn');
                         if (d.success) {

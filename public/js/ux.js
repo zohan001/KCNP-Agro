@@ -570,6 +570,7 @@
     var PHRASES =
 {
   "5 out of 5 stars": "Nyenzo 5 kati ya 5",
+  "Please verify you are not a robot.": "Tafadhali thibitisha kuwa wewe si roboti.",
   "2026 Theme: Climate Smart Agriculture": "Kaulimbiu ya 2026: Kilimo Bora cha Hali ya Hewa",
   ") and its services. By using our website, you consent to the practices described in this Policy.": ") na huduma zake. Kwa kutumia tovuti yetu, unakubali mazoea yaliyoelezwa katika Sera hii.",
   ") and related services. By accessing or using our website, you agree to be bound by these Terms. If you do not agree with any part of these Terms, please do not use the website.": ") na huduma zinazohusiana. Kwa kufikia au kutumia tovuti yetu, unakubali kufungwa na Masharti haya. Ikiwa hukubaliani na sehemu yoyote ya Masharti haya, tafadhali usitumie tovuti.",

@@ -16,6 +16,7 @@
     <script>document.documentElement.classList.add('js');
         function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }</script>
     <script src="/js/ux.js" defer></script>
+    <script src="/js/recaptcha.js" defer></script>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -95,6 +96,8 @@
                         <input type="password" id="password" required autocomplete="new-password" placeholder="At least 6 characters" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
                         <p id="password-error" class="text-red-400 text-xs mt-1 hidden" role="alert"></p>
                     </div>
+
+                    <div id="register-captcha" class="mb-4" data-recaptcha></div>
 
                     <button type="submit" class="cta-btn w-full py-4 rounded-xl text-white font-bold text-base flex items-center justify-center gap-2">
                         <span id="submit-text" data-i18n="btn_create">Create Account</span>
@@ -300,11 +303,22 @@
             submitSpinner.classList.remove('hidden');
 
             try {
+                const capToken = (window.KCNPRecaptcha && window.KCNPRecaptcha.active()) ? window.KCNPRecaptcha.tokenFrom('register-captcha') : '';
+                if (!capToken) {
+                    submitText.textContent = 'Create Account';
+                    submitSpinner.classList.add('hidden');
+                    formError.className = 'mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm text-center';
+                    formError.textContent = P('Please verify you are not a robot.');
+                    formError.classList.remove('hidden');
+                    return;
+                }
+
                 const { res, data } = await postJson('/api/auth/register', {
                     name: name.value,
                     email: email.value,
                     password: password.value,
-                    role: document.getElementById('role').value
+                    role: document.getElementById('role').value,
+                    recaptchaToken: capToken
                 });
                 submitText.textContent = 'Create Account';
                 submitSpinner.classList.add('hidden');
@@ -336,6 +350,13 @@
         });
 
         document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        function initRecaptcha() { if (window.KCNPRecaptcha) window.KCNPRecaptcha.init(); }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initRecaptcha);
+        } else {
+            initRecaptcha();
+        }
     </script>
     <!-- Assist: call for help + language toggle (low-literacy support) -->
     <a href="tel:+254745756470" class="fab-help" aria-label="Call for help">

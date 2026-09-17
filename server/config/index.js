@@ -73,25 +73,37 @@ module.exports = {
         currency: process.env.PAYSTACK_CURRENCY || 'KES'
     },
 
+    // Google reCAPTCHA v2 (checkbox) — protects auth + payment forms.
+    // Leave RECAPTCHA_SECRET_KEY empty to disable verification (dev/staging).
+    recaptcha: {
+        siteKey: process.env.RECAPTCHA_SITE_KEY || '',
+        secretKey: process.env.RECAPTCHA_SECRET_KEY || ''
+    },
+
     // Whether any email delivery path has been configured (SMTP or Brevo HTTP API)
     mailConfigured() {
         return Boolean((this.mail.host && this.mail.user && this.mail.pass) || this.mail.apiKey);
     },
 
-// Whether the Daraja M-Pesa credentials have been supplied. When false the
-        // payment flow falls back to manual (pending + admin approval).
-        mpesaConfigured() {
-            return Boolean(
-                this.daraja.consumerKey &&
-                this.daraja.consumerSecret &&
-                this.daraja.passkey &&
-                this.daraja.shortcode &&
-                this.daraja.callbackUrl
-            );
-        },
+    // Whether the Daraja M-Pesa credentials have been supplied. When false the
+    // payment flow falls back to manual (pending + admin approval).
+    mpesaConfigured() {
+        return Boolean(
+            this.daraja.consumerKey &&
+            this.daraja.consumerSecret &&
+            this.daraja.passkey &&
+            this.daraja.shortcode &&
+            this.daraja.callbackUrl
+        );
+    },
 
-        // Whether Paystack secret key is configured (preferred M-Pesa provider)
-        paystackConfigured() {
-            return Boolean(this.paystack.secretKey);
-        }
+    // Whether Paystack secret key is configured (preferred M-Pesa provider)
+    paystackConfigured() {
+        return Boolean(this.paystack.secretKey);
+    },
+
+    // Whether reCAPTCHA verification is enabled (both keys supplied)
+    recaptchaConfigured() {
+        return Boolean(this.recaptcha.siteKey && this.recaptcha.secretKey);
+    }
 };

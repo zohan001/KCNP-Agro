@@ -21,6 +21,9 @@ const config = require('./config');
 // Import routes
 const apiRoutes = require('./routes/api');
 
+// Import M-Pesa callback handler (public Daraja endpoint)
+const mpesaController = require('./controllers/mpesaController');
+
 // Import error handling middleware
 const { errorHandler, notFoundHandler } = require('./middleware/validation');
 
@@ -151,6 +154,14 @@ function createApp() {
             res.sendFile(path.join(__dirname, '..', 'public', file));
         });
     });
+
+    // ==============================
+    // M-Pesa (Daraja) STK callback
+    // ==============================
+    // Safaricom posts the payment result here. Must NOT go through the /api
+    // rate limiter or JWT auth, and must answer fast (200) with a Daraja
+    // result object. Configured by MPESA_CALLBACK_URL.
+    app.post('/mpesa/callback', mpesaController.stkCallback);
 
     // ==============================
     // API Routes

@@ -29,6 +29,19 @@ const subscriptionSchema = new mongoose.Schema(
             type: String,
             default: ''
         },
+        checkoutRequestId: {
+            type: String,
+            default: '',
+            index: true
+        },
+        merchantRequestId: {
+            type: String,
+            default: ''
+        },
+        rawCallback: {
+            type: mongoose.Schema.Types.Mixed,
+            default: null
+        },
         status: {
             type: String,
             enum: ['pending', 'active', 'expired', 'cancelled', 'denied'],

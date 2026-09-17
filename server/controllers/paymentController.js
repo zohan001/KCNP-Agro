@@ -1,6 +1,8 @@
 const User = require('../models/User');
 const Subscription = require('../models/Subscription');
 const { logAudit } = require('../db/database');
+const config = require('../config');
+const daraja = require('../services/daraja');
 
 /**
  * Subscription plans. Prices in Kenyan Shillings (KES).
@@ -98,6 +100,47 @@ async function requestPayment(req, res) {
 
         logAudit('PAYMENT_REQUESTED', `Payment request ${p.id} KES ${p.price} for ${req.user.email}`)
             .catch(err => console.error('[Audit] Failed to log:', err.message));
+
+        // When Daraja credentials are configured, push an STK prompt to the
+        // farmer's phone; the callback below activates the subscription.
+        if (config.mpesaConfigured()) {
+            try {
+                const resp = await daraja.stkPush(
+                    String(phone).trim(),
+                    p.price,
+                    `KCNP${p.id}`,
+                    `${p.name} subscription`
+                );
+                const accepted = resp && (String(resp.ResponseCode) === '0' || resp.ResponseCode === 0);
+
+                if (accepted && resp.CheckoutRequestID) {
+                    pending.merchantRequestId = resp.MerchantRequestID || '';
+                    pending.checkoutRequestId = resp.CheckoutRequestID;
+                    await pending.save();
+
+                    logAudit('MPESA_STK_SENT',
+                        `STK ${resp.CheckoutRequestID} KES ${p.price} to ${String(phone).trim()} for ${req.user.email}`)
+                        .catch(err => console.error('[Audit] Failed to log:', err.message));
+
+                    return res.status(201).json({
+                        success: true,
+                        message: 'M-Pesa prompt sent to your phone. Enter your PIN on the M-Pesa screen to complete the payment — your subscription activates automatically.',
+                        data: {
+                            payment: pending,
+                            plan: p,
+                            stk: {
+                                checkoutRequestId: resp.CheckoutRequestID,
+                                responseDescription: resp.ResponseDescription || ''
+                            }
+                        }
+                    });
+                }
+
+                console.error('[Payment] STK push not accepted by Daraja:', resp);
+            } catch (err) {
+                console.error('[Payment] STK push failed, falling back to manual verification:', err.message);
+            }
+        }
 
         return res.status(201).json({
             success: true,

@@ -38,6 +38,16 @@ const subscriptionSchema = new mongoose.Schema(
             type: String,
             default: ''
         },
+        paystackReference: {
+            type: String,
+            default: '',
+            index: true
+        },
+        provider: {
+            type: String,
+            enum: ['manual', 'daraja', 'paystack'],
+            default: 'manual'
+        },
         rawCallback: {
             type: mongoose.Schema.Types.Mixed,
             default: null

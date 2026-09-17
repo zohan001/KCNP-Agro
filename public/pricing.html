@@ -138,6 +138,21 @@
                         </div>
                     </form>
                     <p id="pay-result" class="hidden mt-5 p-4 rounded-xl text-sm text-center" role="status"></p>
+                    <div id="otp-panel" class="hidden mt-5 p-5 rounded-2xl bg-accent-500/10 border border-accent-500/25">
+                        <p class="text-sm font-bold text-accent-300 mb-1" data-i18n="pr_otp_title">Enter the code from your phone</p>
+                        <p class="text-xs text-gray-400 mb-4" data-i18n="pr_otp_sub">Enter the one-time code (OTP) that Paystack sent to your M-Pesa phone to complete this payment.</p>
+                        <div class="flex flex-wrap gap-3 items-center">
+                            <input id="otp-input" type="text" inputmode="numeric" maxlength="8"
+                                   placeholder="123456" autocomplete="one-time-code"
+                                   class="form-input px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm w-40">
+                            <button type="button" id="otp-submit" class="cta-btn px-6 py-3 rounded-xl text-white font-semibold text-sm">
+                                <span id="otp-submit-text" data-i18n="pr_otp_btn">Confirm code</span>
+                            </button>
+                        </div>
+                        <button type="button" id="otp-refresh" class="mt-3 text-xs text-accent-300 underline">
+                            <span data-i18n="pr_otp_refresh">Request a new payment instead</span>
+                        </button>
+                    </div>
                     <p id="pay-login-hint" class="hidden mt-5 p-4 rounded-xl bg-accent-500/10 border border-accent-500/20 text-accent-300 text-sm text-center">
                         <span data-i18n="pr_login_hint">You need to be logged in as a farmer to subscribe.</span>
                         <a href="/login" class="underline font-semibold"><span data-i18n="nav_login">Login</span></a>
@@ -357,9 +372,56 @@
                 box.classList.remove('hidden');
             }
 
+            var otpState = { reference: null };
+
+            function showOtpPanel() {
+                document.getElementById('otp-panel').classList.remove('hidden');
+                document.getElementById('otp-input').value = '';
+                document.getElementById('otp-input').focus();
+            }
+
+            function hideOtpPanel() {
+                document.getElementById('otp-panel').classList.add('hidden');
+            }
+
+            function confirmOtp() {
+                var otp = document.getElementById('otp-input').value.trim();
+                if (!otp || !otpState.reference) return;
+                var otpBtn = document.getElementById('otp-submit-text');
+                otpBtn.textContent = t('pr_otp_sending');
+                fetch(api + '/payment/otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getToken() },
+                    body: JSON.stringify({ reference: otpState.reference, otp: otp })
+                }).then(function (r) { return r.json(); }).then(function (d) {
+                    otpBtn.textContent = t('pr_otp_btn');
+                    if (d.success) {
+                        hideOtpPanel();
+                        otpState.reference = null;
+                        resultBox(true, P(d.message) || P('Payment confirmed.'));
+                    } else {
+                        resultBox(false, P(d.message) || P('Could not confirm the code. Please try again.'));
+                    }
+                }).catch(function () {
+                    otpBtn.textContent = t('pr_otp_btn');
+                    resultBox(false, P('Network error. Please try again.'));
+                });
+            }
+
             function initForm() {
                 var form = document.getElementById('payment-form');
                 if (!form) return;
+                var otpSubmit = document.getElementById('otp-submit');
+                if (otpSubmit) otpSubmit.addEventListener('click', confirmOtp);
+                var otpRefresh = document.getElementById('otp-refresh');
+                if (otpRefresh) otpRefresh.addEventListener('click', function () {
+                    hideOtpPanel();
+                    otpState.reference = null;
+                });
+                var otpInput = document.getElementById('otp-input');
+                if (otpInput) otpInput.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') { e.preventDefault(); confirmOtp(); }
+                });
                 form.addEventListener('submit', function (e) {
                     e.preventDefault();
                     var phone = document.getElementById('pay-phone').value.trim();
@@ -384,6 +446,14 @@
                     }).then(function (r) { return r.json(); }).then(function (d) {
                         submitText.textContent = t('pr_pay_btn');
                         if (d.success) {
+                            if (d.needsOtp && d.otpReference) {
+                                otpState.reference = d.otpReference;
+                                showOtpPanel();
+                                resultBox(true, P(d.message) || P('Enter the code from your phone to finish.'));
+                                return;
+                            }
+                            hideOtpPanel();
+                            otpState.reference = null;
                             resultBox(true, P(d.message) || P('Payment request received.'));
                         } else {
                             resultBox(false, P(d.message) || P('Failed to create the payment request.'));

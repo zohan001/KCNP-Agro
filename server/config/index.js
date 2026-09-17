@@ -65,20 +65,33 @@ module.exports = {
         }
     },
 
+    // Paystack (Kenya M-Pesa via Charge API + webhook)
+    // Leave PAYSTACK_SECRET_KEY empty to fall back to Daraja or manual approval.
+    paystack: {
+        secretKey: process.env.PAYSTACK_SECRET_KEY || '',
+        publicKey: process.env.PAYSTACK_PUBLIC_KEY || '',
+        currency: process.env.PAYSTACK_CURRENCY || 'KES'
+    },
+
     // Whether any email delivery path has been configured (SMTP or Brevo HTTP API)
     mailConfigured() {
         return Boolean((this.mail.host && this.mail.user && this.mail.pass) || this.mail.apiKey);
     },
 
-    // Whether the Daraja M-Pesa credentials have been supplied. When false the
-    // payment flow falls back to manual (pending + admin approval).
-    mpesaConfigured() {
-        return Boolean(
-            this.daraja.consumerKey &&
-            this.daraja.consumerSecret &&
-            this.daraja.passkey &&
-            this.daraja.shortcode &&
-            this.daraja.callbackUrl
-        );
-    }
+// Whether the Daraja M-Pesa credentials have been supplied. When false the
+        // payment flow falls back to manual (pending + admin approval).
+        mpesaConfigured() {
+            return Boolean(
+                this.daraja.consumerKey &&
+                this.daraja.consumerSecret &&
+                this.daraja.passkey &&
+                this.daraja.shortcode &&
+                this.daraja.callbackUrl
+            );
+        },
+
+        // Whether Paystack secret key is configured (preferred M-Pesa provider)
+        paystackConfigured() {
+            return Boolean(this.paystack.secretKey);
+        }
 };

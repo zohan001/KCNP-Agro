@@ -97,6 +97,7 @@ router.get('/stats', statsController.getStats);
 router.get('/plans', paymentController.getPlansHandler);
 router.get('/my/membership', authenticate, paymentController.getMyMembership);
 router.post('/payment/request', authenticate, authorize('farmer', 'admin'), paymentController.requestPayment);
+router.post('/payment/otp', authenticate, authorize('farmer', 'admin'), paymentController.submitPaymentOtp);
 
 // ==============================
 // Testimonials / Feedback

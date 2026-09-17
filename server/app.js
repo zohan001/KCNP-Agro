@@ -23,6 +23,7 @@ const apiRoutes = require('./routes/api');
 
 // Import M-Pesa callback handler (public Daraja endpoint)
 const mpesaController = require('./controllers/mpesaController');
+const paystackController = require('./controllers/paystackController');
 
 // Import error handling middleware
 const { errorHandler, notFoundHandler } = require('./middleware/validation');
@@ -78,11 +79,13 @@ function createApp() {
         credentials: false
     }));
 
-    // Parse JSON request bodies with a size limit
-    app.use(express.json({ limit: '10mb' }));
+    // Parse JSON request bodies with a size limit. The verify callback keeps
+    // the RAW bytes so the Paystack webhook can validate its HMAC signature.
+    const rawBodyCapture = (req, _res, buf) => { req.rawBody = buf; };
+    app.use(express.json({ limit: '10mb', verify: rawBodyCapture }));
 
     // Parse URL-encoded request bodies
-    app.use(express.urlencoded({ extended: false }));
+    app.use(express.urlencoded({ extended: false, verify: rawBodyCapture }));
 
     // Apply rate limiting to all API requests
     const limiter = rateLimit({
@@ -162,6 +165,12 @@ function createApp() {
     // rate limiter or JWT auth, and must answer fast (200) with a Daraja
     // result object. Configured by MPESA_CALLBACK_URL.
     app.post('/mpesa/callback', mpesaController.stkCallback);
+
+    // Paystack webhook — Paystack posts charge.success/failed events here.
+    // Kept outside the /api rate limiter and JWT auth; the signature is
+    // verified inside the handler against the RAW body. Set this URL as the
+    // webhook in the Paystack dashboard.
+    app.post('/paystack/webhook', paystackController.webhook);
 
     // ==============================
     // API Routes

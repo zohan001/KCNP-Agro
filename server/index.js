@@ -17,6 +17,37 @@ const createApp = require('./app');
 // Import database helpers
 const { connectDB, initializeDatabase, closeDatabase } = require('./db/database');
 
+// Import error logging helpers
+const { recordError } = require('./services/errorLogger');
+
+// Fail fast in production when the JWT secret is still the insecure default
+// (anyone with the repo can forge admin tokens with it).
+if (config.env === 'production' && !config.jwtSecretSecure()) {
+    console.error(
+        '[Security] JWT_SECRET is unset or still the development default. ' +
+        'Generate a random one (openssl rand -hex 32) and set it on the server ' +
+        'before going live.'
+    );
+    process.exit(1);
+} else if (config.env === 'development' && !config.jwtSecretSecure()) {
+    console.warn('[Security] Using the development JWT_SECRET. Set JWT_SECRET to a random value before deploying.');
+}
+
+// Capture uncaught errors and unhandled promise rejections so they are
+// recorded to the ErrorLog collection (when the DB is up) instead of only
+// being visible in the console.
+process.on('uncaughtException', (err) => {
+    console.error('[Process] Uncaught exception:', err);
+    recordError({ level: 'fatal', source: 'process.uncaughtException', error: err })
+        .then(() => process.exit(1))
+        .catch(() => process.exit(1));
+});
+process.on('unhandledRejection', (reason) => {
+    const err = reason instanceof Error ? reason : new Error(String(reason));
+    console.error('[Process] Unhandled rejection:', err);
+    recordError({ level: 'error', source: 'process.unhandledRejection', error: err });
+});
+
 /**
  * Bootstrap function - connects to the database,
  * creates the app, and starts the HTTP server.

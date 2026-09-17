@@ -14,6 +14,7 @@ const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const cookieParser = require('cookie-parser');
 
 // Import configuration
 const config = require('./config');
@@ -72,12 +73,15 @@ function createApp() {
         }
     }));
 
-    // Enable CORS for cross-origin requests
+    // Enable CORS for cross-origin requests. Credentials (cookies) are only
+    // forwarded when a specific origin is allow-listed — never alongside '*',
+    // which browsers would silently reject for credentialed requests anyway.
+    const corsOrigin = config.cors.origin;
     app.use(cors({
-        origin: config.cors.origin,
+        origin: corsOrigin,
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
-        credentials: false
+        credentials: corsOrigin !== '*'
     }));
 
     // Parse JSON request bodies with a size limit. The verify callback keeps
@@ -87,6 +91,9 @@ function createApp() {
 
     // Parse URL-encoded request bodies
     app.use(express.urlencoded({ extended: false, verify: rawBodyCapture }));
+
+    // Parse cookies (used to carry the httpOnly session JWT)
+    app.use(cookieParser());
 
     // Apply rate limiting to all API requests
     const limiter = rateLimit({

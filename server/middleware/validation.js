@@ -116,6 +116,17 @@ function errorHandler(err, req, res, next) {
     console.error('[ERROR]', err.message);
     console.error(err.stack);
 
+    // Persist the error for admin review (best-effort, never blocking).
+    const { recordError } = require('../services/errorLogger');
+    recordError({
+        level: err.level === 'fatal' ? 'fatal' : 'error',
+        source: err.source || 'http',
+        error: err,
+        method: req.method,
+        url: req.originalUrl || req.url,
+        status: err.status || 500
+    }).catch(() => {});
+
     // Return a generic error message - don't leak internals
     res.status(err.status || 500).json({
         success: false,

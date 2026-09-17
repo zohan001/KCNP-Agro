@@ -8,7 +8,9 @@
     "dev": "nodemon server/index.js",
     "init-db": "node scripts/init-db.js",
     "seed": "node scripts/seed-data.js",
-    "test": "node scripts/test-api.js",
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch",
+    "test:api": "node scripts/test-api.js",
     "build:css": "node ./node_modules/tailwindcss/lib/cli.js -i ./css/input.css -o ./public/styles.css --minify",
     "build": "npm run build:css"
   },
@@ -25,6 +27,7 @@
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
@@ -36,6 +39,9 @@
     "tailwindcss": "^3.4.13"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "jest": "^30.5.1",
+    "mongodb-memory-server": "^11.2.0",
+    "nodemon": "^3.1.0",
+    "supertest": "^7.2.2"
   }
 }

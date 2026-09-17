@@ -858,6 +858,11 @@
                 logoutLinks.forEach(link => {
                     link.addEventListener('click', (e) => {
                         e.preventDefault();
+                        fetch('/api/auth/logout', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'same-origin'
+                        }).catch(function () {});
                         clearSession();
                         window.location.href = '/';
                     });

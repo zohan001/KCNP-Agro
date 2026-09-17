@@ -109,6 +109,16 @@ async function login(req, res) {
 
         const token = generateToken(user);
 
+        // httpOnly session cookie — the primary transport going forward. Not
+        // readable from JavaScript, so XSS cannot exfiltrate the JWT.
+        res.cookie(config.auth.cookieName, token, {
+            httpOnly: true,
+            secure: config.auth.cookieSecure,
+            sameSite: 'lax',
+            path: '/',
+            maxAge: config.auth.cookieMaxAge
+        });
+
         return res.status(200).json({
             success: true,
             message: 'Login successful.',
@@ -121,6 +131,22 @@ async function login(req, res) {
             message: 'Login failed. Please try again.'
         });
     }
+}
+
+/**
+ * POST /api/auth/logout — clears the session cookie.
+ */
+function logout(req, res) {
+    res.clearCookie(config.auth.cookieName, {
+        httpOnly: true,
+        secure: config.auth.cookieSecure,
+        sameSite: 'lax',
+        path: '/'
+    });
+    return res.status(200).json({
+        success: true,
+        message: 'Logged out successfully.'
+    });
 }
 
 async function getProfile(req, res) {
@@ -336,4 +362,4 @@ async function resetPassword(req, res) {
     }
 }
 
-module.exports = { register, login, getProfile, activate, resendActivation, forgotPassword, resetPassword };
+module.exports = { register, login, logout, getProfile, activate, resendActivation, forgotPassword, resetPassword };

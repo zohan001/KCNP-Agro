@@ -5,6 +5,7 @@ const config = require('../config');
 const daraja = require('../services/daraja');
 const paystack = require('../services/paystack');
 const { activateSubscription } = require('../services/subscriptions');
+const { notifyAdmins } = require('../services/notifications');
 
 /**
  * Subscription plans. Prices in Kenyan Shillings (KES).
@@ -221,6 +222,12 @@ async function requestPayment(req, res) {
         }
 
         // 3) Manual: pending + admin approval.
+        notifyAdmins({
+            type: 'payment_pending_approval',
+            message: `Payment ${p.id} KES ${p.price} from ${req.user.email || req.user._id} is waiting for approval.`,
+            refId: pending._id
+        }).catch(err => console.error('[Notification] Failed:', err.message));
+
         return res.status(201).json({
             success: true,
             message: 'Payment request received. You will be contacted to confirm your M-Pesa payment (or approve from the admin dashboard), then your subscription activates.',

@@ -68,16 +68,20 @@
                     <div class="flex flex-wrap gap-2 mb-6" id="admin-tabs" role="tablist">
                         <button type="button" data-tab="users" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Users</button>
                         <button type="button" data-tab="subscriptions" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Payments</button>
+                        <button type="button" data-tab="notifications" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10"><span id="notif-tab-label">Notifications</span></button>
                         <button type="button" data-tab="listings" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Listings</button>
                         <button type="button" data-tab="education" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Education</button>
                         <button type="button" data-tab="testimonials" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Testimonials</button>
+                        <button type="button" data-tab="errorlogs" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Error Logs</button>
                     </div>
 
                     <!-- Tab panels -->
                     <section id="panel-users" class="admin-panel glass-card rounded-2xl p-6 md:p-8"></section>
                     <section id="panel-subscriptions" class="admin-panel glass-card rounded-2xl p-6 md:p-8 hidden"></section>
+                    <section id="panel-notifications" class="admin-panel glass-card rounded-2xl p-6 md:p-8 hidden"></section>
                     <section id="panel-listings" class="admin-panel glass-card rounded-2xl p-6 md:p-8 hidden"></section>
                     <section id="panel-audit" class="admin-panel glass-card rounded-2xl p-6 md:p-8 hidden"></section>
+                    <section id="panel-errorlogs" class="admin-panel glass-card rounded-2xl p-6 md:p-8 hidden"></section>
                     <section id="panel-education" class="admin-panel glass-card rounded-2xl p-6 md:p-8 hidden">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
                             <div class="flex flex-wrap gap-2" id="edu-subtabs">
@@ -153,16 +157,18 @@
                     b.className = 'admin-tab px-4 py-2 rounded-lg text-sm font-semibold ' +
                         (on ? 'bg-primary-600 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10');
                 });
-                ['users', 'subscriptions', 'listings', 'audit', 'education', 'testimonials'].forEach(function (nm) {
+                ['users', 'subscriptions', 'notifications', 'listings', 'audit', 'education', 'testimonials', 'errorlogs'].forEach(function (nm) {
                     var p = document.getElementById('panel-' + nm);
                     if (p) p.classList.toggle('hidden', nm !== name);
                 });
                 if (name === 'users') loadUsers();
                 else if (name === 'subscriptions') loadSubscriptions();
+                else if (name === 'notifications') loadNotifications();
                 else if (name === 'listings') loadListings();
                 else if (name === 'audit') loadAudit();
                 else if (name === 'education') loadEduView();
                 else if (name === 'testimonials') loadTestimonials();
+                else if (name === 'errorlogs') loadErrorLogs();
             }
 
             function loadOverview() {
@@ -174,10 +180,10 @@
                         { label: 'Total users', value: d.totalUsers, cls: 'text-white' },
                         { label: 'Pending payments', value: d.pendingPayments, cls: d.pendingPayments > 0 ? 'text-accent-400' : 'text-primary-400' },
                         { label: 'Active subs', value: d.activeSubs, cls: 'text-primary-400' },
+                        { label: 'Unread notif.', value: d.unreadNotifications, cls: d.unreadNotifications > 0 ? 'text-accent-400' : 'text-gray-300' },
                         { label: 'Listings', value: d.activeListings + ' / ' + d.listings, cls: 'text-white' },
                         { label: 'Farmers', value: d.farmers, cls: 'text-primary-400' },
                         { label: 'Traders', value: d.traders, cls: 'text-accent-400' },
-                        { label: 'Admins', value: d.admins, cls: 'text-red-400' },
                         { label: 'Articles', value: d.articles, cls: 'text-gray-200' }
                     ];
                     wrap.innerHTML = cards.map(function (c) {
@@ -185,6 +191,7 @@
                             '<div class="text-2xl font-heading font-extrabold ' + c.cls + ' mb-1">' + c.value + '</div>' +
                             '<p class="text-[11px] sm:text-xs text-gray-400 uppercase tracking-wide">' + c.label + '</p></div>';
                     }).join('');
+                    updateNotifTabLabel(d.unreadNotifications);
                 }).catch(function () {});
             }
 
@@ -297,6 +304,79 @@
                                 .then(function () { loadSubscriptions(); loadUsers(); loadOverview(); });
                         });
                     });
+                }).catch(function () { panel.innerHTML = '<div class="text-red-300 text-sm text-center py-10">Network error.</div>'; });
+            }
+
+            function updateNotifTabLabel(unread) {
+                var label = document.getElementById('notif-tab-label');
+                if (!label) return;
+                label.textContent = unread > 0 ? 'Notifications (' + unread + ')' : 'Notifications';
+            }
+
+            function loadNotifications() {
+                var panel = document.getElementById('panel-notifications');
+                panel.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">Loading notifications...</div>';
+                api('/admin/notifications').then(function (r) {
+                    if (!r.data.success) { panel.innerHTML = '<div class="text-red-300 text-sm text-center">Failed to load notifications.</div>'; return; }
+                    var items = r.data.data;
+                    updateNotifTabLabel(r.data.unread);
+                    if (!items.length) { panel.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">No notifications yet.</div>'; return; }
+                    panel.innerHTML =
+                        '<div class="flex justify-end mb-4"><button id="notif-readall" type="button" class="text-[11px] px-3 py-1.5 rounded bg-white/5 text-gray-300 hover:bg-white/10 font-semibold">Mark all as read</button></div>' +
+                        '<div class="space-y-3">' + items.map(function (n) {
+                            var badge = n.read
+                                ? '<span class="text-[10px] font-bold uppercase tracking-wide text-gray-600">Read</span>'
+                                : '<span class="text-[10px] font-bold uppercase tracking-wide text-accent-300 bg-accent-500/10 border border-accent-500/30 px-2 py-0.5 rounded-full">New</span>';
+                            var type = n.type === 'payment_pending_approval'
+                                ? 'Payment approval'
+                                : n.type === 'payment_failed' ? 'Payment failed' : 'System';
+                            return '<div class="flex items-start justify-between gap-4 border border-white/10 rounded-xl p-4 bg-dark-900/40">' +
+                                '<div><div class="flex items-center gap-2 mb-1"><span class="text-xs font-bold uppercase tracking-wide text-gray-400">' + type + '</span>' + badge + '</div>' +
+                                '<p class="text-sm text-gray-200">' + esc(n.message) + '</p>' +
+                                '<p class="text-xs text-gray-500 mt-1">' + fmtDate(n.createdAt) + '</p></div>' +
+                                (n.read ? '' : '<button type="button" data-notif="' + n._id + '" class="text-[11px] px-2.5 py-1 rounded bg-primary-500/10 text-primary-300 hover:bg-primary-500/20 shrink-0">Mark read</button>') +
+                                '</div>';
+                        }).join('') + '</div>';
+                    var ra = panel.querySelector('#notif-readall');
+                    if (ra) ra.addEventListener('click', function () {
+                        api('/admin/notifications/read-all', { method: 'POST', body: {} })
+                            .then(function (rr) { loadNotifications(); loadOverview(); });
+                    });
+                    panel.querySelectorAll('[data-notif]').forEach(function (b) {
+                        b.addEventListener('click', function () {
+                            api('/admin/notifications/' + b.getAttribute('data-notif') + '/read', { method: 'POST', body: {} })
+                                .then(function () { loadNotifications(); loadOverview(); });
+                        });
+                    });
+                }).catch(function () { panel.innerHTML = '<div class="text-red-300 text-sm text-center py-10">Network error.</div>'; });
+            }
+
+            function loadErrorLogs() {
+                var panel = document.getElementById('panel-errorlogs');
+                panel.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">Loading error logs...</div>';
+                api('/admin/logs').then(function (r) {
+                    if (!r.data.success) { panel.innerHTML = '<div class="text-red-300 text-sm text-center">Failed to load error logs.</div>'; return; }
+                    var items = r.data.data;
+                    if (!items.length) { panel.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">No errors recorded. That is a good thing.</div>'; return; }
+                    panel.innerHTML = '<div class="overflow-x-auto"><table class="w-full text-sm"><thead>' +
+                        '<tr class="text-left text-gray-400 uppercase tracking-wide text-xs">' +
+                        '<th class="pb-3 pr-3">Level</th><th class="pb-3 pr-3">Time</th><th class="pb-3 pr-3">Method</th><th class="pb-3 pr-3">Status</th><th class="pb-3 pr-3">Source</th><th class="pb-3 pr-3">Message</th>' +
+                        '</tr></thead><tbody>' + items.map(function (e) {
+                            var lvl = e.level === 'fatal'
+                                ? '<span class="text-red-300 font-bold">FATAL</span>'
+                                : '<span class="text-accent-300 font-semibold">ERROR</span>';
+                            var stackBox = e.stack
+                                ? '<details class="mt-1"><summary class="text-[11px] text-primary-300 cursor-pointer">stack</summary><pre class="text-[10px] text-gray-500 whitespace-pre-wrap mt-2">' + esc(e.stack) + '</pre></details>'
+                                : '';
+                            return '<tr class="border-t border-white/5 align-top">' +
+                                '<td class="py-2.5 pr-3 whitespace-nowrap">' + lvl + '</td>' +
+                                '<td class="py-2.5 pr-3 text-gray-500 text-xs whitespace-nowrap">' + fmtDate(e.createdAt) + '</td>' +
+                                '<td class="py-2.5 pr-3 text-gray-400 text-xs">' + esc(e.method || '') + '</td>' +
+                                '<td class="py-2.5 pr-3 text-gray-300 text-xs">' + (e.status || '') + '</td>' +
+                                '<td class="py-2.5 pr-3 text-gray-400 text-xs">' + esc(e.source || '') + '</td>' +
+                                '<td class="py-2.5 text-gray-200 text-xs">' + esc(e.message) + '<br><span class="text-gray-600">' + esc(e.url || '') + '</span>' + stackBox + '</td>' +
+                                '</tr>';
+                        }).join('') + '</tbody></table></div>';
                 }).catch(function () { panel.innerHTML = '<div class="text-red-300 text-sm text-center py-10">Network error.</div>'; });
             }
 
@@ -697,6 +777,12 @@
                 }
                 document.getElementById('admin-app').classList.remove('hidden');
                 document.getElementById('logout-btn').addEventListener('click', function () {
+                    // Clear the httpOnly session cookie server-side first.
+                    fetch(API + '/auth/logout', {
+                        method: 'POST',
+                        headers: { 'Authorization': 'Bearer ' + getAuth().token },
+                        credentials: 'same-origin'
+                    }).catch(function () {});
                     ['kcnp_token', 'kcnp_user', 'token', 'user'].forEach(function (k) { localStorage.removeItem(k); });
                     window.location.href = '/login';
                 });

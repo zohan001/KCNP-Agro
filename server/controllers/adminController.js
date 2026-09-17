@@ -4,6 +4,8 @@ const Article = require('../models/Article');
 const Subscription = require('../models/Subscription');
 const Testimonial = require('../models/Testimonial');
 const AuditLog = require('../models/AuditLog');
+const ErrorLog = require('../models/ErrorLog');
+const Notification = require('../models/Notification');
 const { logAudit } = require('../db/database');
 const { PLANS } = require('./paymentController');
 
@@ -18,7 +20,7 @@ async function overview(req, res) {
     try {
         const [
             farmers, traders, admins, listings, activeListings, articles,
-            pendingPayments, activeSubs, totalUsers
+            pendingPayments, activeSubs, totalUsers, unreadNotifications
         ] = await Promise.all([
             User.countDocuments({ role: 'farmer', isActive: true }),
             User.countDocuments({ role: 'trader', isActive: true }),
@@ -28,11 +30,12 @@ async function overview(req, res) {
             Article.countDocuments({}),
             Subscription.countDocuments({ status: 'pending' }),
             Subscription.countDocuments({ status: 'active' }),
-            User.countDocuments({})
+            User.countDocuments({}),
+            Notification.countDocuments({ read: false })
         ]);
         return res.status(200).json({
             success: true,
-            data: { farmers, traders, admins, listings, activeListings, articles, pendingPayments, activeSubs, totalUsers }
+            data: { farmers, traders, admins, listings, activeListings, articles, pendingPayments, activeSubs, totalUsers, unreadNotifications }
         });
     } catch (err) {
         console.error('[Admin] Overview failed:', err.message);
@@ -172,6 +175,8 @@ async function setSubscriptionStatus(req, res, status) {
         }
         await sub.save();
         logAudit('ADMIN_SUB_UPDATE', `Payment ${status}: ${sub.plan} for ${sub.user}`).catch(() => {});
+        // Resolve the "waiting for approval" notification for this payment.
+        await Notification.updateMany({ refId: sub._id, read: false }, { $set: { read: true } }).catch(() => {});
         return res.status(200).json({ success: true, message: `Payment ${status}.`, data: { subscription: sub } });
     } catch (err) {
         console.error('[Admin] Payment update failed:', err.message);
@@ -303,6 +308,67 @@ async function deleteTestimonial(req, res) {
     }
 }
 
+/**
+ * GET /api/admin/logs — recent persisted error logs.
+ * Query: ?level=error|fatal
+ */
+async function listErrorLogs(req, res) {
+    try {
+        const filter = {};
+        if (req.query.level && ['error', 'fatal'].includes(req.query.level)) {
+            filter.level = req.query.level;
+        }
+        const entries = await ErrorLog.find(filter).sort({ createdAt: -1 }).limit(100).lean();
+        return res.status(200).json({ success: true, count: entries.length, data: entries });
+    } catch (err) {
+        console.error('[Admin] Error logs failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to load error logs.' });
+    }
+}
+
+/**
+ * GET /api/admin/notifications — admin notifications (newest first, unread first).
+ */
+async function listNotifications(req, res) {
+    try {
+        const entries = await Notification.find({})
+            .sort({ read: 1, createdAt: -1 })
+            .limit(50)
+            .lean();
+        const unread = entries.filter(n => !n.read).length;
+        return res.status(200).json({ success: true, count: entries.length, unread, data: entries });
+    } catch (err) {
+        console.error('[Admin] Notifications failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to load notifications.' });
+    }
+}
+
+/**
+ * POST /api/admin/notifications/:id/read — mark a notification as read.
+ */
+async function markNotificationRead(req, res) {
+    try {
+        await Notification.findByIdAndUpdate(req.params.id, { read: true });
+        return res.status(200).json({ success: true, message: 'Notification marked as read.' });
+    } catch (err) {
+        console.error('[Admin] Mark notification failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to update the notification.' });
+    }
+}
+
+/**
+ * POST /api/admin/notifications/read-all — clear all notifications.
+ */
+async function markAllNotificationsRead(req, res) {
+    try {
+        await Notification.updateMany({ read: false }, { $set: { read: true } });
+        return res.status(200).json({ success: true, message: 'All notifications marked as read.' });
+    } catch (err) {
+        console.error('[Admin] Clear notifications failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to clear notifications.' });
+    }
+}
+
 module.exports = {
     overview,
     listUsers,
@@ -316,5 +382,9 @@ module.exports = {
     setSubscriptionStatus,
     listTestimonials,
     updateTestimonial,
-    deleteTestimonial
+    deleteTestimonial,
+    listErrorLogs,
+    listNotifications,
+    markNotificationRead,
+    markAllNotificationsRead
 };

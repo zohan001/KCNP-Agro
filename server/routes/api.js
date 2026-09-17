@@ -51,6 +51,7 @@ router.post('/auth/activate', authController.activate);
 router.post('/auth/resend-activation', authController.resendActivation);
 router.post('/auth/forgot-password', validateForgotPassword, requireRecaptcha, authController.forgotPassword);
 router.post('/auth/reset-password', validateResetPassword, requireRecaptcha, authController.resetPassword);
+router.post('/auth/logout', authController.logout);
 
 // Public config helpers
 router.get('/recaptcha-config', (req, res) => {
@@ -131,6 +132,10 @@ router.get('/admin/listings', authenticate, authorize('admin'), adminController.
 router.put('/admin/listings/:id', authenticate, authorize('admin'), adminController.updateListing);
 router.delete('/admin/listings/:id', authenticate, authorize('admin'), adminController.deleteListing);
 router.get('/admin/audit-log', authenticate, authorize('admin'), adminController.auditLog);
+router.get('/admin/logs', authenticate, authorize('admin'), adminController.listErrorLogs);
+router.get('/admin/notifications', authenticate, authorize('admin'), adminController.listNotifications);
+router.post('/admin/notifications/:id/read', authenticate, authorize('admin'), adminController.markNotificationRead);
+router.post('/admin/notifications/read-all', authenticate, authorize('admin'), adminController.markAllNotificationsRead);
 
 // ==============================
 // Health Check

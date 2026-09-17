@@ -20,8 +20,12 @@ module.exports = {
     mongoURI: process.env.MONGO_URI,
 
     // CORS configuration
+    // In production we default to SAME-ORIGIN (no cross-origin access) unless
+    // CORS_ORIGIN is explicitly set. In development '*' keeps local tooling happy.
     cors: {
-        origin: process.env.CORS_ORIGIN || '*'
+        origin: process.env.CORS_ORIGIN || (process.env.NODE_ENV === 'production'
+            ? (process.env.FRONTEND_URL || '')
+            : '*')
     },
 
     // Rate limiting configuration (per IP)
@@ -34,6 +38,14 @@ module.exports = {
     jwt: {
         secret: process.env.JWT_SECRET || 'dev-secret-change-in-production',
         expiresIn: process.env.JWT_EXPIRES_IN || '7d'
+    },
+
+    // Auth session cookie (httpOnly JWT transport). The token is ALSO accepted
+    // via the Authorization header for backwards compatibility / API tooling.
+    auth: {
+        cookieName: process.env.AUTH_COOKIE_NAME || 'kcnp_session',
+        cookieMaxAge: 7 * 24 * 60 * 60 * 1000, // matches JWT_EXPIRES_IN default
+        cookieSecure: process.env.NODE_ENV === 'production'
     },
 
     // Frontend base URL (used to build password reset links)
@@ -105,5 +117,11 @@ module.exports = {
     // Whether reCAPTCHA verification is enabled (both keys supplied)
     recaptchaConfigured() {
         return Boolean(this.recaptcha.siteKey && this.recaptcha.secretKey);
+    },
+
+    // A hard-coded JWT secret is only ever acceptable outside production.
+    // Returns true when the deployed secret is safe to run with.
+    jwtSecretSecure() {
+        return Boolean(this.jwt.secret && this.jwt.secret !== 'dev-secret-change-in-production');
     }
 };

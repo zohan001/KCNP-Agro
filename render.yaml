@@ -14,6 +14,13 @@
 #   2. In Render Dashboard: New > Blueprint
 #   3. Selecting this repository
 #   4. Pasting your MONGO_URI when prompted
+#
+# SECURITY
+#   The server REFUSES to boot in production when JWT_SECRET
+#   is missing or still the development default. This blueprint
+#   asks Render to generate a strong random secret automatically
+#   (generateValue: true). If you set it by hand instead, use:
+#       openssl rand -hex 32
 # ============================================
 
 services:
@@ -35,6 +42,29 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+
+      # JWT signing secret. Render generates a strong random value.
+      # NOTE: the server fails fast in production if this is unset or still
+      # the development default, so never ship without it.
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+
+      # Name of the httpOnly session cookie that carries the JWT.
+      - key: AUTH_COOKIE_NAME
+        value: kcnp_session
+
+      # Public URL of this service. Used to build password-reset links and as
+      # the CORS allow-list origin in production. Update to your real domain.
+      - key: FRONTEND_URL
+        sync: false
+
+      # Cross-origin allow-list for the API. Leave unset in production to keep
+      # same-origin only (recommended). Set to a specific origin only if the
+      # frontend is hosted on a different domain (comma-separated).
+      - key: CORS_ORIGIN
+        sync: false
 
       # Rate limiting defaults
       - key: RATE_LIMIT_WINDOW

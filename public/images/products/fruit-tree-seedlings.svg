@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-label="Tropical Fruit Tree Seedlings">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#14532d"/>
+      <stop offset="0.55" stop-color="#0c1222"/>
+      <stop offset="1" stop-color="#0a0f1f"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="660" cy="120" r="220" fill="#22c55e" opacity="0.08"/>
+  <circle cx="120" cy="520" r="260" fill="#f59e0b" opacity="0.06"/>
+  <text x="400" y="250" font-size="170" text-anchor="middle">🥭</text>
+  <text x="400" y="410" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700" text-anchor="middle" fill="#f8fafc">Tropical Fruit Tree Seedlings</text>
+  <text x="400" y="460" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="600" text-anchor="middle" fill="#f59e0b" letter-spacing="4">SERVICES • KWALE</text>
+  <rect x="300" y="500" width="200" height="3" rx="1.5" fill="#22c55e" opacity="0.6"/>
+</svg>

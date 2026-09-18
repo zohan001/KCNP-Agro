@@ -22,7 +22,18 @@
 const SEED_USERS = [
     { name: 'KCNP Admin', email: 'admin@kcnpagro.org', password: 'adminpass123', role: 'admin' },
     { name: 'Demo Farmer', email: 'farmer@example.com', password: 'farmer123', role: 'farmer' },
-    { name: 'Demo Trader', email: 'trader@example.com', password: 'trader123', role: 'trader' }
+    { name: 'Demo Trader', email: 'trader@example.com', password: 'trader123', role: 'trader' },
+    // Extra demo farmers (the marketplace relies on farmers posting listings)
+    { name: 'Mary Wanjiru', email: 'mary.wanjiru@example.com', password: 'KcnpAgro2026!', role: 'farmer' },
+    { name: 'John Kamau', email: 'john.kamau@example.com', password: 'KcnpAgro2026!', role: 'farmer' },
+    { name: 'Amina Hassan', email: 'amina.hassan@example.com', password: 'KcnpAgro2026!', role: 'farmer' },
+    { name: 'Peter Otieno', email: 'peter.otieno@example.com', password: 'KcnpAgro2026!', role: 'farmer' },
+    { name: 'Grace Mwende', email: 'grace.mwende@example.com', password: 'KcnpAgro2026!', role: 'farmer' },
+    { name: 'Daniel Mutua', email: 'daniel.mutua@example.com', password: 'KcnpAgro2026!', role: 'farmer' },
+    // Extra demo traders (they buy produce and resell)
+    { name: 'David Musyoka', email: 'david.musyoka@example.com', password: 'KcnpAgro2026!', role: 'trader' },
+    { name: 'Faith Chebet', email: 'faith.chebet@example.com', password: 'KcnpAgro2026!', role: 'trader' },
+    { name: 'Samuel Kiprop', email: 'samuel.kiprop@example.com', password: 'KcnpAgro2026!', role: 'trader' }
 ];
 
 const SEED_ARTICLES = [
@@ -535,7 +546,8 @@ const SEED_PRODUCTS = [
         unit: 'kg',
         location: 'Mombasa, Kenya',
         contactEmail: 'farmer@example.com',
-        contactPhone: '+254 700 000 000'
+        contactPhone: '+254 700 000 000',
+        image: '/images/products/maize-seeds.svg'
     },
     {
         title: 'Organic Cow Manure (Bag)',
@@ -545,7 +557,8 @@ const SEED_PRODUCTS = [
         unit: 'bag',
         location: 'Kilifi, Kenya',
         contactEmail: 'farmer@example.com',
-        contactPhone: '+254 700 000 000'
+        contactPhone: '+254 700 000 000',
+        image: '/images/products/cow-manure.svg'
     },
     {
         title: 'Fresh Green Bananas (Dodo)',
@@ -555,7 +568,8 @@ const SEED_PRODUCTS = [
         unit: 'bunch',
         location: 'Voi, Kenya',
         contactEmail: 'farmer@example.com',
-        contactPhone: '+254 712 345 678'
+        contactPhone: '+254 712 345 678',
+        image: '/images/products/green-bananas.svg'
     },
     {
         title: 'Panga and Garden Hoe Set',
@@ -565,7 +579,8 @@ const SEED_PRODUCTS = [
         unit: 'set',
         location: 'Mombasa, Kenya',
         contactEmail: 'farmer@example.com',
-        contactPhone: '+254 712 345 678'
+        contactPhone: '+254 712 345 678',
+        image: '/images/products/panga-hoe-set.svg'
     },
     {
         title: 'Tropical Fruit Tree Seedlings',
@@ -575,7 +590,118 @@ const SEED_PRODUCTS = [
         unit: 'piece',
         location: 'Kwale, Kenya',
         contactEmail: 'farmer@example.com',
-        contactPhone: '+254 728 456 789'
+        contactPhone: '+254 728 456 789',
+        image: '/images/products/fruit-tree-seedlings.svg'
+    },
+    {
+        title: 'Grafted Hass Avocado Seedlings',
+        description: 'Disease-free grafted Hass avocado seedlings ready for transplanting. Take 3-4 years to first harvest.',
+        category: 'seeds',
+        price: 350,
+        unit: 'piece',
+        location: 'Nyeri, Kenya',
+        contactEmail: 'mary.wanjiru@example.com',
+        contactPhone: '+254 711 111 111',
+        image: '/images/products/avocado-seedlings.svg'
+    },
+    {
+        title: 'Fresh Sorghum Grain (50kg Bag)',
+        description: 'Clean, well-dried white sorghum grain from this season\u2019s harvest. Bulk available for traders.',
+        category: 'produce',
+        price: 3200,
+        unit: 'bag',
+        location: 'Kitui, Kenya',
+        contactEmail: 'john.kamau@example.com',
+        contactPhone: '+254 722 222 222',
+        image: '/images/products/sorghum-grain.svg'
+    },
+    {
+        title: 'Friesian Dairy Cow (Calving Soon)',
+        description: 'Healthy Friesian dairy cow, vaccinated and dewormed, due to calve next month. Good milking pedigree.',
+        category: 'livestock',
+        price: 85000,
+        unit: 'head',
+        location: 'Nakuru, Kenya',
+        contactEmail: 'peter.otieno@example.com',
+        contactPhone: '+254 733 333 333',
+        image: '/images/products/dairy-cow.svg'
+    },
+    {
+        title: 'Greenhouse Tunnel Kit',
+        description: 'Complete greenhouse tunnel kit for small plots, includes frame, UV cover and drip line. Easy to erect.',
+        category: 'equipment',
+        price: 45000,
+        unit: 'kit',
+        location: 'Limuru, Kenya',
+        contactEmail: 'grace.mwende@example.com',
+        contactPhone: '+254 744 444 444',
+        image: '/images/products/greenhouse-kit.svg'
+    },
+    {
+        title: 'Organic Drip Irrigation Kit',
+        description: 'Low-cost drip irrigation kit for a quarter-acre plot, saves 40-60% water compared with surface irrigation.',
+        category: 'equipment',
+        price: 7500,
+        unit: 'kit',
+        location: 'Machakos, Kenya',
+        contactEmail: 'john.kamau@example.com',
+        contactPhone: '+254 722 222 222',
+        image: '/images/products/drip-irrigation-kit.svg'
+    },
+    {
+        title: 'High-Value French Beans',
+        description: 'Freshly harvested French beans graded for the export market. Contract and wholesale buyers welcome.',
+        category: 'produce',
+        price: 80,
+        unit: 'kg',
+        location: 'Nairobi, Kenya',
+        contactEmail: 'grace.mwende@example.com',
+        contactPhone: '+254 744 444 444',
+        image: '/images/products/french-beans.svg'
+    },
+    {
+        title: 'Finger Millet Seeds (High-Yield)',
+        description: 'Certified finger millet seed varieties with good disease tolerance and strong head formation.',
+        category: 'seeds',
+        price: 400,
+        unit: 'kg',
+        location: 'Kisumu, Kenya',
+        contactEmail: 'amina.hassan@example.com',
+        contactPhone: '+254 733 000 111',
+        image: '/images/products/finger-millet-seeds.svg'
+    },
+    {
+        title: 'Free-Range Eggs (Crate)',
+        description: 'Farm-fresh free-range eggs collected daily from local-reared hens. Sold per crate of 30.',
+        category: 'produce',
+        price: 850,
+        unit: 'crate',
+        location: 'Nakuru, Kenya',
+        contactEmail: 'amina.hassan@example.com',
+        contactPhone: '+254 733 000 112',
+        image: '/images/products/free-range-eggs.svg'
+    },
+    {
+        title: 'Compost Starter Culture',
+        description: 'Active compost inoculant that speeds up decomposition of farm residues into rich organic matter.',
+        category: 'fertilizer',
+        price: 600,
+        unit: 'pack',
+        location: 'Meru, Kenya',
+        contactEmail: 'daniel.mutua@example.com',
+        contactPhone: '+254 722 333 444',
+        image: '/images/products/compost-starter.svg'
+    },
+    {
+        title: 'Mobile Poultry Coop',
+        description: 'Sturdy portable poultry coop for 20 birds; protects from predators and lets you rotate pasture easily.',
+        category: 'equipment',
+        price: 18500,
+        unit: 'unit',
+        location: 'Bomet, Kenya',
+        contactEmail: 'peter.otieno@example.com',
+        contactPhone: '+254 733 333 334',
+        image: '/images/products/poultry-coop.svg'
     }
 ];
 
@@ -623,17 +749,36 @@ if (require.main === module) {
                 console.log(`[Quiz] Created ${SEED_QUIZZES.length} quizzes`);
             }
 
-            const productCount = await Product.countDocuments();
-            if (productCount === 0) {
-                await Product.create(SEED_PRODUCTS);
-                console.log(`[Product] Created ${SEED_PRODUCTS.length} sample listings`);
+            // Link listings to their seed farmers and upsert by title, so
+            // re-running the seed safely adds new listings and attaches images
+            // (and sellers) to listings created by earlier versions.
+            const seedUserEmails = SEED_USERS.map(u => u.email);
+            const seedUsers = await User.find({ email: { $in: seedUserEmails } }).lean();
+            const userIdByEmail = new Map(seedUsers.map(u => [u.email, u._id]));
+
+            let createdProducts = 0;
+            let updatedProducts = 0;
+            for (const p of SEED_PRODUCTS) {
+                const sellerId = userIdByEmail.get(p.contactEmail) || null;
+                const existing = await Product.findOne({ title: p.title });
+                if (existing) {
+                    const update = { ...p };
+                    delete update.title;
+                    update.seller = sellerId;
+                    await Product.updateOne({ _id: existing._id }, { $set: update });
+                    updatedProducts++;
+                } else {
+                    await Product.create({ ...p, ...(sellerId ? { seller: sellerId } : {}) });
+                    createdProducts++;
+                }
             }
+            console.log(`[Product] Listings ensured: ${SEED_PRODUCTS.length} (${createdProducts} created, ${updatedProducts} updated with images)`);
 
             console.log('\n=== Seeding complete ===');
             console.log('Demo accounts:');
-            console.log('Admin  - admin@kcnpagro.org / adminpass123');
-            console.log('Farmer - farmer@example.com / farmer123');
-            console.log('Trader - trader@example.com / trader123');
+            for (const u of SEED_USERS) {
+                console.log(`  ${u.role.padEnd(6)} - ${u.email} / ${u.password}`);
+            }
 
             await closeDatabase();
             process.exit(0);

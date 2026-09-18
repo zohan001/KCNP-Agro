@@ -547,7 +547,7 @@ const SEED_PRODUCTS = [
         location: 'Mombasa, Kenya',
         contactEmail: 'farmer@example.com',
         contactPhone: '+254 700 000 000',
-        image: '/images/products/maize-seeds.svg'
+        image: '/images/products/maize-seeds.jpg'
     },
     {
         title: 'Organic Cow Manure (Bag)',
@@ -558,7 +558,7 @@ const SEED_PRODUCTS = [
         location: 'Kilifi, Kenya',
         contactEmail: 'farmer@example.com',
         contactPhone: '+254 700 000 000',
-        image: '/images/products/cow-manure.svg'
+        image: '/images/products/cow-manure.jpg'
     },
     {
         title: 'Fresh Green Bananas (Dodo)',
@@ -569,7 +569,7 @@ const SEED_PRODUCTS = [
         location: 'Voi, Kenya',
         contactEmail: 'farmer@example.com',
         contactPhone: '+254 712 345 678',
-        image: '/images/products/green-bananas.svg'
+        image: '/images/products/green-bananas.jpg'
     },
     {
         title: 'Panga and Garden Hoe Set',
@@ -580,7 +580,7 @@ const SEED_PRODUCTS = [
         location: 'Mombasa, Kenya',
         contactEmail: 'farmer@example.com',
         contactPhone: '+254 712 345 678',
-        image: '/images/products/panga-hoe-set.svg'
+        image: '/images/products/panga-hoe-set.jpg'
     },
     {
         title: 'Tropical Fruit Tree Seedlings',
@@ -591,7 +591,7 @@ const SEED_PRODUCTS = [
         location: 'Kwale, Kenya',
         contactEmail: 'farmer@example.com',
         contactPhone: '+254 728 456 789',
-        image: '/images/products/fruit-tree-seedlings.svg'
+        image: '/images/products/fruit-tree-seedlings.jpg'
     },
     {
         title: 'Grafted Hass Avocado Seedlings',
@@ -602,7 +602,7 @@ const SEED_PRODUCTS = [
         location: 'Nyeri, Kenya',
         contactEmail: 'mary.wanjiru@example.com',
         contactPhone: '+254 711 111 111',
-        image: '/images/products/avocado-seedlings.svg'
+        image: '/images/products/avocado-seedlings.jpg'
     },
     {
         title: 'Fresh Sorghum Grain (50kg Bag)',
@@ -613,7 +613,7 @@ const SEED_PRODUCTS = [
         location: 'Kitui, Kenya',
         contactEmail: 'john.kamau@example.com',
         contactPhone: '+254 722 222 222',
-        image: '/images/products/sorghum-grain.svg'
+        image: '/images/products/sorghum-grain.png'
     },
     {
         title: 'Friesian Dairy Cow (Calving Soon)',
@@ -624,7 +624,7 @@ const SEED_PRODUCTS = [
         location: 'Nakuru, Kenya',
         contactEmail: 'peter.otieno@example.com',
         contactPhone: '+254 733 333 333',
-        image: '/images/products/dairy-cow.svg'
+        image: '/images/products/dairy-cow.jpg'
     },
     {
         title: 'Greenhouse Tunnel Kit',
@@ -635,7 +635,7 @@ const SEED_PRODUCTS = [
         location: 'Limuru, Kenya',
         contactEmail: 'grace.mwende@example.com',
         contactPhone: '+254 744 444 444',
-        image: '/images/products/greenhouse-kit.svg'
+        image: '/images/products/greenhouse-kit.jpg'
     },
     {
         title: 'Organic Drip Irrigation Kit',
@@ -646,7 +646,7 @@ const SEED_PRODUCTS = [
         location: 'Machakos, Kenya',
         contactEmail: 'john.kamau@example.com',
         contactPhone: '+254 722 222 222',
-        image: '/images/products/drip-irrigation-kit.svg'
+        image: '/images/products/drip-irrigation-kit.jpg'
     },
     {
         title: 'High-Value French Beans',
@@ -657,7 +657,7 @@ const SEED_PRODUCTS = [
         location: 'Nairobi, Kenya',
         contactEmail: 'grace.mwende@example.com',
         contactPhone: '+254 744 444 444',
-        image: '/images/products/french-beans.svg'
+        image: '/images/products/french-beans.jpg'
     },
     {
         title: 'Finger Millet Seeds (High-Yield)',
@@ -668,7 +668,7 @@ const SEED_PRODUCTS = [
         location: 'Kisumu, Kenya',
         contactEmail: 'amina.hassan@example.com',
         contactPhone: '+254 733 000 111',
-        image: '/images/products/finger-millet-seeds.svg'
+        image: '/images/products/finger-millet-seeds.jpg'
     },
     {
         title: 'Free-Range Eggs (Crate)',
@@ -679,7 +679,7 @@ const SEED_PRODUCTS = [
         location: 'Nakuru, Kenya',
         contactEmail: 'amina.hassan@example.com',
         contactPhone: '+254 733 000 112',
-        image: '/images/products/free-range-eggs.svg'
+        image: '/images/products/free-range-eggs.jpg'
     },
     {
         title: 'Compost Starter Culture',
@@ -690,7 +690,7 @@ const SEED_PRODUCTS = [
         location: 'Meru, Kenya',
         contactEmail: 'daniel.mutua@example.com',
         contactPhone: '+254 722 333 444',
-        image: '/images/products/compost-starter.svg'
+        image: '/images/products/compost-starter.jpg'
     },
     {
         title: 'Mobile Poultry Coop',
@@ -701,7 +701,7 @@ const SEED_PRODUCTS = [
         location: 'Bomet, Kenya',
         contactEmail: 'peter.otieno@example.com',
         contactPhone: '+254 733 333 334',
-        image: '/images/products/poultry-coop.svg'
+        image: '/images/products/poultry-coop.jpg'
     }
 ];
 

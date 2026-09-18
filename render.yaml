@@ -16,10 +16,10 @@
 #   4. Pasting your MONGO_URI when prompted
 #
 # SECURITY
-#   The server REFUSES to boot in production when JWT_SECRET
-#   is missing or still the development default. This blueprint
-#   asks Render to generate a strong random secret automatically
-#   (generateValue: true). If you set it by hand instead, use:
+#   Render generates a strong random JWT_SECRET automatically
+#   (generateValue: true). If it is ever missing, the server
+#   generates one on first boot and persists it in MongoDB, so
+#   the app boots cleanly either way. To set it by hand instead:
 #       openssl rand -hex 32
 # ============================================
 
@@ -44,8 +44,8 @@ services:
         value: production
 
       # JWT signing secret. Render generates a strong random value.
-      # NOTE: the server fails fast in production if this is unset or still
-      # the development default, so never ship without it.
+      # If it is ever missing, the app auto-generates one and stores it in
+      # MongoDB on first boot, so the service still starts cleanly.
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRES_IN

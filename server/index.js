@@ -20,18 +20,8 @@ const { connectDB, initializeDatabase, closeDatabase } = require('./db/database'
 // Import error logging helpers
 const { recordError } = require('./services/errorLogger');
 
-// Fail fast in production when the JWT secret is still the insecure default
-// (anyone with the repo can forge admin tokens with it).
-if (config.env === 'production' && !config.jwtSecretSecure()) {
-    console.error(
-        '[Security] JWT_SECRET is unset or still the development default. ' +
-        'Generate a random one (openssl rand -hex 32) and set it on the server ' +
-        'before going live.'
-    );
-    process.exit(1);
-} else if (config.env === 'development' && !config.jwtSecretSecure()) {
-    console.warn('[Security] Using the development JWT_SECRET. Set JWT_SECRET to a random value before deploying.');
-}
+// Resolve/auto-generate the JWT signing secret (after the DB is connected).
+const { resolveJwtSecret } = require('./services/appSecret');
 
 // Capture uncaught errors and unhandled promise rejections so they are
 // recorded to the ErrorLog collection (when the DB is up) instead of only
@@ -62,6 +52,20 @@ async function startServer() {
         // Initialize the database (build indexes)
         await initializeDatabase();
         console.log('[Server] Database initialized successfully.');
+
+        // Resolve the JWT signing secret. In production, a missing JWT_SECRET is
+        // generated once and persisted in MongoDB so sessions survive restarts.
+        const { secret, source } = await resolveJwtSecret();
+        config.jwt.secret = secret;
+        if (source === 'env') {
+            console.log('[Security] JWT secret loaded from JWT_SECRET.');
+        } else if (source === 'database') {
+            console.log('[Security] JWT secret loaded from the database (auto-generated on first boot).');
+        } else if (source === 'ephemeral') {
+            console.warn('[Security] Using an ephemeral JWT secret; sessions will reset on restart.');
+        } else {
+            console.warn('[Security] Using the development JWT_SECRET. Set JWT_SECRET to a random value before deploying.');
+        }
 
         // Create the Express application
         const app = createApp();

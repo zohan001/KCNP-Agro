@@ -53,6 +53,18 @@ async function startServer() {
         await initializeDatabase();
         console.log('[Server] Database initialized successfully.');
 
+        // Sync the seed data (demo users, listings with images). Idempotent and
+        // cheap on subsequent boots — creates what's missing, attaches images
+        // and sellers to existing seed listings. A failure here must not take
+        // the server down, so it is logged and startup continues.
+        try {
+            const { syncSeedData } = require('../scripts/seed-data');
+            const seedSummary = await syncSeedData();
+            console.log(`[Server] Seed data synced: ${seedSummary.usersCreated} users, ${seedSummary.articlesCreated} articles, ${seedSummary.quizzesCreated} quizzes, ${seedSummary.productsCreated + seedSummary.productsUpdated} listings (${seedSummary.productsUpdated} updated with images)`);
+        } catch (err) {
+            console.warn('[Server] Seed data sync skipped:', err.message);
+        }
+
         // Resolve the JWT signing secret. In production, a missing JWT_SECRET is
         // generated once and persisted in MongoDB so sessions survive restarts.
         const { secret, source } = await resolveJwtSecret();

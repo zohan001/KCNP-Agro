@@ -706,73 +706,91 @@ const SEED_PRODUCTS = [
 ];
 
 // ---------------------------------------------------------------------------
-// Run as a script: npm run seed (only seeds fresh collections)
+// syncSeedData: idempotent seed. Creates missing demo users, articles and
+// quizzes, and ensures every SEED_PRODUCTS listing exists with its image and a
+// linked seller. Safe to run on a populated database — new listings are added
+// and existing seed listings are just updated (title is the lookup key).
+//
+// Assumes a Mongoose connection is already established.
+// ---------------------------------------------------------------------------
+async function syncSeedData() {
+    const User = require('../server/models/User');
+    const Article = require('../server/models/Article');
+    const Quiz = require('../server/models/Quiz');
+    const Product = require('../server/models/Product');
+
+    const summary = { usersCreated: 0, articlesCreated: 0, quizzesCreated: 0, productsCreated: 0, productsUpdated: 0 };
+
+    for (const u of SEED_USERS) {
+        const existing = await User.findOne({ email: u.email });
+        if (!existing) {
+            if (u.role === 'farmer' && u.email === 'farmer@example.com') {
+                u.membership = {
+                    plan: 'grower',
+                    status: 'active',
+                    expiresAt: new Date(Date.now() + 13 * 30 * 24 * 60 * 60 * 1000)
+                };
+            }
+            await User.create(u);
+            summary.usersCreated++;
+        }
+    }
+
+    const articleCount = await Article.countDocuments();
+    if (articleCount === 0) {
+        await Article.create(SEED_ARTICLES);
+        summary.articlesCreated = SEED_ARTICLES.length;
+    }
+
+    const quizCount = await Quiz.countDocuments();
+    if (quizCount === 0) {
+        await Quiz.create(SEED_QUIZZES);
+        summary.quizzesCreated = SEED_QUIZZES.length;
+    }
+
+    // Link listings to their seed farmers and upsert by title, so re-running
+    // the seed safely adds new listings and attaches images (and sellers) to
+    // listings created by earlier versions.
+    const seedUserEmails = SEED_USERS.map(u => u.email);
+    const seedUsers = await User.find({ email: { $in: seedUserEmails } }).lean();
+    const userIdByEmail = new Map(seedUsers.map(u => [u.email, u._id]));
+
+    for (const p of SEED_PRODUCTS) {
+        const sellerId = userIdByEmail.get(p.contactEmail) || null;
+        const existing = await Product.findOne({ title: p.title });
+        if (existing) {
+            const update = { ...p };
+            delete update.title;
+            update.seller = sellerId;
+            await Product.updateOne({ _id: existing._id }, { $set: update });
+            summary.productsUpdated++;
+        } else {
+            await Product.create({ ...p, ...(sellerId ? { seller: sellerId } : {}) });
+            summary.productsCreated++;
+        }
+    }
+
+    return summary;
+}
+
+// ---------------------------------------------------------------------------
+// Run as a script: npm run seed (seeds safely, idempotently)
 // ---------------------------------------------------------------------------
 if (require.main === module) {
     (async () => {
         try {
             require('dotenv').config();
             const { connectDB, initializeDatabase, closeDatabase } = require('../server/db/database');
-            const User = require('../server/models/User');
-            const Article = require('../server/models/Article');
-            const Quiz = require('../server/models/Quiz');
-            const Product = require('../server/models/Product');
 
             await connectDB();
             await initializeDatabase();
             console.log('\n=== Seeding database ===');
 
-            for (const u of SEED_USERS) {
-                const existing = await User.findOne({ email: u.email });
-                if (!existing) {
-                    if (u.role === 'farmer' && u.email === 'farmer@example.com') {
-                        u.membership = {
-                            plan: 'grower',
-                            status: 'active',
-                            expiresAt: new Date(Date.now() + 13 * 30 * 24 * 60 * 60 * 1000)
-                        };
-                    }
-                    await User.create(u);
-                    console.log(`[User] Created ${u.name} (${u.role})`);
-                }
-            }
-
-            const articleCount = await Article.countDocuments();
-            if (articleCount === 0) {
-                await Article.create(SEED_ARTICLES);
-                console.log(`[Article] Created ${SEED_ARTICLES.length} articles`);
-            }
-
-            const quizCount = await Quiz.countDocuments();
-            if (quizCount === 0) {
-                await Quiz.create(SEED_QUIZZES);
-                console.log(`[Quiz] Created ${SEED_QUIZZES.length} quizzes`);
-            }
-
-            // Link listings to their seed farmers and upsert by title, so
-            // re-running the seed safely adds new listings and attaches images
-            // (and sellers) to listings created by earlier versions.
-            const seedUserEmails = SEED_USERS.map(u => u.email);
-            const seedUsers = await User.find({ email: { $in: seedUserEmails } }).lean();
-            const userIdByEmail = new Map(seedUsers.map(u => [u.email, u._id]));
-
-            let createdProducts = 0;
-            let updatedProducts = 0;
-            for (const p of SEED_PRODUCTS) {
-                const sellerId = userIdByEmail.get(p.contactEmail) || null;
-                const existing = await Product.findOne({ title: p.title });
-                if (existing) {
-                    const update = { ...p };
-                    delete update.title;
-                    update.seller = sellerId;
-                    await Product.updateOne({ _id: existing._id }, { $set: update });
-                    updatedProducts++;
-                } else {
-                    await Product.create({ ...p, ...(sellerId ? { seller: sellerId } : {}) });
-                    createdProducts++;
-                }
-            }
-            console.log(`[Product] Listings ensured: ${SEED_PRODUCTS.length} (${createdProducts} created, ${updatedProducts} updated with images)`);
+            const summary = await syncSeedData();
+            console.log(`[User] ${summary.usersCreated} created, ${SEED_USERS.length} total demo accounts`);
+            console.log(`[Article] ${summary.articlesCreated} created`);
+            console.log(`[Quiz] ${summary.quizzesCreated} created`);
+            console.log(`[Product] Listings ensured: ${SEED_PRODUCTS.length} (${summary.productsCreated} created, ${summary.productsUpdated} updated with images)`);
 
             console.log('\n=== Seeding complete ===');
             console.log('Demo accounts:');
@@ -790,4 +808,4 @@ if (require.main === module) {
     })();
 }
 
-module.exports = { SEED_USERS, SEED_ARTICLES, SEED_QUIZZES, SEED_PRODUCTS };
+module.exports = { syncSeedData, SEED_USERS, SEED_ARTICLES, SEED_QUIZZES, SEED_PRODUCTS };

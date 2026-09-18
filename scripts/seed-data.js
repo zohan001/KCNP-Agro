@@ -21,19 +21,19 @@
 
 const SEED_USERS = [
     { name: 'KCNP Admin', email: 'admin@kcnpagro.org', password: 'adminpass123', role: 'admin' },
-    { name: 'Demo Farmer', email: 'farmer@example.com', password: 'farmer123', role: 'farmer' },
-    { name: 'Demo Trader', email: 'trader@example.com', password: 'trader123', role: 'trader' },
+    { name: 'Demo Farmer', email: 'demo.farmer@gmail.com', password: 'farmer123', role: 'farmer' },
+    { name: 'Demo Trader', email: 'demo.trader@gmail.com', password: 'trader123', role: 'trader' },
     // Extra demo farmers (the marketplace relies on farmers posting listings)
-    { name: 'Mary Wanjiru', email: 'mary.wanjiru@example.com', password: 'KcnpAgro2026!', role: 'farmer' },
-    { name: 'John Kamau', email: 'john.kamau@example.com', password: 'KcnpAgro2026!', role: 'farmer' },
-    { name: 'Amina Hassan', email: 'amina.hassan@example.com', password: 'KcnpAgro2026!', role: 'farmer' },
-    { name: 'Peter Otieno', email: 'peter.otieno@example.com', password: 'KcnpAgro2026!', role: 'farmer' },
-    { name: 'Grace Mwende', email: 'grace.mwende@example.com', password: 'KcnpAgro2026!', role: 'farmer' },
-    { name: 'Daniel Mutua', email: 'daniel.mutua@example.com', password: 'KcnpAgro2026!', role: 'farmer' },
+    { name: 'Mary Wanjiru', email: 'mary.wanjiru@gmail.com', password: 'KcnpAgro2026!', role: 'farmer' },
+    { name: 'John Kamau', email: 'john.kamau@gmail.com', password: 'KcnpAgro2026!', role: 'farmer' },
+    { name: 'Amina Hassan', email: 'amina.hassan@gmail.com', password: 'KcnpAgro2026!', role: 'farmer' },
+    { name: 'Peter Otieno', email: 'peter.otieno@gmail.com', password: 'KcnpAgro2026!', role: 'farmer' },
+    { name: 'Grace Mwende', email: 'grace.mwende@gmail.com', password: 'KcnpAgro2026!', role: 'farmer' },
+    { name: 'Daniel Mutua', email: 'daniel.mutua@gmail.com', password: 'KcnpAgro2026!', role: 'farmer' },
     // Extra demo traders (they buy produce and resell)
-    { name: 'David Musyoka', email: 'david.musyoka@example.com', password: 'KcnpAgro2026!', role: 'trader' },
-    { name: 'Faith Chebet', email: 'faith.chebet@example.com', password: 'KcnpAgro2026!', role: 'trader' },
-    { name: 'Samuel Kiprop', email: 'samuel.kiprop@example.com', password: 'KcnpAgro2026!', role: 'trader' }
+    { name: 'David Musyoka', email: 'david.musyoka@gmail.com', password: 'KcnpAgro2026!', role: 'trader' },
+    { name: 'Faith Chebet', email: 'faith.chebet@gmail.com', password: 'KcnpAgro2026!', role: 'trader' },
+    { name: 'Samuel Kiprop', email: 'samuel.kiprop@gmail.com', password: 'KcnpAgro2026!', role: 'trader' }
 ];
 
 const SEED_ARTICLES = [
@@ -545,8 +545,8 @@ const SEED_PRODUCTS = [
         price: 550,
         unit: 'kg',
         location: 'Mombasa, Kenya',
-        contactEmail: 'farmer@example.com',
-        contactPhone: '+254 700 000 000',
+        contactEmail: 'demo.farmer@gmail.com',
+        contactPhone: '+254 701 234 567',
         image: '/images/products/maize-seeds.jpg'
     },
     {
@@ -556,8 +556,8 @@ const SEED_PRODUCTS = [
         price: 800,
         unit: 'bag',
         location: 'Kilifi, Kenya',
-        contactEmail: 'farmer@example.com',
-        contactPhone: '+254 700 000 000',
+        contactEmail: 'demo.farmer@gmail.com',
+        contactPhone: '+254 714 529 086',
         image: '/images/products/cow-manure.jpg'
     },
     {
@@ -567,8 +567,8 @@ const SEED_PRODUCTS = [
         price: 100,
         unit: 'bunch',
         location: 'Voi, Kenya',
-        contactEmail: 'farmer@example.com',
-        contactPhone: '+254 712 345 678',
+        contactEmail: 'demo.farmer@gmail.com',
+        contactPhone: '+254 726 803 451',
         image: '/images/products/green-bananas.jpg'
     },
     {
@@ -578,8 +578,8 @@ const SEED_PRODUCTS = [
         price: 450,
         unit: 'set',
         location: 'Mombasa, Kenya',
-        contactEmail: 'farmer@example.com',
-        contactPhone: '+254 712 345 678',
+        contactEmail: 'demo.farmer@gmail.com',
+        contactPhone: '+254 738 217 905',
         image: '/images/products/panga-hoe-set.jpg'
     },
     {
@@ -589,8 +589,8 @@ const SEED_PRODUCTS = [
         price: 300,
         unit: 'piece',
         location: 'Kwale, Kenya',
-        contactEmail: 'farmer@example.com',
-        contactPhone: '+254 728 456 789',
+        contactEmail: 'demo.farmer@gmail.com',
+        contactPhone: '+254 711 964 320',
         image: '/images/products/fruit-tree-seedlings.jpg'
     },
     {
@@ -600,8 +600,8 @@ const SEED_PRODUCTS = [
         price: 350,
         unit: 'piece',
         location: 'Nyeri, Kenya',
-        contactEmail: 'mary.wanjiru@example.com',
-        contactPhone: '+254 711 111 111',
+        contactEmail: 'mary.wanjiru@gmail.com',
+        contactPhone: '+254 785 302 714',
         image: '/images/products/avocado-seedlings.jpg'
     },
     {
@@ -611,8 +611,8 @@ const SEED_PRODUCTS = [
         price: 3200,
         unit: 'bag',
         location: 'Kitui, Kenya',
-        contactEmail: 'john.kamau@example.com',
-        contactPhone: '+254 722 222 222',
+        contactEmail: 'john.kamau@gmail.com',
+        contactPhone: '+254 792 441 860',
         image: '/images/products/sorghum-grain.png'
     },
     {
@@ -622,8 +622,8 @@ const SEED_PRODUCTS = [
         price: 85000,
         unit: 'head',
         location: 'Nakuru, Kenya',
-        contactEmail: 'peter.otieno@example.com',
-        contactPhone: '+254 733 333 333',
+        contactEmail: 'peter.otieno@gmail.com',
+        contactPhone: '+254 758 617 293',
         image: '/images/products/dairy-cow.jpg'
     },
     {
@@ -633,8 +633,8 @@ const SEED_PRODUCTS = [
         price: 45000,
         unit: 'kit',
         location: 'Limuru, Kenya',
-        contactEmail: 'grace.mwende@example.com',
-        contactPhone: '+254 744 444 444',
+        contactEmail: 'grace.mwende@gmail.com',
+        contactPhone: '+254 720 558 937',
         image: '/images/products/greenhouse-kit.jpg'
     },
     {
@@ -644,8 +644,8 @@ const SEED_PRODUCTS = [
         price: 7500,
         unit: 'kit',
         location: 'Machakos, Kenya',
-        contactEmail: 'john.kamau@example.com',
-        contactPhone: '+254 722 222 222',
+        contactEmail: 'john.kamau@gmail.com',
+        contactPhone: '+254 739 275 108',
         image: '/images/products/drip-irrigation-kit.jpg'
     },
     {
@@ -655,8 +655,8 @@ const SEED_PRODUCTS = [
         price: 80,
         unit: 'kg',
         location: 'Nairobi, Kenya',
-        contactEmail: 'grace.mwende@example.com',
-        contactPhone: '+254 744 444 444',
+        contactEmail: 'grace.mwende@gmail.com',
+        contactPhone: '+254 746 891 052',
         image: '/images/products/french-beans.jpg'
     },
     {
@@ -666,8 +666,8 @@ const SEED_PRODUCTS = [
         price: 400,
         unit: 'kg',
         location: 'Kisumu, Kenya',
-        contactEmail: 'amina.hassan@example.com',
-        contactPhone: '+254 733 000 111',
+        contactEmail: 'amina.hassan@gmail.com',
+        contactPhone: '+254 769 403 285',
         image: '/images/products/finger-millet-seeds.jpg'
     },
     {
@@ -677,8 +677,8 @@ const SEED_PRODUCTS = [
         price: 850,
         unit: 'crate',
         location: 'Nakuru, Kenya',
-        contactEmail: 'amina.hassan@example.com',
-        contactPhone: '+254 733 000 112',
+        contactEmail: 'amina.hassan@gmail.com',
+        contactPhone: '+254 737 620 844',
         image: '/images/products/free-range-eggs.jpg'
     },
     {
@@ -688,8 +688,8 @@ const SEED_PRODUCTS = [
         price: 600,
         unit: 'pack',
         location: 'Meru, Kenya',
-        contactEmail: 'daniel.mutua@example.com',
-        contactPhone: '+254 722 333 444',
+        contactEmail: 'daniel.mutua@gmail.com',
+        contactPhone: '+254 753 918 476',
         image: '/images/products/compost-starter.jpg'
     },
     {
@@ -699,8 +699,8 @@ const SEED_PRODUCTS = [
         price: 18500,
         unit: 'unit',
         location: 'Bomet, Kenya',
-        contactEmail: 'peter.otieno@example.com',
-        contactPhone: '+254 733 333 334',
+        contactEmail: 'peter.otieno@gmail.com',
+        contactPhone: '+254 725 184 639',
         image: '/images/products/poultry-coop.jpg'
     }
 ];
@@ -722,9 +722,16 @@ async function syncSeedData() {
     const summary = { usersCreated: 0, articlesCreated: 0, quizzesCreated: 0, productsCreated: 0, productsUpdated: 0 };
 
     for (const u of SEED_USERS) {
-        const existing = await User.findOne({ email: u.email });
-        if (!existing) {
-            if (u.role === 'farmer' && u.email === 'farmer@example.com') {
+        // Look up by email or name so demo accounts renamed from old
+        // example.com addresses are migrated in place (no duplicates, seller
+        // references on listings stay intact).
+        const existing = await User.findOne({ $or: [{ email: u.email }, { name: u.name }] });
+        if (existing) {
+            if (existing.email !== u.email) {
+                await User.updateOne({ _id: existing._id }, { $set: { email: u.email } });
+            }
+        } else {
+            if (u.role === 'farmer' && u.name === 'Demo Farmer') {
                 u.membership = {
                     plan: 'grower',
                     status: 'active',

@@ -30,7 +30,7 @@ async function registerUser(overrides = {}) {
         .send({
             name: 'Demo Farmer',
             email: 'farmer@example.com',
-            password: 'secret123',
+            password: 'Secret123!',
             role: 'farmer',
             ...overrides
         });
@@ -60,11 +60,32 @@ describe('Auth', () => {
         expect(res.body.data.activationLink).toContain('/activate?token=');
     });
 
+    test('register rejects a password missing required character classes', async () => {
+        const res = await registerUser({ email: 'weak@example.com', password: 'alllowercase' });
+        expect(res.status).toBe(400);
+        const messages = res.body.errors.map(e => e.message).join(' ');
+        expect(messages).toContain('uppercase letter');
+        expect(messages).toContain('number');
+        expect(messages).toContain('special character');
+    });
+
+    test('register rejects a password shorter than the minimum length', async () => {
+        const res = await registerUser({ email: 'short@example.com', password: 'Ab1!x' });
+        expect(res.status).toBe(400);
+        expect(res.body.errors.some(e => /at least 8 characters/.test(e.message))).toBe(true);
+    });
+
+    test('register accepts a password that satisfies the policy', async () => {
+        const res = await registerUser({ email: 'strong@example.com', password: 'StrongPass1!' });
+        expect(res.status).toBe(201);
+        expect(res.body.success).toBe(true);
+    });
+
     test('login before activation is rejected', async () => {
         await registerUser();
         const res = await request(app)
             .post('/api/auth/login')
-            .send({ email: 'farmer@example.com', password: 'secret123' });
+            .send({ email: 'farmer@example.com', password: 'Secret123!' });
         expect(res.status).toBe(403);
         expect(res.body.code).toBe('ACTIVATION_REQUIRED');
     });
@@ -86,7 +107,7 @@ describe('Auth', () => {
 
         const login = await request(app)
             .post('/api/auth/login')
-            .send({ email: 'farmer@example.com', password: 'secret123' });
+            .send({ email: 'farmer@example.com', password: 'Secret123!' });
 
         expect(login.status).toBe(200);
         expect(login.body.success).toBe(true);
@@ -157,5 +178,5 @@ async function registerActive() {
 async function loginAs(email) {
     return request(app)
         .post('/api/auth/login')
-        .send({ email, password: 'secret123' });
+        .send({ email, password: 'Secret123!' });
 }

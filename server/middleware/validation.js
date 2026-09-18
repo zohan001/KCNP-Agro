@@ -8,6 +8,8 @@
  * ============================================
  */
 
+const { passwordProblems } = require('../services/passwordPolicy');
+
 /**
  * Validate a contact message submission.
  *
@@ -167,13 +169,9 @@ function validateRegister(req, res, next) {
         errors.push({ field: 'email', message: 'Please provide a valid email address.' });
     }
 
-    if (!password) {
-        errors.push({ field: 'password', message: 'Password is required.' });
-    } else if (password.length < 6) {
-        errors.push({ field: 'password', message: 'Password must be at least 6 characters.' });
-    } else if (password.length > 128) {
-        errors.push({ field: 'password', message: 'Password cannot exceed 128 characters.' });
-    }
+    passwordProblems(password).forEach((message) => {
+        errors.push({ field: 'password', message });
+    });
 
     if (role && role !== 'farmer' && role !== 'trader') {
         errors.push({ field: 'role', message: 'Role must be either farmer or trader.' });
@@ -242,13 +240,9 @@ function validateResetPassword(req, res, next) {
         errors.push({ field: 'token', message: 'A valid reset token is required.' });
     }
 
-    if (!password) {
-        errors.push({ field: 'password', message: 'Password is required.' });
-    } else if (password.length < 6) {
-        errors.push({ field: 'password', message: 'Password must be at least 6 characters.' });
-    } else if (password.length > 128) {
-        errors.push({ field: 'password', message: 'Password cannot exceed 128 characters.' });
-    }
+    passwordProblems(password).forEach((message) => {
+        errors.push({ field: 'password', message });
+    });
 
     if (errors.length > 0) {
         return res.status(400).json({ success: false, message: 'Validation failed', errors });

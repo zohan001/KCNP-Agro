@@ -129,7 +129,7 @@ const request = (path, options = {}) => {
         const email = `user_${Date.now()}@test.com`;
         res = await request('/api/auth/register', {
             method: 'POST',
-            body: { name: 'Test User', email, password: 'secret123', role: 'trader' }
+            body: { name: 'Test User', email, password: 'Secret123!', role: 'trader' }
         });
         console.log(`[10] Register ${res.status}: ${res.body.message}`);
         console.assert(res.status === 201, 'Register should be 201');
@@ -142,7 +142,7 @@ const request = (path, options = {}) => {
         // 10a. Login blocked before activation
         res = await request('/api/auth/login', {
             method: 'POST',
-            body: { email, password: 'secret123' }
+            body: { email, password: 'Secret123!' }
         });
         console.log(`[10a] Login before activation ${res.status}: expect 403`);
         console.assert(res.status === 403, 'Login before activation should be 403');
@@ -167,7 +167,7 @@ const request = (path, options = {}) => {
         // 11. Register duplicate
         res = await request('/api/auth/register', {
             method: 'POST',
-            body: { name: 'Test User', email, password: 'secret123' }
+            body: { name: 'Test User', email, password: 'Secret123!' }
         });
         console.log(`[11] Register duplicate ${res.status}: expect 400`);
         console.assert(res.status === 400, 'Duplicate register should be 400');
@@ -175,7 +175,7 @@ const request = (path, options = {}) => {
         // 11b. Register with invalid role
         res = await request('/api/auth/register', {
             method: 'POST',
-            body: { name: 'Bad Role', email: `bad_${Date.now()}@test.com`, password: 'secret123', role: 'admin' }
+            body: { name: 'Bad Role', email: `bad_${Date.now()}@test.com`, password: 'Secret123!', role: 'admin' }
         });
         console.log(`[11b] Register invalid role ${res.status}: expect 400`);
         console.assert(res.status === 400, 'Register with admin role should be 400');
@@ -183,7 +183,7 @@ const request = (path, options = {}) => {
         // 12. Login valid
         res = await request('/api/auth/login', {
             method: 'POST',
-            body: { email, password: 'secret123' }
+            body: { email, password: 'Secret123!' }
         });
         console.log(`[12] Login ${res.status}: ${res.body.message}`);
         console.assert(res.status === 200, 'Login should be 200');
@@ -211,7 +211,7 @@ const request = (path, options = {}) => {
         // 15b. Register a farmer (farmers are the only ones who can post listings)
         res = await request('/api/auth/register', {
             method: 'POST',
-            body: { name: 'Test Farmer', email: `farmer_${Date.now()}@test.com`, password: 'secret123', role: 'farmer' }
+            body: { name: 'Test Farmer', email: `farmer_${Date.now()}@test.com`, password: 'Secret123!', role: 'farmer' }
         });
         console.log(`[15b] Register farmer ${res.status}: role=${res.body.data && res.body.data.user && res.body.data.user.role}`);
         console.assert(res.status === 201, 'Register farmer should be 201');
@@ -222,7 +222,7 @@ const request = (path, options = {}) => {
         // 15c. Farmer login (after activation), then grant an active subscription
         res = await request('/api/auth/login', {
             method: 'POST',
-            body: { email: res.body.data.user.email, password: 'secret123' }
+            body: { email: res.body.data.user.email, password: 'Secret123!' }
         });
         const farmerToken = res.body.data.token;
         const Subscription = require('../server/models/Subscription');
@@ -239,13 +239,13 @@ const request = (path, options = {}) => {
         // 15d. Farmer WITHOUT an active subscription cannot post -> 402
         res = await request('/api/auth/register', {
             method: 'POST',
-            body: { name: 'No Sub Farmer', email: `nosub_${Date.now()}@test.com`, password: 'secret123', role: 'farmer' }
+            body: { name: 'No Sub Farmer', email: `nosub_${Date.now()}@test.com`, password: 'Secret123!', role: 'farmer' }
         });
         const noSubActivation = new URL(res.body.data.activationLink).searchParams.get('token');
         await request('/api/auth/activate', { method: 'POST', body: { token: noSubActivation } });
         const noSubLogin = await request('/api/auth/login', {
             method: 'POST',
-            body: { email: res.body.data.user.email, password: 'secret123' }
+            body: { email: res.body.data.user.email, password: 'Secret123!' }
         });
         res = await request('/api/products', {
             method: 'POST',

@@ -93,8 +93,23 @@
                     </div>
                     <div class="mb-6">
                         <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Password <span class="text-red-400">*</span></label>
-                        <input type="password" id="password" required autocomplete="new-password" placeholder="At least 6 characters" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
+                        <input type="password" id="password" required minlength="8" autocomplete="new-password" placeholder="Create a strong password" aria-describedby="password-meter" class="form-input w-full px-4 py-3 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-gray-500 text-sm sm:text-base">
                         <p id="password-error" class="text-red-400 text-xs mt-1 hidden" role="alert"></p>
+                        <div id="password-meter" class="mt-2">
+                            <div class="flex items-center gap-2">
+                                <div class="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden">
+                                    <div id="password-meter-bar" class="h-full w-0 rounded-full bg-red-500 transition-all duration-300"></div>
+                                </div>
+                                <span id="password-meter-label" class="text-xs font-medium text-gray-500 w-12 text-right" aria-live="polite">Strength</span>
+                            </div>
+                            <ul class="mt-2 space-y-1 text-xs text-gray-500">
+                                <li id="pw-req-length" class="flex items-center gap-2"><span class="pw-dot inline-block w-1.5 h-1.5 rounded-full bg-gray-600"></span><span>At least 8 characters</span></li>
+                                <li id="pw-req-lower" class="flex items-center gap-2"><span class="pw-dot inline-block w-1.5 h-1.5 rounded-full bg-gray-600"></span><span>A lowercase letter</span></li>
+                                <li id="pw-req-upper" class="flex items-center gap-2"><span class="pw-dot inline-block w-1.5 h-1.5 rounded-full bg-gray-600"></span><span>An uppercase letter</span></li>
+                                <li id="pw-req-number" class="flex items-center gap-2"><span class="pw-dot inline-block w-1.5 h-1.5 rounded-full bg-gray-600"></span><span>A number</span></li>
+                                <li id="pw-req-special" class="flex items-center gap-2"><span class="pw-dot inline-block w-1.5 h-1.5 rounded-full bg-gray-600"></span><span>A special character (!@#$%^&amp;*)</span></li>
+                            </ul>
+                        </div>
                     </div>
 
                     <div id="register-captcha" class="mb-4" data-recaptcha></div>
@@ -268,6 +283,74 @@
             });
         }
 
+        const PW_RULES = [
+            { id: 'pw-req-length', test: function (v) { return v.length >= 8; } },
+            { id: 'pw-req-lower', test: function (v) { return /[a-z]/.test(v); } },
+            { id: 'pw-req-upper', test: function (v) { return /[A-Z]/.test(v); } },
+            { id: 'pw-req-number', test: function (v) { return /[0-9]/.test(v); } },
+            { id: 'pw-req-special', test: function (v) { return /[^A-Za-z0-9]/.test(v); } }
+        ];
+
+        function passwordProblems(value) {
+            const problems = [];
+            if (value.length < 8) problems.push('at least 8 characters');
+            if (!/[a-z]/.test(value)) problems.push('a lowercase letter');
+            if (!/[A-Z]/.test(value)) problems.push('an uppercase letter');
+            if (!/[0-9]/.test(value)) problems.push('a number');
+            if (!/[^A-Za-z0-9]/.test(value)) problems.push('a special character');
+            return problems;
+        }
+
+        function updatePasswordMeter(value) {
+            const bar = document.getElementById('password-meter-bar');
+            const label = document.getElementById('password-meter-label');
+            if (!bar || !label) return;
+
+            let met = 0;
+            PW_RULES.forEach(function (rule) {
+                const li = document.getElementById(rule.id);
+                const ok = value.length > 0 && rule.test(value);
+                if (ok) met++;
+                if (li) {
+                    li.classList.toggle('text-primary-400', ok);
+                    li.classList.toggle('text-gray-500', !ok);
+                    const dot = li.querySelector('.pw-dot');
+                    if (dot) {
+                        dot.classList.toggle('bg-primary-400', ok);
+                        dot.classList.toggle('bg-gray-600', !ok);
+                    }
+                }
+            });
+
+            const pct = value ? Math.max(10, Math.round((met / PW_RULES.length) * 100)) : 0;
+            bar.style.width = pct + '%';
+
+            let color = 'bg-red-500', text = P('Weak'), labelColor = 'text-red-400';
+            if (met === PW_RULES.length) { color = 'bg-primary-500'; text = P('Strong'); labelColor = 'text-primary-400'; }
+            else if (met === PW_RULES.length - 1) { color = 'bg-accent-500'; text = P('Good'); labelColor = 'text-accent-400'; }
+            else if (met >= 3) { color = 'bg-accent-500'; text = P('Fair'); labelColor = 'text-accent-400'; }
+
+            bar.classList.remove('bg-red-500', 'bg-accent-500', 'bg-primary-500');
+            bar.classList.add(color);
+            label.classList.remove('text-gray-500', 'text-red-400', 'text-accent-400', 'text-primary-400');
+            label.classList.add(value ? labelColor : 'text-gray-500');
+            label.textContent = value ? text : P('Strength');
+        }
+
+        (function bindPasswordMeter() {
+            const input = document.getElementById('password');
+            if (!input) return;
+            input.addEventListener('input', function () {
+                updatePasswordMeter(input.value);
+                const err = document.getElementById('password-error');
+                if (err && !err.classList.contains('hidden') && passwordProblems(input.value).length === 0) {
+                    err.classList.add('hidden');
+                    input.classList.remove('border-red-500');
+                }
+            });
+            updatePasswordMeter(input.value);
+        })();
+
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('name');
@@ -292,12 +375,16 @@
                 email.classList.add('border-red-500');
                 return;
             }
-            if (password.value.length < 6) {
-                document.getElementById('password-error').textContent = 'Password must be at least 6 characters.';
+            const pwProblems = passwordProblems(password.value);
+            if (pwProblems.length) {
+                document.getElementById('password-error').textContent = 'Password must include ' + pwProblems.join(', ') + '.';
                 document.getElementById('password-error').classList.remove('hidden');
                 password.classList.add('border-red-500');
+                updatePasswordMeter(password.value);
                 return;
             }
+            document.getElementById('password-error').classList.add('hidden');
+            password.classList.remove('border-red-500');
 
             submitText.textContent = 'Creating account...';
             submitSpinner.classList.remove('hidden');

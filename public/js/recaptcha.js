@@ -1,15 +1,18 @@
 /**
  * ============================================
- * reCAPTCHA v2 checkbox bootstrap (shared)
+ * reCAPTCHA v2 invisible bootstrap (shared)
  * ============================================
  * Fetches the public site key from /api/recaptcha-config,
- * injects the Google reCAPTCHA script, and renders a
- * checkbox widget into a container element. Exposes a
- * tiny global API for page scripts.
+ * loads the Google reCAPTCHA script, and registers an
+ * invisible widget (no checkbox, no user interaction).
+ * Tokens are minted in the background on demand and
+ * returned as a Promise by KCNPRecaptcha.execute(action).
  *
  * When reCAPTCHA is not configured on the server the
- * widget is simply never rendered and getToken() returns
- * '' (the server skips verification in that case).
+ * script is never loaded, active() is false and
+ * execute() resolves to '' (the server skips
+ * verification in that case), so dev/staging keep
+ * working without Google keys.
  * ============================================
  */
 (function () {
@@ -19,21 +22,41 @@
     var widgetId = null;
     var active = false;
     var scriptBusy = false;
+    var pendingRenders = [];
+
+    function ensureHolder() {
+        var host = document.getElementById('kcnp-recaptcha-holder');
+        if (!host) {
+            host = document.createElement('div');
+            host.id = 'kcnp-recaptcha-holder';
+            host.setAttribute('aria-hidden', 'true');
+            host.style.position = 'absolute';
+            host.style.left = '-9999px';
+            host.style.top = '-9999px';
+            host.style.width = '1px';
+            host.style.height = '1px';
+            document.body.appendChild(host);
+        }
+        return host;
+    }
 
     function onScriptReady() {
         scriptBusy = false;
         if (typeof grecaptcha === 'undefined' || !siteKey) return;
-        var firstWidget = null;
-        document.querySelectorAll('[data-recaptcha]').forEach(function (el) {
-            var wid = grecaptcha.render(el, {
+        try {
+            widgetId = grecaptcha.render(ensureHolder(), {
                 sitekey: siteKey,
+                size: 'invisible',
+                badge: 'bottomright',
                 theme: 'dark'
             });
-            el.setAttribute('data-widget-id', String(wid));
-            if (firstWidget === null) firstWidget = wid;
-        });
-        if (firstWidget !== null) widgetId = firstWidget;
-        active = true;
+        } catch (e) {
+            widgetId = null;
+        }
+        active = widgetId !== null;
+        var q = pendingRenders;
+        pendingRenders = [];
+        for (var i = 0; i < q.length; i++) q[i]();
     }
 
     function injectScript() {
@@ -46,8 +69,8 @@
         s.async = true;
         s.defer = true;
         document.head.appendChild(s);
-        // Safety net: if Google's loader is slow or blocked, give up and let
-        // the page work without the widget (dev/local environments).
+        // Safety net: if Google's loader is slow or blocked, give up so the
+        // page keeps working without a captcha (dev/local environments).
         setTimeout(function () {
             if (typeof grecaptcha !== 'undefined') onScriptReady();
             scriptBusy = false;
@@ -65,25 +88,37 @@
             .catch(function () { /* keep page functional without captcha */ });
     }
 
-    function getToken() {
-        if (!active || typeof grecaptcha === 'undefined' || !widgetId) return '';
-        try { return grecaptcha.getResponse(widgetId) || ''; } catch (e) { return ''; }
-    }
-
-    // widgetId stays for the first container rendered. Multi-form pages use
-    // tokenFrom() instead, which always queries the container by reference.
-    function tokenFrom(containerId) {
-        if (typeof grecaptcha === 'undefined' || !active) return '';
-        var el = document.getElementById(containerId);
-        if (!el) return '';
-        var wid = el.getAttribute('data-widget-id');
-        try { return grecaptcha.getResponse(wid ? Number(wid) : widgetId) || ''; } catch (e) { return ''; }
+    /**
+     * Mint a fresh verification token in the background. Resolves with '' when
+     * reCAPTCHA is not configured or unavailable (the server skips verification).
+     *
+     * @param {string} [action] - one of 'login', 'register', 'forgot-password',
+     *                            'reset-password', 'payment', ...
+     * @returns {Promise<string>}
+     */
+    function execute(action) {
+        if (!active || typeof grecaptcha === 'undefined' || widgetId === null) {
+            return Promise.resolve('');
+        }
+        var opts = action ? { action: action } : undefined;
+        return new Promise(function (resolve) {
+            grecaptcha.execute(widgetId, opts).then(function (token) {
+                resolve(token || '');
+            }).catch(function () { resolve(''); });
+        });
     }
 
     function activeFlag() { return active; }
 
+    // Legacy sync helpers (no-op) kept so older inline scripts that still call
+    // tokenFrom/getToken never throw; they always yield '' and the new pages
+    // use execute() instead.
+    function tokenFrom() { return ''; }
+    function getToken() { return ''; }
+
     window.KCNPRecaptcha = {
         init: init,
+        execute: execute,
         getToken: getToken,
         tokenFrom: tokenFrom,
         active: activeFlag

@@ -68,15 +68,15 @@ async function initializeDatabase() {
 async function ensureDemoAccounts() {
     try {
         const User = require('../models/User');
-        const emails = ['admin@kcnpagro.org', 'farmer@example.com', 'trader@example.com'];
+        const emails = ['admin@kcnpagro.org', 'demofarmer@gmail.com', 'demotrader@gmail.com'];
         const update = { $set: { isActive: true } };
         if (User.updateMany) {
             await User.updateMany({ email: { $in: emails } }, update);
         }
-        const farmer = await User.findOne({ email: 'farmer@example.com' }).lean();
+        const farmer = await User.findOne({ email: 'demofarmer@gmail.com' }).lean();
         if (farmer && (!farmer.membership || farmer.membership.status !== 'active' ||
             !farmer.membership.expiresAt || new Date(farmer.membership.expiresAt) <= new Date())) {
-            await User.updateOne({ email: 'farmer@example.com' }, {
+            await User.updateOne({ email: 'demofarmer@gmail.com' }, {
                 $set: {
                     membership: {
                         plan: 'grower',

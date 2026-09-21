@@ -85,11 +85,14 @@ module.exports = {
         currency: process.env.PAYSTACK_CURRENCY || 'KES'
     },
 
-    // Google reCAPTCHA v2 (checkbox) — protects auth + payment forms.
+    // Google reCAPTCHA (invisible, background token). Protects auth +
+    // payment forms. The same site+secret key pair works for the invisible
+    // v2 widget; v3 keys also return a score that must clear minScore.
     // Leave RECAPTCHA_SECRET_KEY empty to disable verification (dev/staging).
     recaptcha: {
         siteKey: process.env.RECAPTCHA_SITE_KEY || '',
-        secretKey: process.env.RECAPTCHA_SECRET_KEY || ''
+        secretKey: process.env.RECAPTCHA_SECRET_KEY || '',
+        minScore: parseFloat(process.env.RECAPTCHA_MIN_SCORE || '0.5')
     },
 
     // Whether any email delivery path has been configured (SMTP or Brevo HTTP API)

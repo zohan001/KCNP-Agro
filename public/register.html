@@ -112,8 +112,6 @@
                         </div>
                     </div>
 
-                    <div id="register-captcha" class="mb-4" data-recaptcha></div>
-
                     <button type="submit" class="cta-btn w-full py-4 rounded-xl text-white font-bold text-base flex items-center justify-center gap-2">
                         <span id="submit-text" data-i18n="btn_create">Create Account</span>
                         <svg id="submit-spinner" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24" aria-hidden="true">
@@ -390,8 +388,8 @@
             submitSpinner.classList.remove('hidden');
 
             try {
-                const capToken = (window.KCNPRecaptcha && window.KCNPRecaptcha.active()) ? window.KCNPRecaptcha.tokenFrom('register-captcha') : '';
-                if (!capToken) {
+                const capToken = (window.KCNPRecaptcha && window.KCNPRecaptcha.active()) ? await window.KCNPRecaptcha.execute('register') : '';
+                if (window.KCNPRecaptcha && window.KCNPRecaptcha.active() && !capToken) {
                     submitText.textContent = 'Create Account';
                     submitSpinner.classList.add('hidden');
                     formError.className = 'mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm text-center';

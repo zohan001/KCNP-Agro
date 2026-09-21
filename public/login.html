@@ -91,8 +91,6 @@
                         <a href="/forgot-password" class="text-xs text-primary-400 hover:text-primary-300 font-semibold">Forgot password?</a>
                     </div>
 
-                    <div id="login-captcha" class="mb-4" data-recaptcha></div>
-
                     <button type="submit" class="cta-btn w-full py-4 rounded-xl text-white font-bold text-base flex items-center justify-center gap-2">
                         <span id="submit-text" data-i18n="btn_login">Login</span>
                         <svg id="submit-spinner" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24" aria-hidden="true">
@@ -302,8 +300,8 @@
             submitSpinner.classList.remove('hidden');
 
             try {
-                const capToken = (window.KCNPRecaptcha && window.KCNPRecaptcha.active()) ? window.KCNPRecaptcha.tokenFrom('login-captcha') : '';
-                if (!capToken) {
+                const capToken = (window.KCNPRecaptcha && window.KCNPRecaptcha.active()) ? await window.KCNPRecaptcha.execute('login') : '';
+                if (window.KCNPRecaptcha && window.KCNPRecaptcha.active() && !capToken) {
                     submitText.textContent = P('Login');
                     submitSpinner.classList.add('hidden');
                     formError.textContent = P('Please verify you are not a robot.');

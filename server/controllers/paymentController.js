@@ -243,6 +243,80 @@ async function requestPayment(req, res) {
 }
 
 /**
+ * GET /api/payment/status/:reference — live-check a pending Paystack charge
+ * against Paystack's API (GET /charge/:reference) and activate the matching
+ * subscription when Paystack reports success. This is the self-verification
+ * path the pricing page polls in the background, so a missed or delayed
+ * webhook can never leave a farmer stuck on "pending" forever.
+ *
+ * @route GET /api/payment/status/:reference
+ */
+async function getPaymentStatus(req, res) {
+    const reference = String(req.params.reference || '').trim();
+    if (!reference) {
+        return res.status(400).json({ success: false, message: 'Payment reference is required.' });
+    }
+
+    try {
+        const sub = await Subscription.findOne({
+            paystackReference: reference,
+            user: req.user._id
+        }).lean();
+
+        if (!sub) {
+            return res.status(404).json({ success: false, message: 'Payment request not found.' });
+        }
+
+        // Already active — nothing to do.
+        if (sub.status === 'active') {
+            return res.status(200).json({ success: true, data: { verified: true, payment: sub } });
+        }
+
+        let live = null;
+        if (config.paystackConfigured()) {
+            try {
+                const resp = await paystack.checkCharge(reference);
+                live = resp && resp.data ? resp.data : null;
+            } catch (err) {
+                console.warn('[Payment] Charge status check failed:', err.message);
+            }
+        }
+
+        const liveStatus = live ? String(live.status || '').toLowerCase() : '';
+
+        if (liveStatus === 'success') {
+            const doc = await Subscription.findById(sub._id);
+            if (doc && doc.status !== 'active') {
+                await activateSubscription(doc, {
+                    ref: live.reference || reference,
+                    provider: 'paystack',
+                    raw: live
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                data: { verified: true, payment: { ...sub, status: 'active' } }
+            });
+        }
+
+        if (liveStatus === 'failed' || liveStatus === 'timeout' || liveStatus === 'abandoned') {
+            await Subscription.updateOne(
+                { _id: sub._id },
+                { $set: { status: 'failed', rawCallback: live || undefined } }
+            );
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: { verified: false, payment: { ...sub, status: liveStatus || sub.status } }
+        });
+    } catch (err) {
+        console.error('[Payment] Status check failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to check payment status.' });
+    }
+}
+
+/**
  * POST /api/payment/otp — submit the OTP Paystack requested after a charge.
  *
  * @route POST /api/payment/otp  { reference, otp }
@@ -305,5 +379,6 @@ module.exports = {
     getPlansHandler,
     getMyMembership,
     requestPayment,
-    submitPaymentOtp
+    submitPaymentOtp,
+    getPaymentStatus
 };

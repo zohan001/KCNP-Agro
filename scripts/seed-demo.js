@@ -126,6 +126,15 @@ const TESTIMONIALS = [
     { userRef: 'farmer9', name: 'Amina Safari', role: 'farmer', message: 'I love the Swahili version of the lessons. I can listen to the quizzes and learn in my own language. The platform was made for people like me.', rating: 5, featured: false },
 ];
 
+// Single-word handles, no dot between the two names (e.g. mwanahamisicharo).
+function emailFor(n) {
+    return `${n.first.toLowerCase()}${n.last.toLowerCase()}@kcnpagro.co.ke`;
+}
+
+function displayName(n) {
+    return `${n.first} ${n.last}`;
+}
+
 function daysAgo(n) {
     const d = new Date();
     d.setDate(d.getDate() - n);
@@ -137,11 +146,11 @@ async function main() {
     console.log(`Connected (mode: ${MODE})`);
 
     if (MODE === 'clean') {
-        const seededEmails = [
-            ...FARMER_NAMES.map(n => `${n.first.toLowerCase()}.${n.last.toLowerCase()}@kcnpagro.co.ke`),
-            ...TRADER_NAMES.map(n => `${n.first.toLowerCase()}.${n.last.toLowerCase()}@kcnpagro.co.ke`),
-        ];
-        const users = await User.find({ email: { $in: seededEmails } }).select('_id');
+        const seededEmails = allNames().map(emailFor);
+        const seededNames = allNames().map(displayName);
+        const users = await User.find({
+            $or: [{ email: { $in: seededEmails } }, { name: { $in: seededNames } }]
+        }).select('_id');
         const ids = users.map(u => u._id);
         const prodDel = await Product.deleteMany({ seller: { $in: ids } });
         const subDel = await Subscription.deleteMany({ user: { $in: ids } });
@@ -153,23 +162,36 @@ async function main() {
     }
 
     // --- Users ---
-    const allNames = [
-        ...FARMER_NAMES.map((n, i) => ({ ...n, role: 'farmer', idx: i })),
-        ...TRADER_NAMES.map((n, i) => ({ ...n, role: 'trader', idx: i })),
-    ];
+    function allNames() {
+        return [
+            ...FARMER_NAMES.map((n, i) => ({ ...n, role: 'farmer', idx: i })),
+            ...TRADER_NAMES.map((n, i) => ({ ...n, role: 'trader', idx: i })),
+        ];
+    }
 
+    const names = allNames();
     const existingUsers = await User.find({
-        email: { $in: allNames.map(n => `${n.first.toLowerCase()}.${n.last.toLowerCase()}@kcnpagro.co.ke`) }
-    }).select('email _id');
-    const existingMap = new Map(existingUsers.map(u => [u.email, u._id]));
+        $or: [
+            { email: { $in: names.map(emailFor) } },
+            { name: { $in: names.map(displayName) } }
+        ]
+    }).select('email name _id');
+    const existingByEmail = new Map(existingUsers.map(u => [u.email, u._id]));
+    const existingByName = new Map(existingUsers.map(u => [u.name, u]));
 
     const createdFarmers = [];
     const createdTraders = [];
 
-    for (const n of allNames) {
-        const email = `${n.first.toLowerCase()}.${n.last.toLowerCase()}@kcnpagro.co.ke`;
-        if (existingMap.has(email)) {
-            const u = { _id: existingMap.get(email), email, ...n };
+    for (const n of names) {
+        const email = emailFor(n);
+        const prior = existingByEmail.get(email) || (existingByName.get(displayName(n)) || {})._id || null;
+        if (prior) {
+            const priorDoc = existingByName.get(displayName(n));
+            if (priorDoc && priorDoc.email !== email) {
+                // Migrate the old dotted handle in place so we never duplicate.
+                await User.updateOne({ _id: priorDoc._id }, { $set: { email } });
+            }
+            const u = { _id: prior, email, ...n };
             (n.role === 'farmer' ? createdFarmers : createdTraders).push(u);
             continue;
         }
@@ -180,7 +202,7 @@ async function main() {
             continue;
         }
         const user = await User.create({
-            name: `${n.first} ${n.last}`,
+            name: displayName(n),
             email,
             password: DEMO_PASSWORD,
             role: n.role,

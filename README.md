@@ -97,8 +97,8 @@ and the live stats on the homepage reflect real database counts.
 | Role   | Email                | Password    |
 |--------|----------------------|-------------|
 | Admin  | admin@kcnpagro.org   | adminpass123 |
-| Farmer | farmer@example.com   | farmer123   |
-| Trader | trader@example.com   | trader123   |
+| Farmer | demofarmer@gmail.com | farmer123   |
+| Trader | demotrader@gmail.com | trader123   |
 
 > **Note:** This project targets **MongoDB 4.4+**. MongoDB 5.0+ requires a
 > CPU with AVX support and will fail to start on older hardware. When using

@@ -13,7 +13,7 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #0c1222;
+    background-color: #164a37;
     color: #e8eef7;
     overflow-x: hidden;
 }
@@ -381,7 +381,7 @@ summary:focus-visible {
 
 /* Navigation backdrop */
 .nav-blur {
-    background: rgba(12, 18, 34, 0.85);
+    background: rgba(22, 74, 55, 0.92);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
 }
@@ -390,7 +390,7 @@ summary:focus-visible {
    never shows a blur band behind/around the tabs */
 @media (max-width: 767px) {
     .nav-blur {
-        background: #0c1222;
+        background: #164a37;
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
     }
@@ -510,29 +510,39 @@ summary:focus-visible {
     color: #ffffff;
 }
 
-/* Floating language toggle (bottom left) */
+/* Language switch stays visible below the header on every viewport. */
 .lang-fab {
     position: fixed;
-    bottom: 1.25rem;
-    left: 1.25rem;
-    z-index: 60;
-    width: 2.75rem;
+    top: calc(env(safe-area-inset-top, 0px) + 5.5rem);
+    right: calc(env(safe-area-inset-right, 0px) + 1rem);
+    z-index: 45;
+    min-width: 3.25rem;
     height: 2.75rem;
-    border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #d1d5db;
+    padding: 0 0.8rem;
+    border-radius: 0.75rem;
+    background: #15803d;
+    border: 2px solid #86efac;
+    color: #ffffff;
     font-weight: 700;
-    font-size: 0.8rem;
+    font-size: 0.875rem;
     letter-spacing: 0.04em;
     cursor: pointer;
-    backdrop-filter: blur(10px);
     transition: all 0.2s ease;
 }
 
 .lang-fab:hover {
-    background: rgba(34, 197, 94, 0.2);
+    background: #166534;
     color: #ffffff;
+}
+
+@media (max-width: 480px) {
+    .lang-fab {
+        top: calc(env(safe-area-inset-top, 0px) + 4.75rem);
+        right: calc(env(safe-area-inset-right, 0px) + 0.75rem);
+        min-width: 3rem;
+        height: 2.5rem;
+        padding: 0 0.65rem;
+    }
 }
 
 /* Listen buttons (read aloud) */

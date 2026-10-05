@@ -159,17 +159,27 @@
         gate.classList.remove('hidden');
     }
 
+    /** Resolves an i18n key, falling back to English if not loaded. */
+    function tr(key) {
+        if (window.KCNP && KCNP.t) return KCNP.t(key);
+        return key;
+    }
+
     function paintStatus(v) {
         var pill = $('verify-status-pill');
+        // The pill text is status-driven, so it is translated here rather than
+        // tagged in the markup -- a data-i18n value would be overwritten the
+        // moment the record loads.
         var labels = {
-            draft: { text: 'Not submitted', cls: 'px-4 py-2 rounded-lg bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm' },
-            submitted: { text: 'Awaiting review', cls: 'px-4 py-2 rounded-lg bg-accent-500/10 border border-accent-500/25 text-accent-400 text-sm' },
-            under_review: { text: 'Under review', cls: 'px-4 py-2 rounded-lg bg-accent-500/10 border border-accent-500/25 text-accent-400 text-sm' },
-            approved: { text: 'Verified', cls: 'px-4 py-2 rounded-lg bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm' },
-            rejected: { text: 'Rejected', cls: 'px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-300 text-sm' },
-            revoked: { text: 'Verification withdrawn', cls: 'px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-300 text-sm' }
+            draft: { key: 'vst_draft', cls: 'px-4 py-2 rounded-lg bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm' },
+            submitted: { key: 'vst_submitted', cls: 'px-4 py-2 rounded-lg bg-accent-500/10 border border-accent-500/25 text-accent-400 text-sm' },
+            under_review: { key: 'vst_under_review', cls: 'px-4 py-2 rounded-lg bg-accent-500/10 border border-accent-500/25 text-accent-400 text-sm' },
+            approved: { key: 'vst_approved', cls: 'px-4 py-2 rounded-lg bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm' },
+            rejected: { key: 'vst_rejected', cls: 'px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-300 text-sm' },
+            revoked: { key: 'vst_revoked', cls: 'px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-300 text-sm' }
         };
-        var meta = labels[v && v.status] || labels.draft;
+        var meta = Object.assign({}, labels[v && v.status] || labels.draft, { text: '' });
+        meta.text = tr(meta.key);
         if (pill) {
             pill.textContent = meta.text;
             pill.className = meta.cls;
@@ -180,25 +190,23 @@
 
         if (v && v.status === 'approved') {
             box.className = 'p-4 rounded-xl bg-primary-500/10 border border-primary-500/20 text-sm';
-            box.textContent = 'You are verified. You can list produce and request escrow payouts.';
+            box.textContent = tr('vmsg_approved');
         } else if (v && v.status === 'rejected') {
             box.className = 'p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm';
-            box.textContent = 'An admin could not accept your documents: ' + (v.rejectionReason || 'please try again.') + ' You can upload fresh photos below.';
+            // The admin's reason is free text an admin wrote, so it stays as
+            // typed; only the surrounding sentence is translated.
+            box.textContent = tr('vmsg_rejected') + ' ' + (v.rejectionReason || tr('vmsg_try_again'));
         } else if (v && v.status === 'revoked') {
             // A revocation withdraws an approval that was already granted, so
             // the wording differs from a rejection: it is not a bad upload, and
             // their existing listings may still be live.
-            var listingNote = v.revokedListingAction === 'delist'
-                ? ' Your live listings were taken down.'
-                : ' Your existing listings stay visible for now, but you cannot create or edit any.';
+            var listingNote = tr(v.revokedListingAction === 'delist' ? 'vmsg_delisted' : 'vmsg_kept');
             box.className = 'p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm';
-            box.textContent = 'An admin has withdrawn your verification: '
-                + (v.rejectionReason || 'please contact support.')
-                + listingNote
-                + ' You must submit new documents before you can list again. Payments for orders you have already been paid for are not affected.';
+            box.textContent = tr('vmsg_revoked') + ' ' + (v.rejectionReason || tr('vmsg_contact'))
+                + listingNote + ' ' + tr('vmsg_resubmit');
         } else if (v && v.status === 'submitted') {
             box.className = 'p-4 rounded-xl bg-accent-500/10 border border-accent-500/25 text-accent-400 text-sm';
-            box.textContent = 'Your documents are with an admin. You will be able to list once they are approved.';
+            box.textContent = tr('vmsg_submitted');
         } else {
             box.className = 'hidden';
             box.textContent = '';
@@ -350,6 +358,13 @@
         window.addEventListener('beforeunload', stopCamera);
 
         load();
+
+        // Switching SW / EN has to repaint the status pill and message, which
+        // come from the loaded record rather than from static markup. Without
+        // this the page stayed in whichever language it first rendered in.
+        document.addEventListener('kcnp:lang', function () {
+            load();
+        });
     }
 
     if (document.readyState === 'loading') {

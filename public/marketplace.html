@@ -93,7 +93,7 @@
                     <button id="toggle-form-btn" class="text-primary-400 hover:text-primary-300 text-sm font-semibold"><span data-i18n="toggle_post">+ Post a Listing</span></button>
                 </div>
 
-                <div id="post-notice" class="hidden mb-4 p-4 rounded-xl bg-canvas border border-gray-200 text-gray-300 text-sm text-center"></div>
+                <div id="post-notice" class="hidden mb-4 p-4 rounded-xl bg-canvas border border-gray-200 text-gray-600 text-sm text-center"></div>
 
                 <div id="listing-form-container" class="hidden mb-10 reveal">
                     <form id="listing-form" class="glass-card rounded-2xl p-6 sm:p-8" novalidate>
@@ -223,7 +223,7 @@
                             name="newsletter-email"
                             required
                             placeholder="Your email"
-                            class="flex-1 px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-white placeholder-gray-500 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all"
+                            class="flex-1 px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-500 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all"
                         >
                         <button type="submit" class="px-4 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-medium hover:bg-primary-500 transition-colors" aria-label="Subscribe to newsletter">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -436,7 +436,7 @@
                         ${p.price > 0 ? `<span class="text-accent-400 font-bold text-lg">Ksh ${Number(p.price).toFixed(2)}${p.unit ? '/' + p.unit : ''}</span>` : `<span class="text-gray-500 text-sm">${t('price_on_request')}</span>`}
                     </div>
                     <div class="flex items-center gap-3 text-xs text-gray-500 mb-2"><span class="inline-flex items-center gap-1">👁 <span id="views-count-${p._id}">${Number(p.views30d).toLocaleString()}</span> <span class="lowercase">${t('mp_views_short')}</span></span><span class="inline-flex items-center gap-1">❤️ <span id="interest-count-${p._id}">${Number(p.interest30d).toLocaleString()}</span> <span class="lowercase">${t('mp_interest_short')}</span></span></div>
-                    <h3 class="text-xl font-bold text-white mb-2">${p.title}</h3>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">${p.title}</h3>
                     <p class="text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3">${p.description}</p>
                     ${p.location ? `<p class="text-gray-500 text-xs mb-1">📍 ${p.location}</p>` : ''}
                     <div class="pt-3 border-t border-gray-200 mt-3">
@@ -606,7 +606,7 @@
                     more.innerHTML = '';
                 } else {
                     more.innerHTML = `
-                        <h3 class="text-lg font-bold text-white mb-4 border-t border-gray-200 pt-6">${t('mp_more_from')}</h3>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 border-t border-gray-200 pt-6">${t('mp_more_from')}</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             ${others.map(o => `
                                 <div role="button" tabindex="0" class="glass-card rounded-xl p-4 cursor-pointer" onclick="openListingDetail('${o._id}')">
@@ -614,7 +614,7 @@
                                         <span class="text-primary-300 text-xs font-semibold uppercase tracking-wide">${t('cat_' + o.category) || o.category}</span>
                                         ${o.price > 0 ? `<span class="text-accent-400 font-bold">Ksh ${Number(o.price).toFixed(2)}${o.unit ? '/' + o.unit : ''}</span>` : ''}
                                     </div>
-                                    <h4 class="text-sm font-semibold text-white">${o.title}</h4>
+                                    <h4 class="text-sm font-semibold text-gray-900">${o.title}</h4>
                                     ${o.image ? `<img src="${o.image}" alt="${o.title}" class="mt-2 h-24 w-full object-cover rounded-lg" onerror="this.remove()">` : ''}
                                     <div class="mt-2 text-xs text-gray-500">👁 ${Number(o.views30d).toLocaleString()} · ❤️ ${Number(o.interest30d).toLocaleString()}</div>
                                 </div>
@@ -723,6 +723,16 @@
             }
         }
 
+        /**
+         * True when the signed-in farmer is allowed to post. Callers that
+         * open the form use this to decide between opening it and showing the
+         * "verify first" notice, rather than checking the flag in each place.
+         */
+        function canPostListings() {
+            const auth = getAuthUser();
+            return Boolean(auth && auth.role === 'farmer' && auth.identityVerified === true);
+        }
+
         function openListingForm() {
             const container = document.getElementById('listing-form-container');
             if (container) container.classList.remove('hidden');
@@ -730,6 +740,37 @@
                 const el = document.getElementById('listing-form');
                 if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } catch (e) {}
+        }
+
+        /**
+         * Scrolls to the notice and flashes it. A farmer who taps "Post a
+         * Listing" without verifying should be told why nothing opened,
+         * not left with a dead button.
+         */
+        function showPostingBlockedNotice() {
+            applyPostingPermissions();
+            const notice = document.getElementById('post-notice');
+            if (!notice) return;
+            try {
+                notice.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } catch (e) {}
+            notice.classList.remove('notice-flash');
+            // Force a reflow so the animation restarts on repeat clicks.
+            void notice.offsetWidth;
+            notice.classList.add('notice-flash');
+        }
+
+        /**
+         * Single entry point for every "Post a Listing" affordance on the
+         * page. Returns true when the form was opened.
+         */
+        function requestOpenListingForm() {
+            if (canPostListings()) {
+                openListingForm();
+                return true;
+            }
+            showPostingBlockedNotice();
+            return false;
         }
 
         // Buyer demand signals: count listing views (once per card per session)
@@ -839,10 +880,30 @@
             document.getElementById('category-filter').addEventListener('change', loadListings);
             document.getElementById('listing-form').addEventListener('submit', submitListing);
             document.getElementById('toggle-form-btn').addEventListener('click', () => {
+                // Only a verified farmer ever sees this button, but the check
+                // is kept so a stale cached session cannot open the form.
                 const container = document.getElementById('listing-form-container');
-                container.classList.toggle('hidden');
+                if (canPostListings()) {
+                    container.classList.toggle('hidden');
+                    return;
+                }
+                showPostingBlockedNotice();
             });
-            if (window.location.hash === '#listing-form') openListingForm();
+
+            // Every in-page link that points at #listing-form goes through the
+            // same gate, so the farmer gets the explanation rather than a
+            // silently inert anchor.
+            document.querySelectorAll('a[href*="#listing-form"]').forEach(function (link) {
+                link.addEventListener('click', function (e) {
+                    if (canPostListings()) return; // let the anchor work
+                    e.preventDefault();
+                    showPostingBlockedNotice();
+                });
+            });
+
+            if (window.location.hash === '#listing-form') {
+                requestOpenListingForm();
+            }
 
             document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape') {

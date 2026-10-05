@@ -1162,3 +1162,114 @@ body.tour-lock {
         transform: none;
     }
 }
+/* ============================================================
+   LEGACY DARK-THEME NEUTRAL OVERRIDES
+   ------------------------------------------------------------
+   The site moved from a dark theme to the light agricultural
+   palette. The text greys were already re-mapped earlier in
+   this file, but three *surface* classes from the dark theme
+   survived in the markup and are invisible on a light page:
+
+     bg-white/5        a chip that used to be a faint white
+                       overlay on dark; on white it is the
+                       same colour as the card behind it, so
+                       the control looks disabled
+     border-white/10   "white at 20%", i.e. no visible edge
+     text-white        correct on a dark fill, 1:1 on a
+                       white card
+
+   Anything legitimately light-on-dark (hero scrim, modal
+   overlays) still works, because those set their own colour.
+   ============================================================ */
+/* NOTE: the text greys are already remapped for this light
+   theme further up this file (the block at ~line 109), and
+   those steps are the readable ones. Do not re-map them here
+   or you will undo that work. What is still wrong from the
+   old dark theme is surfaces, not text: see below. */
+
+/* `bg-white/5` was a subtle dark-theme chip. On a light card it
+   is indistinguishable from the background, so the controls it
+   is used on (admin tabs, filter pills) would look unclickable. */
+.bg-white\/5 {
+    background-color: #F3F6F1;
+}
+
+.bg-white\/10 {
+    background-color: #E8F5E9;
+}
+
+.hover\:bg-white\/10:hover {
+    background-color: #E8F5E9;
+}
+
+.hover\:bg-white:hover {
+    background-color: #F3F6F1;
+}
+
+/* Borders that were "white at 20%" for dark surfaces read as
+   nothing at all on a light background. */
+.border-white\/10,
+.border-white\/20 {
+    border-color: #E3E8E2;
+}
+
+/* `text-white` on a white card is 1:1, so the admin overview tile
+   values were invisible. Scoped to the tile wrapper only -- a
+   `cta-btn` carries text-white too and must keep it, since it
+   sits on a green fill. */
+#overview-cards .text-white {
+    color: #1B2A1B;
+}
+
+/* ------------------------------------------------------------
+   Light-surface text that the dark theme kept white
+   ------------------------------------------------------------
+   `text-white` was correct wherever it sat on a dark fill: the
+   hero scrim, cta-btn on green, primary-600 buttons. These are
+   the leftovers on a white/light background, where white is a
+   1:1 ratio and the text simply cannot be read.
+   ------------------------------------------------------------ */
+footer .text-white,
+#listing-modal .text-white,
+#order-modal .text-white,
+#quiz-modal .text-white,
+#listing-form input.text-white,
+#listing-form select.text-white,
+#listing-form textarea.text-white {
+    color: #1B2A1B;
+}
+
+/* The hero theme badge is a glass-card (white) sitting on the
+   photograph, so its label was white-on-white. */
+.hero-slide ~ .relative .glass-card .text-primary-300 {
+    color: #276729;
+}
+
+/* ------------------------------------------------------------
+   Posting-gate notice
+   ------------------------------------------------------------
+   Shown when a farmer taps a "Post a Listing" control before
+   verifying. The brief flash is what makes the tap feel answered
+   rather than ignored, since the form deliberately stays closed.
+   ------------------------------------------------------------ */
+.notice-flash {
+    animation: noticeFlash 1.4s ease-out;
+}
+
+@keyframes noticeFlash {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 179, 0, 0);
+    }
+    20%,
+    60% {
+        box-shadow: 0 0 0 4px rgba(255, 179, 0, 0.35);
+    }
+}
+
+/* A "Post a Listing" control a farmer cannot use yet is dimmed rather than
+   hidden, so the reason the feature exists stays discoverable. */
+.verify-gate-hint {
+    opacity: 0.75;
+    cursor: not-allowed;
+}

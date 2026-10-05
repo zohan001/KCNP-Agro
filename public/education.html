@@ -512,7 +512,7 @@
                         const verdict = r.isCorrect ? t('res_correct') : t('res_incorrect');
                         return `
                         <div class="p-3 rounded-lg ${r.isCorrect ? 'bg-primary-500/10 border border-primary-500/20' : 'bg-red-500/10 border border-red-500/20'}">
-                            <p class="text-sm font-semibold text-white mb-1">${question}</p>
+                            <p class="text-sm font-semibold text-gray-800 mb-1">${question}</p>
                             <p class="text-xs ${r.isCorrect ? 'text-primary-300' : 'text-red-300'}">${verdict}</p>
                             ${explanation ? `<p class="text-xs text-gray-400 mt-1">${explanation}</p>` : ''}
                         </div>

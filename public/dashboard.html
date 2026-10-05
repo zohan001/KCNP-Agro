@@ -315,6 +315,35 @@
                 return JSON.parse(readStored('kcnp_user') || readStored('user') || 'null');
             } catch (e) { return null; }
         };
+        /**
+         * The cached session can be stale: an admin may have approved this
+         * farmer after they last loaded the dashboard, which would otherwise
+         * keep showing "verify first" to someone who is already verified.
+         */
+        let identityVerified = false;
+        async function refreshVerificationFlag() {
+            try {
+                const u = getUser();
+                identityVerified = Boolean(u && u.identityVerified === true);
+                if (!u || u.role !== 'farmer') return;
+                const res = await fetch('/api/auth/profile', { credentials: 'same-origin' });
+                if (!res.ok) return;
+                const json = await res.json();
+                const fresh = json && json.data && json.data.user
+                    ? json.data.user.identityVerified === true
+                    : (json && json.data ? json.data.identityVerified === true : null);
+                if (fresh === null) return;
+                identityVerified = fresh;
+                try {
+                    const stored = JSON.parse(readStored('kcnp_user') || readStored('user') || 'null');
+                    if (stored) {
+                        stored.identityVerified = fresh;
+                        localStorage.setItem('kcnp_user', JSON.stringify(stored));
+                    }
+                } catch (e) { /* storage unavailable */ }
+            } catch (e) { /* keep the cached value */ }
+        }
+
         function clearSession() {
             try {
                 localStorage.removeItem('token');
@@ -366,6 +395,52 @@
             return `<span class="inline-block px-2.5 py-1 rounded-full border ${cls} text-xs font-semibold uppercase tracking-wider">${role}</span>`;
         }
 
+        /**
+         * A farmer without a verified identity gets a visible explanation and
+         * a link to /verification instead of a "Post a Listing" button that
+         * leads nowhere.
+         */
+        function applyDashboardPostingGate() {
+            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            const targets = Array.prototype.slice.call(
+                document.querySelectorAll('#post-listing-cta, a[href*="#listing-form"]'));
+            targets.forEach(function (el) {
+                if (identityVerified) {
+                    el.classList.remove('verify-gate-hint');
+                    return;
+                }
+                if (el.tagName === 'A') {
+                    el.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        showDashboardVerifyNotice();
+                    }, { once: false });
+                } else {
+                    el.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        showDashboardVerifyNotice();
+                    });
+                }
+                el.classList.add('verify-gate-hint');
+            });
+        }
+
+        function showDashboardVerifyNotice() {
+            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            let box = document.getElementById('dashboard-verify-notice');
+            if (!box) {
+                box = document.createElement('div');
+                box.id = 'dashboard-verify-notice';
+                box.className = 'notice-flash mb-4 p-4 rounded-xl bg-accent-50 border border-accent-500/30 text-accent-800 text-sm text-center';
+                const cta = document.getElementById('post-listing-cta');
+                if (cta && cta.parentElement) cta.parentElement.insertBefore(box, cta);
+            }
+            box.innerHTML = `${t('np_verify1')} <a href="/verification" class="font-semibold underline">${t('np_verify_link')}</a> ${t('np_verify2')}`;
+            box.classList.remove('notice-flash');
+            void box.offsetWidth;
+            box.classList.add('notice-flash');
+            try { box.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+        }
+
         function showRoleView(role) {
             const farmer = document.getElementById('farmer-panel');
             const trader = document.getElementById('trader-panel');
@@ -394,6 +469,7 @@
             } else {
                 farmer.classList.remove('hidden');
                 cta.classList.remove('hidden');
+                applyDashboardPostingGate();
                 feedback.classList.remove('hidden');
                 hint.textContent = 'Manage your listings, post produce, and reach traders directly.';
                 loadMembership();
@@ -463,8 +539,13 @@
                     headers: { Authorization: `Bearer ${getToken()}` }
                 });
                 if (!data.count) {
+                    // An unverified farmer is told to verify first instead of
+                    // being sent to a form that will refuse their submission.
+                    const verifyHint = identityVerified ? '' : `<p class="text-xs text-accent-600 mt-1">${t('np_verify1')}
+                        <a href="/verification" class="font-semibold underline">${t('np_verify_link')}</a></p>`;
                     container.innerHTML = `<div class="text-center py-12 text-gray-500 col-span-full">${t('d_no_listings')}<br>
-                        <a href="/marketplace#listing-form" class="text-primary-400 hover:text-primary-300 font-semibold">${t('s_post_new')} &rarr;</a></div>`;
+                        <a href="/marketplace#listing-form" class="text-primary-400 hover:text-primary-300 font-semibold">${t('s_post_new')} &rarr;</a>
+                        ${verifyHint}</div>`;
                     return;
                 }
                 container.innerHTML = data.data.map(p => `
@@ -548,12 +629,24 @@
             window.location.href = '/';
         }
 
+        document.addEventListener('kcnp:lang', () => {
+            const r = user && user.role ? user.role : 'farmer';
+            showRoleView(r);
+            applyDashboardPostingGate();
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             const role = user && user.role ? user.role : 'farmer';
             document.getElementById('user-name').textContent = user.name.split(' ')[0];
             document.getElementById('signed-in-as').innerHTML = `Signed in as ${roleBadge(role)}`;
             setupAuthNav();
             showRoleView(role);
+            // The posting gate depends on the live flag, so it runs once the
+            // profile has been re-checked rather than off the cached session.
+            refreshVerificationFlag().then(function () {
+                applyDashboardPostingGate();
+                if (role === 'farmer') loadMyListings();
+            });
             loadInsights();
 
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');

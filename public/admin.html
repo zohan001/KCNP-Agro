@@ -157,7 +157,7 @@
                 document.querySelectorAll('.admin-tab').forEach(function (b) {
                     var on = b.getAttribute('data-tab') === name;
                     b.className = 'admin-tab px-4 py-2 rounded-lg text-sm font-semibold ' +
-                        (on ? 'bg-primary-600 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10');
+                        (on ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200');
                 });
                 ['users', 'subscriptions', 'notifications', 'listings', 'verifications', 'audit', 'education', 'testimonials', 'errorlogs'].forEach(function (nm) {
                     var p = document.getElementById('panel-' + nm);
@@ -180,14 +180,17 @@
                     if (!r.data.success) return;
                     var d = r.data.data;
                     var cards = [
-                        { label: 'Total users', value: d.totalUsers, cls: 'text-white' },
-                        { label: 'Pending payments', value: d.pendingPayments, cls: d.pendingPayments > 0 ? 'text-accent-400' : 'text-primary-400' },
-                        { label: 'Active subs', value: d.activeSubs, cls: 'text-primary-400' },
-                        { label: 'Unread notif.', value: d.unreadNotifications, cls: d.unreadNotifications > 0 ? 'text-accent-400' : 'text-gray-300' },
-                        { label: 'Listings', value: d.activeListings + ' / ' + d.listings, cls: 'text-white' },
-                        { label: 'Farmers', value: d.farmers, cls: 'text-primary-400' },
-                        { label: 'Traders', value: d.traders, cls: 'text-accent-400' },
-                        { label: 'Articles', value: d.articles, cls: 'text-gray-200' }
+                        // These tiles sit on a white card, so a "light" text step that
+                        // used to mean "on dark" is invisible here. The values are
+                        // ink and the muted ones are grey-600, both AA on white.
+                        { label: 'Total users', value: d.totalUsers, cls: 'text-ink' },
+                        { label: 'Pending payments', value: d.pendingPayments, cls: d.pendingPayments > 0 ? 'text-accent-700' : 'text-primary-600' },
+                        { label: 'Active subs', value: d.activeSubs, cls: 'text-primary-600' },
+                        { label: 'Unread notif.', value: d.unreadNotifications, cls: d.unreadNotifications > 0 ? 'text-accent-700' : 'text-gray-600' },
+                        { label: 'Listings', value: d.activeListings + ' / ' + d.listings, cls: 'text-ink' },
+                        { label: 'Farmers', value: d.farmers, cls: 'text-primary-600' },
+                        { label: 'Traders', value: d.traders, cls: 'text-accent-700' },
+                        { label: 'Articles', value: d.articles, cls: 'text-gray-600' }
                     ];
                     wrap.innerHTML = cards.map(function (c) {
                         return '<div class="glass-card rounded-xl p-5 text-center">' +
@@ -518,7 +521,7 @@
                 approved: { text: 'Approved', cls: 'bg-primary-500/10 text-primary-300' },
                 rejected: { text: 'Rejected', cls: 'bg-red-500/10 text-red-300' },
                 revoked: { text: 'Revoked', cls: 'bg-red-500/10 text-red-300' },
-                draft: { text: 'Not submitted', cls: 'bg-white/5 text-gray-300' }
+                draft: { text: 'Not submitted', cls: 'bg-gray-100 text-gray-600' }
             };
 
             function verifBadge(status) {
@@ -552,7 +555,7 @@
                         '<div class="flex flex-wrap gap-2">' + filters.map(function (f) {
                             var on = f[0] === active;
                             return '<button type="button" data-vfilter="' + esc(f[0]) + '" class="text-[11px] px-3 py-1.5 rounded font-semibold ' +
-                                (on ? 'bg-primary-600 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10') + '">' + esc(f[1]) + '</button>';
+                                (on ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200') + '">' + esc(f[1]) + '</button>';
                         }).join('') + '</div></div>';
 
                     if (!items.length) {
@@ -747,7 +750,7 @@
                 document.querySelectorAll('[data-ektab]').forEach(function (b) {
                     var on = b.getAttribute('data-ektab') === t;
                     b.className = 'text-sm font-semibold px-4 py-2 rounded-lg ' +
-                        (on ? 'bg-primary-600 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10');
+                        (on ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200');
                 });
                 document.getElementById('edu-cancel').classList.add('hidden');
                 document.getElementById('edu-new').textContent = t === 'articles' ? 'New Article' : 'New Quiz';

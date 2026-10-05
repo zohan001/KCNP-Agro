@@ -151,6 +151,9 @@ function createApp() {
         ['/market-insights', 'market-insights.html'],
         ['/pricing', 'pricing.html'],
         ['/activate', 'activate.html'],
+        ['/contact', 'contact.html'],
+        ['/verification', 'verification.html'],
+        ['/orders', 'orders.html'],
         ['/admin', 'admin.html']
     ];
     pageRoutes.forEach(([pathName, file]) => {

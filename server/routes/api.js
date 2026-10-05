@@ -12,6 +12,8 @@ const marketInsightsController = require('../controllers/marketInsightsControlle
 const paymentController = require('../controllers/paymentController');
 const adminController = require('../controllers/adminController');
 const testimonialController = require('../controllers/testimonialController');
+const orderController = require('../controllers/orderController');
+const verificationController = require('../controllers/verificationController');
 
 const {
     validateContactMessage,
@@ -44,13 +46,17 @@ router.get('/newsletter', newsletterController.getSubscribers);
 // ==============================
 // Auth Routes
 // ==============================
+// reCAPTCHA guards account creation only. Sign-in, password recovery and
+// payments stay captcha-free on purpose: they are already rate limited and
+// sit behind a password or a signed-in account, and a captcha there only
+// serves to lock genuine members out when Google's script is unreachable.
 router.post('/auth/register', validateRegister, requireRecaptcha, authController.register);
-router.post('/auth/login', validateLogin, requireRecaptcha, authController.login);
+router.post('/auth/login', validateLogin, authController.login);
 router.get('/auth/profile', authenticate, authController.getProfile);
 router.post('/auth/activate', authController.activate);
 router.post('/auth/resend-activation', authController.resendActivation);
-router.post('/auth/forgot-password', validateForgotPassword, requireRecaptcha, authController.forgotPassword);
-router.post('/auth/reset-password', validateResetPassword, requireRecaptcha, authController.resetPassword);
+router.post('/auth/forgot-password', validateForgotPassword, authController.forgotPassword);
+router.post('/auth/reset-password', validateResetPassword, authController.resetPassword);
 router.post('/auth/logout', authController.logout);
 
 // Public config helpers
@@ -71,6 +77,37 @@ router.delete('/products/:id', authenticate, productController.deleteProduct);
 // Buyer demand signals (public, lightweight)
 router.post('/products/:id/view', marketInsightsController.recordView);
 router.post('/products/:id/interest', marketInsightsController.recordInterest);
+
+// ==============================
+// Escrow Orders
+// ==============================
+// The money is held by the platform until the trader confirms the goods
+// arrived, then released to the farmer. Both sides get the same timeline,
+// and a dispute freezes the funds until an admin settles it.
+router.post('/products/:id/order', authenticate, authorize('trader', 'admin'), orderController.createOrder);
+router.post('/orders/:id/pay', authenticate, orderController.payOrder);
+router.post('/orders/:id/otp', authenticate, orderController.submitOrderOtp);
+router.post('/orders/:id/dispatch', authenticate, authorize('farmer', 'admin'), orderController.dispatchOrder);
+router.post('/orders/:id/confirm', authenticate, orderController.confirmOrder);
+router.post('/orders/:id/dispute', authenticate, orderController.disputeOrder);
+router.get('/orders', authenticate, orderController.listMyOrders);
+router.get('/orders/admin/list', authenticate, authorize('admin'), orderController.adminListOrders);
+router.get('/orders/:id', authenticate, orderController.getOrder);
+router.post('/orders/:id/hold', authenticate, authorize('admin'), orderController.adminHoldOrder);
+router.post('/orders/:id/release', authenticate, authorize('admin'), orderController.adminReleaseOrder);
+router.post('/orders/:id/resolve', authenticate, authorize('admin'), orderController.adminResolveOrder);
+
+// ==============================
+// Farmer Identity Verification
+// ==============================
+// Documents are uploaded as downscaled base64 JSON to fit our private,
+// cookie-authenticated API. They are never returned to the public list.
+router.get('/verification/me', authenticate, verificationController.getMyVerification);
+router.post('/verification/save', authenticate, verificationController.saveVerification);
+router.post('/verification/request-review', authenticate, verificationController.requestReview);
+router.get('/verification/admin/list', authenticate, authorize('admin'), verificationController.adminListVerifications);
+router.post('/verification/:id/approve', authenticate, authorize('admin'), verificationController.adminApprove);
+router.post('/verification/:id/reject', authenticate, authorize('admin'), verificationController.adminReject);
 
 // Supply/demand analysis
 router.get('/market-insights', marketInsightsController.getMarketInsights);
@@ -104,7 +141,7 @@ router.get('/stats', statsController.getStats);
 // ==============================
 router.get('/plans', paymentController.getPlansHandler);
 router.get('/my/membership', authenticate, paymentController.getMyMembership);
-router.post('/payment/request', authenticate, authorize('farmer', 'admin'), requireRecaptcha, paymentController.requestPayment);
+router.post('/payment/request', authenticate, authorize('farmer', 'admin'), paymentController.requestPayment);
 router.post('/payment/otp', authenticate, authorize('farmer', 'admin'), paymentController.submitPaymentOtp);
 router.get('/payment/status/:reference', authenticate, paymentController.getPaymentStatus);
 

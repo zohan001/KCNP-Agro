@@ -1298,10 +1298,124 @@ var PHRASE_REV = {};
     }
 
     // ==============================
+    // Animated statistics counters
+    // ==============================
+    // Every element carrying data-target counts up from zero each time it
+    // scrolls into view, and drops back to zero when it leaves again, so a
+    // visitor scrolling back up always sees the figures tick over rather
+    // than a row of static digits.
+    var COUNTER_MS = 1500;
+    var reducedMotion = false;
+    try {
+        reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    } catch (e) {}
+
+    function counterSuffix(el) {
+        var explicit = el.getAttribute('data-suffix');
+        if (explicit !== null) return explicit;
+        var shown = el.textContent || '';
+        var m = shown.match(/[^\d\s.,\-−+]*$/);
+        return m ? m[0] : '';
+    }
+
+    function renderCounter(el, value) {
+        var n = Math.round(value);
+        var grouped = String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        el.textContent = grouped + counterSuffix(el);
+    }
+
+    function counterTarget(el) {
+        var t = parseFloat(el.getAttribute('data-target'));
+        if (isFinite(t)) return t;
+        // No target yet: fall back to whatever number is already on screen.
+        var m = (el.textContent || '').replace(/[^\d.]/g, '');
+        return parseFloat(m) || 0;
+    }
+
+    function animateCounter(el) {
+        var target = counterTarget(el);
+        if (el.dataset.counting === '1') return;
+
+        if (reducedMotion || target <= 0) {
+            el.dataset.counting = '';
+            renderCounter(el, target);
+            return;
+        }
+
+        el.dataset.counting = '1';
+        var start = null;
+
+        function frame(now) {
+            if (start === null) start = now;
+            var t = Math.min(1, (now - start) / COUNTER_MS);
+            // easeOutCubic: quick off the line, settles gently on the number.
+            var eased = 1 - Math.pow(1 - t, 3);
+            renderCounter(el, target * eased);
+            if (t < 1) {
+                requestAnimationFrame(frame);
+            } else {
+                renderCounter(el, target);
+                el.dataset.counting = '';
+            }
+        }
+        requestAnimationFrame(frame);
+    }
+
+    function initCounters() {
+        var counters = document.querySelectorAll('[data-target]');
+        if (!counters.length) return;
+
+        // Without an observer (or with motion reduced) just show the figures.
+        if (!('IntersectionObserver' in window) || reducedMotion) {
+            for (var i = 0; i < counters.length; i++) renderCounter(counters[i], counterTarget(counters[i]));
+            return;
+        }
+
+        var observer = new IntersectionObserver(function (entries) {
+            for (var i = 0; i < entries.length; i++) {
+                var entry = entries[i];
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target);
+                } else {
+                    // Off screen again — reset so the next scroll counts up.
+                    entry.target.dataset.counting = '';
+                    renderCounter(entry.target, 0);
+                }
+            }
+        }, { threshold: 0.3 });
+
+        for (var j = 0; j < counters.length; j++) {
+            counters[j].setAttribute('aria-label', counters[j].getAttribute('data-target') || '0');
+            observer.observe(counters[j]);
+        }
+    }
+
+    /**
+     * Point a counter at a fresh figure (e.g. once the live numbers arrive).
+     * If the counter is already on screen it counts to the new value,
+     * otherwise the next time it scrolls in it will.
+     *
+     * @param {string} id - element id
+     * @param {number} value - the real count
+     */
+    function setCounter(id, value) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var v = parseInt(value, 10) || 0;
+        el.setAttribute('data-target', v);
+        if (el.dataset.counting === '1') return;
+        var box = el.getBoundingClientRect();
+        var onScreen = box.top < (window.innerHeight || 0) && box.bottom > 0;
+        renderCounter(el, onScreen && !reducedMotion ? 0 : v);
+        if (onScreen) animateCounter(el);
+    }
+
+    // ==============================
     // Init
     // ==============================
     function init() {
         applyLang();
+        initCounters();
 
         var toggle = document.getElementById('lang-toggle');
         if (toggle && !toggle.getAttribute('data-bound')) {
@@ -1334,7 +1448,8 @@ var PHRASE_REV = {};
         showTour: showTour,
         skipTour: skipTour,
         nextTour: nextTour,
-        trPhrase: trPhrase
+        trPhrase: trPhrase,
+        setCounter: setCounter
     };
 
     if (document.readyState === 'loading') {

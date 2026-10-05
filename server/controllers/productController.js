@@ -33,6 +33,7 @@ async function createProduct(req, res) {
         const product = await Product.create({
             title, description, category, price, unit, location,
             contactEmail, contactPhone, image,
+            stock: req.body.stock !== undefined ? req.body.stock : null,
             seller: req.user ? req.user._id : undefined
         });
 
@@ -149,7 +150,7 @@ async function updateProduct(req, res) {
             return res.status(402).json({ success: false, ...subReq });
         }
 
-        const allowed = ['title', 'description', 'category', 'price', 'unit', 'location', 'contactEmail', 'contactPhone', 'image', 'active'];
+        const allowed = ['title', 'description', 'category', 'price', 'unit', 'location', 'contactEmail', 'contactPhone', 'image', 'active', 'stock'];
         allowed.forEach(field => {
             if (req.body[field] !== undefined) product[field] = req.body[field];
         });

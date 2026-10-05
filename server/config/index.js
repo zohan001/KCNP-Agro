@@ -85,6 +85,20 @@ module.exports = {
         currency: process.env.PAYSTACK_CURRENCY || 'KES'
     },
 
+    // Marketplace escrow — how a trader's payment is held until delivery.
+    //   platformFeePercent : the platform's cut, taken out of the escrow
+    //                        release (0 = the farmer receives the full total).
+    //   autoReleaseDays    : days after dispatch that funds release
+    //                        automatically if the buyer neither confirms
+    //                        nor disputes. Guards the farmer from a silent
+    //                        buyer freezing their money forever.
+    escrow: {
+        platformFeePercent: parseFloat(process.env.ESCROW_PLATFORM_FEE_PERCENT || '0'),
+        autoReleaseDays: parseInt(process.env.ESCROW_AUTO_RELEASE_DAYS || '7', 10),
+        maxQuantity: parseFloat(process.env.ESCROW_MAX_QUANTITY || '100000'),
+        deliveryProofMaxBytes: parseInt(process.env.ESCROW_PROOF_MAX_BYTES || String(2 * 1024 * 1024), 10)
+    },
+
     // Google reCAPTCHA (invisible, background token). Protects auth +
     // payment forms. The same site+secret key pair works for the invisible
     // v2 widget; v3 keys also return a score that must clear minScore.

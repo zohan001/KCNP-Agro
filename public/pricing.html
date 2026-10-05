@@ -16,15 +16,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 
     <script src="/js/ux.js" defer></script>
-    <script src="/js/recaptcha.js" defer></script>
-    <script>
-        function initRecaptcha() { if (window.KCNPRecaptcha) window.KCNPRecaptcha.init(); }
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initRecaptcha);
-        } else {
-            initRecaptcha();
-        }
-    </script>
 </head>
 <body class="bg-dark-900 text-white font-sans antialiased" style="font-family: Inter, system-ui, sans-serif;">
     <script>
@@ -485,18 +476,10 @@
                         return;
                     }
                     submitText.textContent = P('Sending...');
-                    var capToken = (window.KCNPRecaptcha && window.KCNPRecaptcha.active())
-                        ? await window.KCNPRecaptcha.execute('payment')
-                        : '';
-                    if (window.KCNPRecaptcha && window.KCNPRecaptcha.active() && !capToken) {
-                        submitText.textContent = t('pr_pay_btn');
-                        resultBox(false, P('Please verify you are not a robot.'));
-                        return;
-                    }
                     fetch(api + '/payment/request', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-                        body: JSON.stringify({ plan: plan, phone: phone, recaptchaToken: capToken })
+                        body: JSON.stringify({ plan: plan, phone: phone })
                     }).then(function (r) { return r.json(); }).then(function (d) {
                         submitText.textContent = t('pr_pay_btn');
                         if (d.success) {

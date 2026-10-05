@@ -32,6 +32,15 @@ const productSchema = new mongoose.Schema(
             trim: true,
             default: 'unit'
         },
+        // Optional stock tracking. `null` means "quantity agreed on M-Pesa
+        // at checkout", which is how most produce is actually sold, so the
+        // existing listings keep working untouched. When a number is set,
+        // escrow orders reserve that much and the card shows what is left.
+        stock: {
+            type: Number,
+            min: [0, 'Stock cannot be negative.'],
+            default: null
+        },
         location: {
             type: String,
             trim: true,

@@ -14,20 +14,138 @@
 body {
     font-family: 'Inter', sans-serif;
     background-color: #0c1222;
-    color: #e2e8f0;
+    color: #e8eef7;
     overflow-x: hidden;
 }
 
 /* Smooth scrollbar styling */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
+    height: 10px;
 }
 ::-webkit-scrollbar-track {
     background: #111827;
 }
 ::-webkit-scrollbar-thumb {
-    background: #16a34a;
-    border-radius: 4px;
+    background: #2fbf5f;
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #4ade80;
+}
+
+/* ============================================
+   Readability pass
+   ============================================
+   The greys below were tuned for a pitch deck, not
+   for a dark UI read on a phone in daylight. Every
+   one of them sat under the WCAG AA threshold
+   against the #0c1222 page background, which is
+   what made small print look muddy and tiring.
+   They are re-mapped here rather than in the markup
+   so every page inherits the same legible floor and
+   only has to keep using the usual Tailwind names.
+
+   Ratios are against #0c1222:
+     gray-300  ~14:1     gray-500 ~8.5:1
+     gray-400  ~12:1     gray-600 ~6.6:1
+   ============================================ */
+.text-gray-300 { color: #dfe7f2; }
+.text-gray-400 { color: #ccd7e6; }
+.text-gray-500 { color: #aab8ca; }
+.text-gray-600 { color: #94a3b8; }
+
+.placeholder-gray-400::placeholder { color: #8d9cb2; opacity: 1; }
+.placeholder-gray-500::placeholder { color: #8d9cb2; opacity: 1; }
+.placeholder-gray-600::placeholder { color: #7d8b9f; opacity: 1; }
+
+/* Field labels and muted copy should never fall below this. */
+.text-gray-700 { color: #8492a6; }
+
+/* Form controls need a visible edge, not a hint of one. */
+.form-input,
+input[type="text"].form-input,
+input[type="email"].form-input,
+input[type="password"].form-input,
+input[type="tel"].form-input,
+input[type="number"].form-input,
+input[type="search"].form-input,
+textarea.form-input,
+select.form-input {
+    border-color: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+}
+
+.form-input::placeholder { color: #8d9cb2; opacity: 1; }
+
+.form-input:focus {
+    border-color: #2fbf5f;
+    box-shadow: 0 0 0 3px rgba(47, 191, 95, 0.28);
+    outline: none;
+}
+
+/* Keyboard users must always be able to see where they are. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+    outline: 2px solid #6ee7a0;
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+/* ============================================
+   Bot trap + captcha fallback (registration)
+   ============================================ */
+.hp-field {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.hp-fallback {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.hp-fallback[hidden] { display: none; }
+
+.hp-fallback.checked {
+    border-color: rgba(47, 191, 95, 0.55);
+    background: rgba(47, 191, 95, 0.10);
+}
+
+.hp-fallback__label {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.hp-fallback__label input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    accent-color: #16a34a;
+    cursor: pointer;
+}
+
+.hp-fallback__hint {
+    margin: 0;
+    font-size: 0.78rem;
+    color: #aab8ca;
 }
 
 /* ==============================
@@ -171,10 +289,10 @@ body {
 
 /* Glass morphism card */
 .glass-card {
-    background: rgba(17, 24, 39, 0.6);
+    background: rgba(15, 23, 42, 0.78);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 /* Gradient border effect */
@@ -197,9 +315,12 @@ body {
     pointer-events: none;
 }
 
-/* CTA button with glow */
+/* CTA button with glow.
+   The old ramp started at #22c55e, which put white text at 2.2:1 — well
+   below any accessibility floor. The base is now a deep green (>=5:1 with
+   white) and the brighter green is held back for the hover state only. */
 .cta-btn {
-    background: linear-gradient(135deg, #16a34a, #15803d);
+    background: linear-gradient(135deg, #15803d, #166534);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
@@ -209,7 +330,7 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, #22c55e, #16a34a);
+    background: linear-gradient(135deg, #16a34a, #15803d);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -375,16 +496,16 @@ body {
     gap: 0.5rem;
     padding: 0.8rem 1rem;
     border-radius: 9999px;
-    background: #16a34a;
+    background: #15803d;
     color: #ffffff;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.875rem;
     box-shadow: 0 8px 24px rgba(22, 163, 74, 0.45);
     transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .fab-help:hover {
-    background: #15803d;
+    background: #166534;
     transform: scale(1.05);
     color: #ffffff;
 }
@@ -457,15 +578,10 @@ body {
     color: #ffffff;
 }
 
-/* Form input focus styles */
+/* Form input focus styles — the colour, border and placeholder rules live
+   in the readability block at the top of this file. */
 .form-input {
-    transition: all 0.3s ease;
-}
-
-.form-input:focus {
-    border-color: #16a34a;
-    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
-    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 /* Mobile menu animation */
@@ -691,7 +807,7 @@ body.tour-lock {
     padding: 0.75rem 0.5rem;
     border-radius: 0.75rem;
     border: none;
-    background: linear-gradient(135deg, #16a34a, #15803d);
+    background: linear-gradient(135deg, #15803d, #166534);
     color: #fff;
     font-size: 0.88rem;
     font-weight: 700;
@@ -699,7 +815,7 @@ body.tour-lock {
 }
 
 .tour-next:hover {
-    filter: brightness(1.1);
+    background: linear-gradient(135deg, #16a34a, #15803d);
 }
 
 /* Listing photo upload preview */

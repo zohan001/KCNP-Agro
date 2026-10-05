@@ -7,12 +7,40 @@
  * siteverify API. Works with invisible v2 keys and
  * v3 keys alike; when Google returns a score (v3)
  * it must clear RECAPTCHA_MIN_SCORE.
+ *
+ * Only account REGISTRATION is gated by this
+ * middleware. Login, password reset and payments
+ * deliberately do NOT require a captcha: they sit
+ * behind rate limiting and, for login, the password
+ * itself, and putting a captcha in front of them
+ * locked real members out whenever Google's script
+ * was slow, blocked by an extension, or the network
+ * dropped.
+ *
+ * Because an invisible widget can fail to render at
+ * all, a missing token is NEVER treated as proof of
+ * a bot. A missing token simply means the captcha
+ * could not be reached, so the request falls through
+ * to the cheap server-side heuristics in
+ * `passesHeuristicChecks`. A token that IS present
+ * must always verify, which keeps the bot protection
+ * intact for the traffic that can complete the
+ * challenge.
  * ============================================
  */
 
 const config = require('../config');
 
 const VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
+
+/** Fields a human never sees or fills. Any value means a bot filled the form. */
+const HONEYPOT_FIELDS = ['website', 'company_website', 'fax'];
+
+/** Minimum plausible time between a page render and a submit. */
+const MIN_FILL_MS = 1200;
+
+/** How far into the future a client timestamp is allowed to sit. */
+const MAX_CLOCK_SKEW_MS = 60000;
 
 /**
  * Verify a reCAPTCHA response token with Google.
@@ -65,19 +93,58 @@ async function verifyRecaptchaToken(token, remoteIp, expectedAction) {
 }
 
 /**
- * Express middleware. When reCAPTCHA is configured it requires a valid
- * `recaptchaToken` on the request body; otherwise it passes through so
- * development/staging keep working without Google keys.
+ * Cheap checks that need no third party: an untouched honeypot field and a
+ * human-plausible time on the form. Used only when no captcha token could be
+ * minted, so that a blocked or slow Google script can never lock a real
+ * member out of the platform.
+ *
+ * @param {Object} req - Express request object
+ * @returns {{ ok: boolean, reason?: string }}
+ */
+function passesHeuristicChecks(req) {
+    const body = (req && req.body) || {};
+
+    for (const field of HONEYPOT_FIELDS) {
+        const value = body[field];
+        if (value !== undefined && value !== null && String(value).trim() !== '') {
+            return { ok: false, reason: 'honeypot' };
+        }
+    }
+
+    const startedAt = Number(body.formStartedAt);
+    if (Number.isFinite(startedAt) && startedAt > 0) {
+        const elapsed = Date.now() - startedAt;
+        if (elapsed < MIN_FILL_MS) return { ok: false, reason: 'too-fast' };
+        // A stamp from the future means a tampered or badly skewed client.
+        if (elapsed < -MAX_CLOCK_SKEW_MS) return { ok: false, reason: 'bad-timestamp' };
+    }
+
+    return { ok: true };
+}
+
+/**
+ * Express middleware for registration. When reCAPTCHA is configured the request
+ * must either carry a token Google accepts, or come from a client that could not
+ * reach the widget and still looks human by the heuristics above. Anything else
+ * is rejected.
  */
 function requireRecaptcha(req, res, next) {
     if (!config.recaptchaConfigured()) return next();
 
     const token = String((req.body && req.body.recaptchaToken) || '');
+
+    // No token: the widget never ran (offline, blocked, slow). Fall back to the
+    // heuristics instead of failing a genuine member.
     if (!token) {
-        return res.status(400).json({
-            success: false,
-            message: 'Please verify you are not a robot.'
-        });
+        const verdict = passesHeuristicChecks(req);
+        if (!verdict.ok) {
+            console.warn(`[Recaptcha] Blocked registration without token (${verdict.reason})`);
+            return res.status(400).json({
+                success: false,
+                message: 'Your submission was flagged as automated. Please reload the page and try again.'
+            });
+        }
+        return next();
     }
 
     verifyRecaptchaToken(token, req.ip)
@@ -85,17 +152,15 @@ function requireRecaptcha(req, res, next) {
             if (!ok) {
                 return res.status(400).json({
                     success: false,
-                    message: 'Please verify you are not a robot.'
+                    message: 'We could not confirm you are human. Please reload the page and try again.'
                 });
             }
             return next();
         })
-        .catch(() => {
-            return res.status(400).json({
-                success: false,
-                message: 'Please verify you are not a robot.'
-            });
-        });
+        .catch(() => res.status(400).json({
+            success: false,
+            message: 'We could not confirm you are human. Please reload the page and try again.'
+        }));
 }
 
-module.exports = { verifyRecaptchaToken, requireRecaptcha };
+module.exports = { verifyRecaptchaToken, requireRecaptcha, passesHeuristicChecks };

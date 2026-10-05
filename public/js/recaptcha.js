@@ -1,18 +1,21 @@
 /**
  * ============================================
- * reCAPTCHA v2 invisible bootstrap (shared)
+ * reCAPTCHA bootstrap (shared)
  * ============================================
  * Fetches the public site key from /api/recaptcha-config,
- * loads the Google reCAPTCHA script, and registers an
- * invisible widget (no checkbox, no user interaction).
- * Tokens are minted in the background on demand and
- * returned as a Promise by KCNPRecaptcha.execute(action).
+ * loads the Google reCAPTCHA script and renders an
+ * invisible widget that mints tokens in the background.
  *
- * When reCAPTCHA is not configured on the server the
- * script is never loaded, active() is false and
- * execute() resolves to '' (the server skips
- * verification in that case), so dev/staging keep
- * working without Google keys.
+ * The widget is a convenience, never a gate. If Google's
+ * script is slow, blocked by an extension, or simply
+ * unreachable, `execute()` resolves to '' and the server
+ * falls back to its own heuristics. A genuine member is
+ * therefore never locked out of the platform by a
+ * captcha they cannot see.
+ *
+ * When the widget cannot be started, `showFallback()`
+ * paints an ordinary "I am not a robot" checkbox so the
+ * visitor has something real to tick.
  * ============================================
  */
 (function () {
@@ -20,9 +23,9 @@
 
     var siteKey = '';
     var widgetId = null;
-    var active = false;
-    var scriptBusy = false;
-    var pendingRenders = [];
+    var ready = false;
+    var loading = false;
+    var pending = [];
 
     function ensureHolder() {
         var host = document.getElementById('kcnp-recaptcha-holder');
@@ -41,86 +44,121 @@
     }
 
     function onScriptReady() {
-        scriptBusy = false;
-        if (typeof grecaptcha === 'undefined' || !siteKey) return;
-        try {
-            widgetId = grecaptcha.render(ensureHolder(), {
-                sitekey: siteKey,
-                size: 'invisible',
-                badge: 'bottomright',
-                theme: 'dark'
-            });
-        } catch (e) {
-            widgetId = null;
+        loading = false;
+        if (typeof grecaptcha === 'undefined' || !siteKey) {
+            ready = false;
+        } else {
+            try {
+                widgetId = grecaptcha.render(ensureHolder(), {
+                    sitekey: siteKey,
+                    size: 'invisible',
+                    badge: 'bottomright',
+                    theme: 'dark'
+                });
+                ready = widgetId !== null;
+            } catch (e) {
+                widgetId = null;
+                ready = false;
+            }
         }
-        active = widgetId !== null;
-        var q = pendingRenders;
-        pendingRenders = [];
-        for (var i = 0; i < q.length; i++) q[i]();
+        if (!ready) showFallback();
+        settle();
     }
 
     function injectScript() {
-        if (scriptBusy) return;
+        if (loading || ready) return;
         if (typeof grecaptcha !== 'undefined') { onScriptReady(); return; }
-        scriptBusy = true;
+        loading = true;
         window.onRecaptchaReady = onScriptReady;
         var s = document.createElement('script');
         s.src = 'https://www.google.com/recaptcha/api.js?onload=onRecaptchaReady&render=explicit';
         s.async = true;
         s.defer = true;
+        s.onerror = function () { loading = false; ready = false; showFallback(); settle(); };
         document.head.appendChild(s);
-        // Safety net: if Google's loader is slow or blocked, give up so the
-        // page keeps working without a captcha (dev/local environments).
+        // Give up quickly rather than leaving the visitor staring at a
+        // spinner: the server copes without a token.
         setTimeout(function () {
-            if (typeof grecaptcha !== 'undefined') onScriptReady();
-            scriptBusy = false;
-        }, 4000);
+            if (loading) { loading = false; if (!ready) showFallback(); settle(); }
+        }, 3500);
+    }
+
+    /** Flush everyone waiting on the widget, successfully or not. */
+    function settle() {
+        var queue = pending;
+        pending = [];
+        for (var i = 0; i < queue.length; i++) queue[i]();
+    }
+
+    /**
+     * Paint a plain checkbox into #recaptcha-fallback so there is always a
+     * visible control to interact with when the widget could not start.
+     */
+    function showFallback() {
+        var box = document.getElementById('recaptcha-fallback');
+        if (!box || box.dataset.ready === '1') return;
+        box.dataset.ready = '1';
+        box.hidden = false;
+        var input = box.querySelector('input[type="checkbox"]');
+        if (input) {
+            input.addEventListener('change', function () {
+                box.classList.toggle('checked', input.checked);
+            });
+        }
     }
 
     function init() {
-        fetch('/api/recaptcha-config')
+        if (ready) return;
+        fetch('/api/recaptcha-config', { credentials: 'same-origin' })
             .then(function (r) { return r.json(); })
             .then(function (d) {
                 if (!d.success || !d.data || !d.data.siteKey) return;
                 siteKey = d.data.siteKey;
                 injectScript();
             })
-            .catch(function () { /* keep page functional without captcha */ });
+            .catch(function () { /* no captcha configured — page keeps working */ });
     }
 
     /**
      * Mint a fresh verification token in the background. Resolves with '' when
-     * reCAPTCHA is not configured or unavailable (the server skips verification).
+     * reCAPTCHA is unavailable; the server then falls back to its heuristics.
      *
-     * @param {string} [action] - one of 'login', 'register', 'forgot-password',
-     *                            'reset-password', 'payment', ...
+     * @param {string} [action] - the v3 action name, e.g. 'register'
      * @returns {Promise<string>}
      */
     function execute(action) {
-        if (!active || typeof grecaptcha === 'undefined' || widgetId === null) {
-            return Promise.resolve('');
+        if (!ready || typeof grecaptcha === 'undefined' || widgetId === null) {
+            return new Promise(function (resolve) {
+                if (ready || loading) pending.push(function () { execute(action).then(resolve); });
+                else resolve('');
+            });
         }
         var opts = action ? { action: action } : undefined;
         return new Promise(function (resolve) {
-            grecaptcha.execute(widgetId, opts).then(function (token) {
-                resolve(token || '');
-            }).catch(function () { resolve(''); });
+            try {
+                grecaptcha.execute(widgetId, opts).then(function (token) {
+                    resolve(token || '');
+                }).catch(function () { resolve(''); });
+            } catch (e) {
+                resolve('');
+            }
         });
     }
 
-    function activeFlag() { return active; }
+    /** Whether the invisible widget is up and can mint tokens. */
+    function active() { return ready; }
 
-    // Legacy sync helpers (no-op) kept so older inline scripts that still call
-    // tokenFrom/getToken never throw; they always yield '' and the new pages
-    // use execute() instead.
-    function tokenFrom() { return ''; }
-    function getToken() { return ''; }
+    // Stamp the moment the form became visible so the server can tell a human
+    // fill-in from an instant bot submission.
+    function markFormStart() {
+        return Date.now();
+    }
 
     window.KCNPRecaptcha = {
         init: init,
         execute: execute,
-        getToken: getToken,
-        tokenFrom: tokenFrom,
-        active: activeFlag
+        active: active,
+        showFallback: showFallback,
+        markFormStart: markFormStart
     };
 })();

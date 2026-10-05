@@ -112,6 +112,22 @@
                         </div>
                     </div>
 
+                    <!-- Honeypot: hidden from people, irresistible to bots. -->
+                    <div class="hp-field" aria-hidden="true">
+                        <label for="website">Website</label>
+                        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                    </div>
+
+                    <!-- Replaces the invisible widget when Google's script cannot
+                         be reached, so there is always something to tick. -->
+                    <div id="recaptcha-fallback" class="hp-fallback" hidden>
+                        <label class="hp-fallback__label" for="human-check">
+                            <input type="checkbox" id="human-check" name="human-check">
+                            <span>I am not a robot</span>
+                        </label>
+                        <p class="hp-fallback__hint">Tick this to confirm you are a person.</p>
+                    </div>
+
                     <button type="submit" class="cta-btn w-full py-4 rounded-xl text-white font-bold text-base flex items-center justify-center gap-2">
                         <span id="submit-text" data-i18n="btn_create">Create Account</span>
                         <svg id="submit-spinner" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24" aria-hidden="true">
@@ -349,6 +365,10 @@
             updatePasswordMeter(input.value);
         })();
 
+        // Stamp when the form first appeared: the server uses the gap to tell
+        // a person filling the form from a script firing it instantly.
+        const formStartedAt = Date.now();
+
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('name');
@@ -388,21 +408,17 @@
             submitSpinner.classList.remove('hidden');
 
             try {
-                const capToken = (window.KCNPRecaptcha && window.KCNPRecaptcha.active()) ? await window.KCNPRecaptcha.execute('register') : '';
-                if (window.KCNPRecaptcha && window.KCNPRecaptcha.active() && !capToken) {
-                    submitText.textContent = 'Create Account';
-                    submitSpinner.classList.add('hidden');
-                    formError.className = 'mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm text-center';
-                    formError.textContent = P('Please verify you are not a robot.');
-                    formError.classList.remove('hidden');
-                    return;
-                }
+                // Mint a token in the background. If the captcha could not be
+                // reached we still submit: the server falls back to its own
+                // checks rather than locking a real member out.
+                const capToken = window.KCNPRecaptcha ? await window.KCNPRecaptcha.execute('register') : '';
 
                 const { res, data } = await postJson('/api/auth/register', {
                     name: name.value,
                     email: email.value,
                     password: password.value,
                     role: document.getElementById('role').value,
+                    formStartedAt: formStartedAt,
                     recaptchaToken: capToken
                 });
                 submitText.textContent = 'Create Account';

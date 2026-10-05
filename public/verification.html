@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Identity Verification - KCNP Agro</title>
+    <meta name="description" content="Upload your National ID (front and back) and a live face capture for farmer verification.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="bg-dark-950 text-white font-sans antialiased">
+    <a class="skip-link" href="#verify-main">Skip to content</a>
+
+    <header id="site-header"></header>
+    <nav id="mobile-nav" aria-hidden="true"></nav>
+
+    <main id="verify-main" class="pt-24 pb-20">
+        <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-10">
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3">
+                    <span class="bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">Farmer Identity Verification</span>
+                </h1>
+                <p class="text-lg text-gray-400">We keep these documents private and only use them to prevent fraud. They must be shown for an admin to approve you before certain escrow actions, but we never post them publicly.</p>
+            </div>
+
+            <div class="glass-card rounded-2xl border border-white/10 p-6 sm:p-8 mb-8">
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-semibold text-white mb-1">Current Status</h2>
+                        <p class="text-gray-400">Signed-in users are automatically loaded.</p>
+                    </div>
+                    <div class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-gray-300" id="verify-status-pill">Checking...</div>
+                </div>
+                <div id="verify-status" class="hidden"></div>
+                <div id="verify-gate" class="mt-6 hidden"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="glass-card rounded-2xl border border-white/10 p-6 sm:p-8">
+                    <h2 class="text-xl font-semibold text-white mb-2">National ID — Front</h2>
+                    <p class="text-gray-400 text-sm mb-4">Please show all four corners and the full number clearly.</p>
+                    <input type="file" id="id-front" accept="image/*" class="text-sm text-gray-300">
+                    <div class="mt-4"><img id="id-front-preview" src="" alt="ID front preview" class="max-w-full rounded-lg border border-white/10 hidden"></div>
+                </div>
+                <div class="glass-card rounded-2xl border border-white/10 p-6 sm:p-8">
+                    <h2 class="text-xl font-semibold text-white mb-2">National ID — Back</h2>
+                    <p class="text-gray-400 text-sm mb-4">Show the back side, especially any stamps or serials.</p>
+                    <input type="file" id="id-back" accept="image/*" class="text-sm text-gray-300">
+                    <div class="mt-4"><img id="id-back-preview" src="" alt="ID back preview" class="max-w-full rounded-lg border border-white/10 hidden"></div>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-2xl border border-white/10 p-6 sm:p-8 mt-6">
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-xl font-semibold text-white mb-2">Live Face Capture</h2>
+                        <p class="text-gray-400 text-sm">We compare this with your ID face to stop impersonation. Use good light, remove glasses if they glare, and look straight at the camera.</p>
+                    </div>
+                    <button type="button" id="start-camera" class="px-5 py-2.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 font-medium hover:bg-white/10">Start Camera</button>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div>
+                        <video id="face-video" class="w-full rounded-xl border border-white/10 bg-black hidden" autoplay playsinline muted></video>
+                        <button type="button" id="capture-face" class="mt-3 px-5 py-2.5 rounded-lg bg-primary-500 text-white font-semibold hidden">Capture Photo</button>
+                    </div>
+                    <div>
+                        <canvas id="face-canvas" class="hidden"></canvas>
+                        <img id="face-preview" src="" alt="Face capture preview" class="w-full rounded-xl border border-white/10 hidden">
+                        <p id="face-hint" class="text-xs text-gray-400 mt-2">Your camera feed is never uploaded to public spaces. Only a downscaled image is sent to our private verification endpoint.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                <button type="button" id="save-verification" class="px-6 py-3 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 text-white font-semibold hover:opacity-95 disabled:opacity-40 disabled:cursor-not-allowed">Save Verification (Private)</button>
+                <button type="button" id="request-review" class="px-6 py-3 rounded-lg bg-white/5 border border-white/10 text-gray-300 font-semibold hover:bg-white/10">Request Admin Review</button>
+            </div>
+
+            <p class="text-xs text-gray-500 mt-6">By submitting these details you confirm they are accurate. Uploading someone else's ID is a bannable offence.</p>
+        </section>
+    </main>
+
+    <footer id="site-footer"></footer>
+
+    <script src="/js/ux.js"></script>
+    <script src="/js/verification.js"></script>
+</body>
+</html>

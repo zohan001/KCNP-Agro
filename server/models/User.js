@@ -52,7 +52,12 @@ const userSchema = new mongoose.Schema(
             plan: { type: String, enum: ['starter', 'grower', 'pro'], default: null },
             status: { type: String, enum: ['none', 'pending', 'active', 'expired'], default: 'none' },
             expiresAt: { type: Date, default: null }
-        }
+        },
+        // Farmer identity verification (private). Only admins see the images;
+        // the flag is surfaced to the user for UX.
+        identityVerified: { type: Boolean, default: false },
+        identityVerifiedAt: { type: Date, default: null },
+        lastLogin: { type: Date, default: null }
     },
     { timestamps: true }
 );

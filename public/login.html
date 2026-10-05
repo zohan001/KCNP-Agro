@@ -16,7 +16,6 @@
     <script>document.documentElement.classList.add('js');
         function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }</script>
     <script src="/js/ux.js" defer></script>
-    <script src="/js/recaptcha.js" defer></script>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -271,7 +270,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            if (window.KCNPRecaptcha) window.KCNPRecaptcha.init();
             if (new URLSearchParams(window.location.search).get('registered') === '1') {
                 const banner = document.getElementById('registered-banner');
                 if (banner) banner.classList.remove('hidden');
@@ -300,19 +298,9 @@
             submitSpinner.classList.remove('hidden');
 
             try {
-                const capToken = (window.KCNPRecaptcha && window.KCNPRecaptcha.active()) ? await window.KCNPRecaptcha.execute('login') : '';
-                if (window.KCNPRecaptcha && window.KCNPRecaptcha.active() && !capToken) {
-                    submitText.textContent = P('Login');
-                    submitSpinner.classList.add('hidden');
-                    formError.textContent = P('Please verify you are not a robot.');
-                    formError.classList.remove('hidden');
-                    return;
-                }
-
                 const { res, data } = await postJson('/api/auth/login', {
                     email: email.value,
-                    password: password.value,
-                    recaptchaToken: capToken
+                    password: password.value
                 });
                 submitText.textContent = P('Login');
                 submitSpinner.classList.add('hidden');

@@ -13,7 +13,7 @@ const notificationSchema = new mongoose.Schema(
     {
         type: {
             type: String,
-            enum: ['payment_pending_approval', 'payment_failed', 'system'],
+            enum: ['payment_pending_approval', 'payment_failed', 'verification_submitted', 'verification_decided', 'system'],
             default: 'system'
         },
         message: {

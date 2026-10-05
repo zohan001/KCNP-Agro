@@ -166,7 +166,8 @@
             submitted: { text: 'Awaiting review', cls: 'px-4 py-2 rounded-lg bg-accent-500/10 border border-accent-500/25 text-accent-400 text-sm' },
             under_review: { text: 'Under review', cls: 'px-4 py-2 rounded-lg bg-accent-500/10 border border-accent-500/25 text-accent-400 text-sm' },
             approved: { text: 'Verified', cls: 'px-4 py-2 rounded-lg bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm' },
-            rejected: { text: 'Rejected', cls: 'px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-300 text-sm' }
+            rejected: { text: 'Rejected', cls: 'px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-300 text-sm' },
+            revoked: { text: 'Verification withdrawn', cls: 'px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-300 text-sm' }
         };
         var meta = labels[v && v.status] || labels.draft;
         if (pill) {
@@ -183,6 +184,18 @@
         } else if (v && v.status === 'rejected') {
             box.className = 'p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm';
             box.textContent = 'An admin could not accept your documents: ' + (v.rejectionReason || 'please try again.') + ' You can upload fresh photos below.';
+        } else if (v && v.status === 'revoked') {
+            // A revocation withdraws an approval that was already granted, so
+            // the wording differs from a rejection: it is not a bad upload, and
+            // their existing listings may still be live.
+            var listingNote = v.revokedListingAction === 'delist'
+                ? ' Your live listings were taken down.'
+                : ' Your existing listings stay visible for now, but you cannot create or edit any.';
+            box.className = 'p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm';
+            box.textContent = 'An admin has withdrawn your verification: '
+                + (v.rejectionReason || 'please contact support.')
+                + listingNote
+                + ' You must submit new documents before you can list again. Payments for orders you have already been paid for are not affected.';
         } else if (v && v.status === 'submitted') {
             box.className = 'p-4 rounded-xl bg-accent-500/10 border border-accent-500/25 text-accent-400 text-sm';
             box.textContent = 'Your documents are with an admin. You will be able to list once they are approved.';

@@ -106,8 +106,10 @@ router.get('/verification/me', authenticate, verificationController.getMyVerific
 router.post('/verification/save', authenticate, verificationController.saveVerification);
 router.post('/verification/request-review', authenticate, verificationController.requestReview);
 router.get('/verification/admin/list', authenticate, authorize('admin'), verificationController.adminListVerifications);
+router.get('/verification/admin/:id', authenticate, authorize('admin'), verificationController.adminGetVerification);
 router.post('/verification/:id/approve', authenticate, authorize('admin'), verificationController.adminApprove);
 router.post('/verification/:id/reject', authenticate, authorize('admin'), verificationController.adminReject);
+router.post('/verification/:id/revoke', authenticate, authorize('admin'), verificationController.adminRevoke);
 
 // Supply/demand analysis
 router.get('/market-insights', marketInsightsController.getMarketInsights);

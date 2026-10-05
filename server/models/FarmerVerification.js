@@ -10,7 +10,10 @@ const mongoose = require('mongoose');
  * only visible to the farmer who owns the record and to admins.
  */
 
-const STATUS_ENUM = ['draft', 'submitted', 'under_review', 'approved', 'rejected'];
+// `revoked` is separate from `rejected`: a rejection is a request the farmer
+// failed, which they can fix and resubmit. A revocation withdraws an approval
+// that was already granted, so it must not look like something retryable.
+const STATUS_ENUM = ['draft', 'submitted', 'under_review', 'approved', 'rejected', 'revoked'];
 
 const verificationSchema = new mongoose.Schema(
     {
@@ -37,10 +40,18 @@ const verificationSchema = new mongoose.Schema(
         deviceInfo: { type: String, default: '', maxlength: 200 },
         // Admin feedback loop.
         reviewNotes: { type: String, default: '', maxlength: 1000 },
+        // Internal-only note for admins. Never shown to the farmer —
+        // `rejectionReason` is the field they see.
+        internalNotes: { type: String, default: '', maxlength: 2000 },
         reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
         reviewedAt: { type: Date, default: null },
         rejectionReason: { type: String, default: '', maxlength: 500 },
         approvedAt: { type: Date, default: null },
+        // When the identity approval was withdrawn, and what happened to the
+        // farmer's live listings as a result.
+        revokedAt: { type: Date, default: null },
+        revokedListingAction: { type: String, default: '', maxlength: 40 },
+        listingsAffected: { type: Number, default: 0 },
         // Audit trail.
         timeline: [
             {

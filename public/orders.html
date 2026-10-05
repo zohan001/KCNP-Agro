@@ -8,13 +8,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/output.css">
+    <link rel="stylesheet" href="/styles.css">
 </head>
-<body class="bg-dark-950 text-white font-sans antialiased">
+<body class="bg-canvas text-gray-900 font-sans antialiased">
     <a class="skip-link" href="#orders-main">Skip to content</a>
 
     <header id="site-header"></header>
-    <nav id="mobile-nav" aria-hidden="true"></nav>
 
     <main id="orders-main" class="pt-24 pb-20">
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,22 +22,22 @@
                     <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3">
                         <span class="bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">Your Orders</span>
                     </h1>
-                    <p class="text-lg text-gray-400">Payments are held safely in escrow and only released when you confirm delivery. Disputes freeze the money until an admin decides.</p>
+                    <p class="text-lg text-gray-600">Payments are held safely in escrow and only released when you confirm delivery. Disputes freeze the money until an admin decides.</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <button type="button" class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-sm font-medium hover:bg-white/10" data-filter="all" aria-pressed="true">All</button>
-                    <button type="button" class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-sm font-medium hover:bg-white/10" data-filter="buyer">Buying</button>
-                    <button type="button" class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-sm font-medium hover:bg-white/10" data-filter="seller">Selling</button>
-                    <button type="button" class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-sm font-medium hover:bg-white/10" data-filter="disputed">Disputes</button>
+                    <button type="button" class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-900 text-sm font-medium hover:bg-primary-50" data-filter="all" aria-pressed="true">All</button>
+                    <button type="button" class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-900 text-sm font-medium hover:bg-primary-50" data-filter="buyer">Buying</button>
+                    <button type="button" class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-900 text-sm font-medium hover:bg-primary-50" data-filter="seller">Selling</button>
+                    <button type="button" class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-900 text-sm font-medium hover:bg-primary-50" data-filter="disputed">Disputes</button>
                 </div>
             </div>
 
             <div id="orders-status" class="mb-6 hidden"></div>
 
             <div id="orders-empty" class="text-center py-16 glass-card rounded-2xl hidden">
-                <h2 class="text-xl font-semibold text-white mb-2">No orders yet</h2>
-                <p class="text-gray-400">Browse the marketplace, buy a listing and the payment is held in escrow here.</p>
-                <a href="/marketplace" class="inline-block mt-6 px-6 py-3 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 text-white font-semibold hover:opacity-95">Go to Marketplace</a>
+                <h2 class="text-xl font-semibold text-gray-900 mb-2">No orders yet</h2>
+                <p class="text-gray-500">Browse the marketplace, buy a listing and the payment is held in escrow here.</p>
+                <a href="/marketplace" class="inline-block mt-6 px-6 py-3 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 text-gray-900 font-semibold hover:opacity-95">Go to Marketplace</a>
             </div>
 
             <div id="orders-list" class="space-y-6"></div>
@@ -46,118 +45,126 @@
 
         <div id="order-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden" role="dialog" aria-modal="true">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-full overflow-y-auto py-10">
-                <div class="glass-card rounded-2xl border border-white/10 overflow-hidden">
+                <div class="glass-card rounded-2xl border border-gray-200 overflow-hidden">
                     <div class="p-6 sm:p-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                         <div>
-                            <p class="text-sm text-gray-400">Order Reference</p>
-                            <h2 id="modal-ref" class="text-2xl sm:text-3xl font-bold text-white mb-2"></h2>
-                            <p id="modal-status" class="text-sm text-gray-300"></p>
+                            <p class="text-sm text-gray-500">Order Reference</p>
+                            <h2 id="modal-ref" class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2"></h2>
+                            <p id="modal-status" class="text-sm text-gray-600"></p>
                         </div>
-                        <button type="button" class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-sm hover:bg-white/10" id="modal-close">Close</button>
+                        <button type="button" class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-900 text-sm font-medium hover:bg-primary-50" id="modal-close">Close</button>
                     </div>
                     <div class="px-6 sm:px-8 pb-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div class="space-y-6">
-                            <div class="p-5 rounded-xl bg-white/5 border border-white/10">
-                                <h3 class="text-lg font-semibold text-white mb-4">Order Details</h3>
+                            <div class="p-5 rounded-xl bg-gray-100 border border-gray-200">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Order Details</h3>
                                 <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                                     <div>
-                                        <dt class="text-gray-400">Item</dt>
-                                        <dd id="modal-item" class="text-white mt-1"></dd>
+                                        <dt class="text-gray-500">Item</dt>
+                                        <dd id="modal-item" class="text-gray-900 mt-1"></dd>
                                     </div>
                                     <div>
-                                        <dt class="text-gray-400">Quantity</dt>
-                                        <dd id="modal-qty" class="text-white mt-1"></dd>
+                                        <dt class="text-gray-500">Quantity</dt>
+                                        <dd id="modal-qty" class="text-gray-900 mt-1"></dd>
                                     </div>
                                     <div>
-                                        <dt class="text-gray-400">Total (KES)</dt>
-                                        <dd id="modal-total" class="text-white mt-1"></dd>
+                                        <dt class="text-gray-500">Total (KES)</dt>
+                                        <dd id="modal-total" class="text-gray-900 mt-1"></dd>
                                     </div>
                                     <div>
-                                        <dt class="text-gray-400">Paid At</dt>
-                                        <dd id="modal-paid-at" class="text-white mt-1"></dd>
+                                        <dt class="text-gray-500">Paid At</dt>
+                                        <dd id="modal-paid-at" class="text-gray-900 mt-1"></dd>
                                     </div>
                                     <div class="sm:col-span-2">
-                                        <dt class="text-gray-400">Payment Reference</dt>
-                                        <dd id="modal-payref" class="text-white mt-1 break-all"></dd>
+                                        <dt class="text-gray-500">Payment Reference</dt>
+                                        <dd id="modal-payref" class="text-gray-900 mt-1 break-all"></dd>
                                     </div>
                                 </dl>
                                 <div id="modal-otp-wrap" class="mt-4 hidden space-y-3 p-4 rounded-lg bg-amber-500/10 border border-amber-400/40">
-                                    <p class="text-sm text-amber-200">Paystack needs an OTP to complete this payment.</p>
+                                    <p class="text-sm text-amber-700">Paystack needs an OTP to complete this payment.</p>
                                     <form id="modal-otp-form" class="flex flex-col sm:flex-row gap-3">
                                         <input type="hidden" id="modal-otp-ref">
-                                        <input type="text" id="modal-otp" class="flex-1 px-4 py-2 rounded-lg bg-dark-900 border border-white/10 text-white" placeholder="Enter OTP">
-                                        <button type="submit" class="px-5 py-2 rounded-lg bg-amber-400 text-dark-950 font-semibold">Submit OTP</button>
+                                        <input type="text" id="modal-otp" class="flex-1 px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-900" placeholder="Enter OTP">
+                                        <button type="submit" class="px-5 py-2 rounded-lg bg-amber-400 text-gray-900 font-semibold">Submit OTP</button>
                                     </form>
-                                    <p id="modal-otp-msg" class="text-xs text-amber-100 hidden"></p>
+                                    <p id="modal-otp-msg" class="text-xs text-amber-800 hidden"></p>
                                 </div>
                                 <div id="modal-actions" class="mt-6 flex flex-wrap gap-3"></div>
+<div id="modal-pay-wrap" class="mt-4 hidden space-y-3 p-4 rounded-lg bg-accent-500/10 border border-accent-500/30">
+                                    <h4 class="text-sm font-semibold text-gray-900">Pay into escrow</h4>
+                                    <p class="text-xs text-gray-600">Enter the M-Pesa number you are paying from. The platform holds the money until you confirm the goods arrive.</p>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        <input type="tel" id="modal-pay-phone" inputmode="tel" autocomplete="tel" class="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-900" placeholder="e.g. 0712 345 678">
+                                        <button type="button" id="modal-pay-btn" class="px-5 py-2 rounded-lg bg-accent-500 text-gray-900 font-semibold">Send M-Pesa Prompt</button>
+                                    </div>
+                                </div>
                                 <div id="modal-dispute-wrap" class="mt-4 hidden space-y-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-                                    <label for="modal-dispute-reason" class="text-sm text-red-200">Raise a dispute (explain what went wrong)</label>
-                                    <textarea id="modal-dispute-reason" rows="3" class="w-full px-4 py-2 rounded-lg bg-dark-900 border border-white/10 text-white" maxlength="1000"></textarea>
-                                    <button type="button" id="modal-dispute-btn" class="px-5 py-2 rounded-lg bg-red-500 text-white font-semibold">Submit Dispute</button>
+                                    <label for="modal-dispute-reason" class="text-sm text-red-700">Raise a dispute (explain what went wrong)</label>
+                                    <textarea id="modal-dispute-reason" rows="3" class="w-full px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-900" maxlength="1000"></textarea>
+                                    <button type="button" id="modal-dispute-btn" class="px-5 py-2 rounded-lg bg-red-500 text-gray-900 font-semibold">Submit Dispute</button>
                                 </div>
                             </div>
 
-                            <div class="p-5 rounded-xl bg-white/5 border border-white/10">
-                                <h3 class="text-lg font-semibold text-white mb-4">Delivery & Proof</h3>
+                            <div class="p-5 rounded-xl bg-gray-100 border border-gray-200">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Delivery & Proof</h3>
                                 <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                                     <div>
-                                        <dt class="text-gray-400">Method</dt>
-                                        <dd id="modal-method" class="text-white mt-1"></dd>
+                                        <dt class="text-gray-500">Method</dt>
+                                        <dd id="modal-method" class="text-gray-900 mt-1"></dd>
                                     </div>
                                     <div>
-                                        <dt class="text-gray-400">Carrier / Tracking</dt>
-                                        <dd id="modal-carrier" class="text-white mt-1"></dd>
+                                        <dt class="text-gray-500">Carrier / Tracking</dt>
+                                        <dd id="modal-carrier" class="text-gray-900 mt-1"></dd>
                                     </div>
                                     <div>
-                                        <dt class="text-gray-400">Dispatched</dt>
-                                        <dd id="modal-dispatched" class="text-white mt-1"></dd>
+                                        <dt class="text-gray-500">Dispatched</dt>
+                                        <dd id="modal-dispatched" class="text-gray-900 mt-1"></dd>
                                     </div>
                                     <div>
-                                        <dt class="text-gray-400">Delivered / Auto-release</dt>
-                                        <dd id="modal-delivered" class="text-white mt-1"></dd>
+                                        <dt class="text-gray-500">Delivered / Auto-release</dt>
+                                        <dd id="modal-delivered" class="text-gray-900 mt-1"></dd>
                                     </div>
                                     <div class="sm:col-span-2">
-                                        <dt class="text-gray-400">Proof</dt>
-                                        <dd class="mt-2"><img id="modal-proof" src="" alt="Delivery proof" class="max-w-xs rounded-lg border border-white/10 hidden"></dd>
+                                        <dt class="text-gray-500">Proof</dt>
+                                        <dd class="mt-2"><img id="modal-proof" src="" alt="Delivery proof" class="max-w-xs rounded-lg border border-gray-200 hidden"></dd>
                                     </div>
                                 </dl>
-                                <div id="modal-dispatch-wrap" class="mt-4 hidden space-y-3 p-4 rounded-lg bg-white/5 border border-white/10">
-                                    <h4 class="text-sm font-semibold text-white">Mark as Dispatched</h4>
+                                <div id="modal-dispatch-wrap" class="mt-4 hidden space-y-3 p-4 rounded-lg bg-gray-100 border border-gray-200">
+                                    <h4 class="text-sm font-semibold text-gray-900">Mark as Dispatched</h4>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        <select id="modal-dispatch-method" class="px-4 py-2 rounded-lg bg-dark-900 border border-white/10 text-white">
+                                        <select id="modal-dispatch-method" class="px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-900">
                                             <option value="courier">Courier</option>
                                             <option value="farrier">Farrier / Transporter</option>
                                             <option value="pickup">Pickup (agreed)</option>
                                             <option value="other">Other</option>
                                         </select>
-                                        <input type="text" id="modal-dispatch-carrier" class="px-4 py-2 rounded-lg bg-dark-900 border border-white/10 text-white" placeholder="Carrier name">
-                                        <input type="text" id="modal-dispatch-tracking" class="px-4 py-2 rounded-lg bg-dark-900 border border-white/10 text-white" placeholder="Tracking code">
-                                        <input type="datetime-local" id="modal-dispatch-expected" class="px-4 py-2 rounded-lg bg-dark-900 border border-white/10 text-white">
-                                        <input type="text" id="modal-dispatch-notes" class="sm:col-span-2 px-4 py-2 rounded-lg bg-dark-900 border border-white/10 text-white" placeholder="Notes for the buyer">
+                                        <input type="text" id="modal-dispatch-carrier" class="px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-900" placeholder="Carrier name">
+                                        <input type="text" id="modal-dispatch-tracking" class="px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-900" placeholder="Tracking code">
+                                        <input type="datetime-local" id="modal-dispatch-expected" class="px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-900">
+                                        <input type="text" id="modal-dispatch-notes" class="sm:col-span-2 px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-900" placeholder="Notes for the buyer">
                                         <div class="sm:col-span-2">
-                                            <label for="modal-dispatch-proof" class="text-xs text-gray-400">Handover photo (downscaled client-side, small size)</label>
-                                            <input type="file" id="modal-dispatch-proof" accept="image/*" class="mt-2 text-sm text-gray-300">
+                                            <label for="modal-dispatch-proof" class="text-xs text-gray-500">Handover photo (downscaled client-side, small size)</label>
+                                            <input type="file" id="modal-dispatch-proof" accept="image/*" class="mt-2 text-sm text-gray-700">
                                         </div>
                                     </div>
-                                    <button type="button" id="modal-dispatch-btn" class="px-5 py-2 rounded-lg bg-primary-500 text-white font-semibold">Record Dispatch</button>
+                                    <button type="button" id="modal-dispatch-btn" class="px-5 py-2 rounded-lg bg-primary-500 text-gray-900 font-semibold">Record Dispatch</button>
                                 </div>
                                 <div id="modal-confirm-wrap" class="mt-4 hidden space-y-3 p-4 rounded-lg bg-emerald-500/10 border border-emerald-400/40">
-                                    <h4 class="text-sm font-semibold text-white">Confirm Delivery</h4>
+                                    <h4 class="text-sm font-semibold text-gray-900">Confirm Delivery</h4>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        <input type="text" id="modal-confirm-receivedby" class="px-4 py-2 rounded-lg bg-dark-900 border border-white/10 text-white" placeholder="Who received the goods">
-                                        <input type="tel" id="modal-confirm-phone" class="px-4 py-2 rounded-lg bg-dark-900 border border-white/10 text-white" placeholder="Phone">
+                                        <input type="text" id="modal-confirm-receivedby" class="px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-900" placeholder="Who received the goods">
+                                        <input type="tel" id="modal-confirm-phone" class="px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-900" placeholder="Phone">
                                         <div class="sm:col-span-2">
-                                            <label for="modal-confirm-proof" class="text-xs text-gray-400">Photo of receipt (optional)</label>
-                                            <input type="file" id="modal-confirm-proof" accept="image/*" class="mt-2 text-sm text-gray-300">
+                                            <label for="modal-confirm-proof" class="text-xs text-gray-500">Photo of receipt (optional)</label>
+                                            <input type="file" id="modal-confirm-proof" accept="image/*" class="mt-2 text-sm text-gray-700">
                                         </div>
                                     </div>
-                                    <button type="button" id="modal-confirm-btn" class="px-5 py-2 rounded-lg bg-emerald-500 text-white font-semibold">Confirm and Release Funds</button>
+                                    <button type="button" id="modal-confirm-btn" class="px-5 py-2 rounded-lg bg-emerald-500 text-gray-900 font-semibold">Confirm and Release Funds</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="p-5 rounded-xl bg-white/5 border border-white/10 h-max">
-                            <h3 class="text-lg font-semibold text-white mb-4">Accountability Timeline</h3>
+                        <div class="p-5 rounded-xl bg-gray-100 border border-gray-200 h-max">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Accountability Timeline</h3>
                             <ol id="modal-timeline" class="space-y-4 text-sm"></ol>
                         </div>
                     </div>
@@ -169,6 +176,7 @@
     <footer id="site-footer"></footer>
 
     <script src="/js/ux.js"></script>
+    <script src="/js/site-chrome.js"></script>
     <script src="/js/orders.js"></script>
 </body>
 </html>

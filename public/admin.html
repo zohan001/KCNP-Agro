@@ -23,12 +23,12 @@
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-white/5">
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-gray-200">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" role="navigation" aria-label="Admin navigation">
             <div class="flex items-center justify-between h-16 md:h-20">
                 <a href="/" class="flex items-center gap-2 group" aria-label="KCNP Agro Home">
                     <img src="/logo.jpg" alt="KCNP Agro logo" class="w-10 h-10 rounded-xl object-cover transition-transform duration-300 group-hover:scale-110" width="40" height="40">
-                    <span class="font-heading font-bold text-xl text-white">KCNP<span class="text-primary-400">Agro</span></span>
+                    <span class="font-heading font-bold text-xl text-gray-900">KCNP<span class="text-primary-400">Agro</span></span>
                 </a>
                 <div class="flex items-center gap-6">
                     <span class="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full bg-red-500/10 text-red-300 border border-red-500/30">Admin</span>
@@ -46,7 +46,7 @@
 
                 <!-- Unauthorized / not logged in -->
                 <div id="admin-guard" class="hidden max-w-xl mx-auto text-center glass-card rounded-2xl p-10">
-                    <h1 class="font-heading text-2xl font-bold text-white mb-3">Restricted area</h1>
+                    <h1 class="font-heading text-2xl font-bold text-gray-900 mb-3">Restricted area</h1>
                     <p class="text-gray-400 text-sm mb-6">This control panel is reserved for KCNP Agro administrators. Please log in with an admin account.</p>
                     <a href="/login" class="cta-btn inline-block px-6 py-3 rounded-xl text-white font-semibold text-sm">Login</a>
                 </div>
@@ -55,7 +55,7 @@
                     <!-- Title -->
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                         <div>
-                            <h1 class="font-heading text-3xl md:text-4xl font-bold text-white">Super Admin Dashboard</h1>
+                            <h1 class="font-heading text-3xl md:text-4xl font-bold text-gray-900">Super Admin Dashboard</h1>
                             <p class="text-gray-400 text-sm mt-1">Everything happens here — users, listings, payments, audit.</p>
                         </div>
                         <button id="refresh-btn" type="button" class="cta-btn px-5 py-2.5 rounded-xl text-white font-semibold text-sm">Refresh</button>
@@ -66,13 +66,13 @@
 
                     <!-- Tabs -->
                     <div class="flex flex-wrap gap-2 mb-6" id="admin-tabs" role="tablist">
-                        <button type="button" data-tab="users" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Users</button>
-                        <button type="button" data-tab="subscriptions" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Payments</button>
-                        <button type="button" data-tab="notifications" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10"><span id="notif-tab-label">Notifications</span></button>
-                        <button type="button" data-tab="listings" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Listings</button>
-                        <button type="button" data-tab="education" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Education</button>
-                        <button type="button" data-tab="testimonials" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Testimonials</button>
-                        <button type="button" data-tab="errorlogs" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 text-gray-300 hover:bg-white/10">Error Logs</button>
+                        <button type="button" data-tab="users" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white text-gray-300 hover:bg-primary-50">Users</button>
+                        <button type="button" data-tab="subscriptions" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white text-gray-300 hover:bg-primary-50">Payments</button>
+                        <button type="button" data-tab="notifications" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white text-gray-300 hover:bg-primary-50"><span id="notif-tab-label">Notifications</span></button>
+                        <button type="button" data-tab="listings" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white text-gray-300 hover:bg-primary-50">Listings</button>
+                        <button type="button" data-tab="education" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white text-gray-300 hover:bg-primary-50">Education</button>
+                        <button type="button" data-tab="testimonials" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white text-gray-300 hover:bg-primary-50">Testimonials</button>
+                        <button type="button" data-tab="errorlogs" class="admin-tab px-4 py-2 rounded-lg text-sm font-semibold bg-white text-gray-300 hover:bg-primary-50">Error Logs</button>
                     </div>
 
                     <!-- Tab panels -->
@@ -86,11 +86,11 @@
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
                             <div class="flex flex-wrap gap-2" id="edu-subtabs">
                                 <button type="button" data-ektab="articles" class="text-sm font-semibold px-4 py-2 rounded-lg bg-primary-600 text-white">Articles</button>
-                                <button type="button" data-ektab="quizzes" class="text-sm font-semibold px-4 py-2 rounded-lg bg-white/5 text-gray-300 hover:bg-white/10">Quizzes</button>
+                                <button type="button" data-ektab="quizzes" class="text-sm font-semibold px-4 py-2 rounded-lg bg-white text-gray-300 hover:bg-primary-50">Quizzes</button>
                             </div>
                             <div class="flex gap-2">
                                 <button type="button" id="edu-new" class="cta-btn px-4 py-2 rounded-lg text-white font-semibold text-sm">New Article</button>
-                                <button type="button" id="edu-cancel" class="hidden px-4 py-2 rounded-lg bg-white/5 text-gray-300 hover:bg-white/10 text-sm font-semibold">Cancel</button>
+                                <button type="button" id="edu-cancel" class="hidden px-4 py-2 rounded-lg bg-white text-gray-300 hover:bg-primary-50 text-sm font-semibold">Cancel</button>
                             </div>
                         </div>
                         <div id="edu-view"></div>
@@ -214,12 +214,12 @@
                             var status = m.status === 'active'
                                 ? '<span class="text-primary-300 font-semibold">' + (m.plan || '').toUpperCase() + '</span>'
                                 : (m.status === 'pending' ? '<span class="text-accent-300">Pending</span>' : '<span class="text-gray-500">' + (m.status || 'none') + '</span>');
-                            var roleSel = '<select data-role="' + u._id + '" class="bg-dark-900 border border-white/10 rounded-lg text-xs px-2 py-1.5 text-white">' +
+                            var roleSel = '<select data-role="' + u._id + '" class="bg-white border border-gray-200 rounded-lg text-xs px-2 py-1.5 text-gray-900">' +
                                 ['farmer', 'trader', 'admin'].map(function (r) {
                                     return '<option value="' + r + '"' + (u.role === r ? ' selected' : '') + '>' + r + '</option>';
                                 }).join('') + '</select>';
-                            return '<tr class="border-t border-white/5">' +
-                                '<td class="py-3 pr-3 text-white">' + esc(u.name) + '</td>' +
+                            return '<tr class="border-t border-gray-200">' +
+                                '<td class="py-3 pr-3 text-gray-900">' + esc(u.name) + '</td>' +
                                 '<td class="py-3 pr-3 text-gray-400">' + esc(u.email) + '</td>' +
                                 '<td class="py-3 pr-3">' + roleSel + '</td>' +
                                 '<td class="py-3 pr-3">' + badge + '</td>' +
@@ -228,8 +228,8 @@
                                 '<td class="py-3">' +
                                 (m.status !== 'active' ? '<button data-grant="' + u._id + '" class="text-[11px] px-2 py-1 rounded bg-primary-500/10 text-primary-300 hover:bg-primary-500/20 mr-1">Grant</button>' : '') +
                                 (me ? '' : (u.isActive
-                                    ? '<button data-toggle="' + u._id + '" data-target="false" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Deactivate</button>'
-                                    : '<button data-toggle="' + u._id + '" data-target="true" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Activate</button>')) +
+                                    ? '<button data-toggle="' + u._id + '" data-target="false" class="text-[11px] px-2 py-1 rounded bg-white text-gray-300 hover:bg-primary-50 mr-1">Deactivate</button>'
+                                    : '<button data-toggle="' + u._id + '" data-target="true" class="text-[11px] px-2 py-1 rounded bg-white text-gray-300 hover:bg-primary-50 mr-1">Activate</button>')) +
                                 (me ? '' : '<button data-del="' + u._id + '" class="text-[11px] px-2 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20">Delete</button>') +
                                 '</td></tr>';
                         }).join('') + '</tbody></table></div>';
@@ -281,10 +281,10 @@
                                 ? '<button data-approve="' + s._id + '" class="text-[11px] px-2.5 py-1 rounded bg-primary-600 text-white hover:bg-primary-500 mr-1 font-semibold">Verify & Approve</button>' +
                                   '<button data-deny="' + s._id + '" class="text-[11px] px-2.5 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20">Deny</button>'
                                 : '<span class="text-gray-600 text-xs">—</span>';
-                            return '<tr class="border-t border-white/5">' +
-                                '<td class="py-3 pr-3 text-white">' + esc((s.user && s.user.name) || '—') + '<span class="block text-xs text-gray-500">' + esc((s.user && s.user.email) || '') + '</span></td>' +
+                            return '<tr class="border-t border-gray-200">' +
+                                '<td class="py-3 pr-3 text-gray-900">' + esc((s.user && s.user.name) || '—') + '<span class="block text-xs text-gray-500">' + esc((s.user && s.user.email) || '') + '</span></td>' +
                                 '<td class="py-3 pr-3 text-gray-300">' + s.plan + '</td>' +
-                                '<td class="py-3 pr-3 text-white">KES ' + s.amount.toLocaleString() + '</td>' +
+                                '<td class="py-3 pr-3 text-gray-900">KES ' + s.amount.toLocaleString() + '</td>' +
                                 '<td class="py-3 pr-3 text-gray-300">' + esc(s.mpesaPhone || '—') + '</td>' +
                                 '<td class="py-3 pr-3">' + st + '</td>' +
                                 '<td class="py-3 pr-3 text-gray-500 text-xs">' + fmtDate(s.expiresAt) + '</td>' +
@@ -322,7 +322,7 @@
                     updateNotifTabLabel(r.data.unread);
                     if (!items.length) { panel.innerHTML = '<div class="text-gray-400 text-sm text-center py-10">No notifications yet.</div>'; return; }
                     panel.innerHTML =
-                        '<div class="flex justify-end mb-4"><button id="notif-readall" type="button" class="text-[11px] px-3 py-1.5 rounded bg-white/5 text-gray-300 hover:bg-white/10 font-semibold">Mark all as read</button></div>' +
+                        '<div class="flex justify-end mb-4"><button id="notif-readall" type="button" class="text-[11px] px-3 py-1.5 rounded bg-white text-gray-300 hover:bg-primary-50 font-semibold">Mark all as read</button></div>' +
                         '<div class="space-y-3">' + items.map(function (n) {
                             var badge = n.read
                                 ? '<span class="text-[10px] font-bold uppercase tracking-wide text-gray-600">Read</span>'
@@ -330,7 +330,7 @@
                             var type = n.type === 'payment_pending_approval'
                                 ? 'Payment approval'
                                 : n.type === 'payment_failed' ? 'Payment failed' : 'System';
-                            return '<div class="flex items-start justify-between gap-4 border border-white/10 rounded-xl p-4 bg-dark-900/40">' +
+                            return '<div class="flex items-start justify-between gap-4 border border-gray-200 rounded-xl p-4 bg-primary-50">' +
                                 '<div><div class="flex items-center gap-2 mb-1"><span class="text-xs font-bold uppercase tracking-wide text-gray-400">' + type + '</span>' + badge + '</div>' +
                                 '<p class="text-sm text-gray-200">' + esc(n.message) + '</p>' +
                                 '<p class="text-xs text-gray-500 mt-1">' + fmtDate(n.createdAt) + '</p></div>' +
@@ -368,7 +368,7 @@
                             var stackBox = e.stack
                                 ? '<details class="mt-1"><summary class="text-[11px] text-primary-300 cursor-pointer">stack</summary><pre class="text-[10px] text-gray-500 whitespace-pre-wrap mt-2">' + esc(e.stack) + '</pre></details>'
                                 : '';
-                            return '<tr class="border-t border-white/5 align-top">' +
+                            return '<tr class="border-t border-gray-200 align-top">' +
                                 '<td class="py-2.5 pr-3 whitespace-nowrap">' + lvl + '</td>' +
                                 '<td class="py-2.5 pr-3 text-gray-500 text-xs whitespace-nowrap">' + fmtDate(e.createdAt) + '</td>' +
                                 '<td class="py-2.5 pr-3 text-gray-400 text-xs">' + esc(e.method || '') + '</td>' +
@@ -392,15 +392,15 @@
                         '<th class="pb-3 pr-3">Title</th><th class="pb-3 pr-3">Seller</th><th class="pb-3 pr-3">Price</th><th class="pb-3 pr-3">Status</th><th class="pb-3">Actions</th>' +
                         '</tr></thead><tbody>' + items.map(function (p) {
                             var st = p.active ? '<span class="text-primary-300 font-semibold">LIVE</span>' : '<span class="text-gray-500">HIDDEN</span>';
-                            return '<tr class="border-t border-white/5">' +
-                                '<td class="py-3 pr-3 text-white">' + esc(p.title) + '</td>' +
+                            return '<tr class="border-t border-gray-200">' +
+                                '<td class="py-3 pr-3 text-gray-900">' + esc(p.title) + '</td>' +
                                 '<td class="py-3 pr-3 text-gray-400 text-xs">' + esc((p.seller && (p.seller.name || p.seller.email)) || '—') + '</td>' +
                                 '<td class="py-3 pr-3 text-gray-300">KES ' + esc(p.price) + ' / ' + esc(p.unit || '') + '</td>' +
                                 '<td class="py-3 pr-3">' + st + '</td>' +
                                 '<td class="py-3">' +
                                 (p.active
-                                    ? '<button data-hide="' + p._id + '" class="text-[11px] px-2.5 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Hide</button>'
-                                    : '<button data-show="' + p._id + '" class="text-[11px] px-2.5 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Show</button>') +
+                                    ? '<button data-hide="' + p._id + '" class="text-[11px] px-2.5 py-1 rounded bg-white text-gray-300 hover:bg-primary-50 mr-1">Hide</button>'
+                                    : '<button data-show="' + p._id + '" class="text-[11px] px-2.5 py-1 rounded bg-white text-gray-300 hover:bg-primary-50 mr-1">Show</button>') +
                                 '<button data-del="' + p._id + '" class="text-[11px] px-2.5 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20">Delete</button>' +
                                 '</td></tr>';
                         }).join('') + '</tbody></table></div>';
@@ -435,8 +435,8 @@
                     panel.innerHTML = '<div class="overflow-x-auto"><table class="w-full text-sm"><thead>' +
                         '<tr class="text-left text-gray-400 uppercase tracking-wide text-xs"><th class="pb-3 pr-3">Time</th><th class="pb-3 pr-3">Action</th><th class="pb-3">Details</th></tr>' +
                         '</thead><tbody>' + entries.map(function (e) {
-                            return '<tr class="border-t border-white/5"><td class="py-2.5 pr-3 text-gray-500 text-xs">' + fmtDate(e.createdAt) + '</td>' +
-                                '<td class="py-2.5 pr-3 text-white font-semibold">' + esc(e.action) + '</td>' +
+                            return '<tr class="border-t border-gray-200"><td class="py-2.5 pr-3 text-gray-500 text-xs">' + fmtDate(e.createdAt) + '</td>' +
+                                '<td class="py-2.5 pr-3 text-gray-900 font-semibold">' + esc(e.action) + '</td>' +
                                 '<td class="py-2.5 text-gray-400 text-xs">' + esc(e.details) + '</td></tr>';
                         }).join('') + '</tbody></table></div>';
                 }).catch(function () { panel.innerHTML = '<div class="text-red-300 text-sm text-center py-10">Network error.</div>'; });
@@ -459,8 +459,8 @@
                                     ? '<span class="text-accent-400 font-semibold">PENDING</span>'
                                     : '<span class="text-red-300">REJECTED</span>';
                             var feat = t.featured ? '★' : '';
-                            return '<tr class="border-t border-white/5 align-top">' +
-                                '<td class="py-3 pr-3 text-white text-xs">' + esc(t.name || (t.user && t.user.name) || '—') +
+                            return '<tr class="border-t border-gray-200 align-top">' +
+                                '<td class="py-3 pr-3 text-gray-900 text-xs">' + esc(t.name || (t.user && t.user.name) || '—') +
                                 '<br><span class="text-gray-500">' + esc(t.role || '') + ' · ' + (t.user ? esc(t.user.email || '') : '') + '</span></td>' +
                                 '<td class="py-3 pr-3 text-accent-400 font-semibold">' + (t.rating || 5) + '/5</td>' +
                                 '<td class="py-3 pr-3 text-gray-300 text-xs max-w-xs">"' + esc(t.message) + '"</td>' +
@@ -468,7 +468,7 @@
                                 '<td class="py-3 whitespace-nowrap">' +
                                 ((t.status === 'pending') ? '<button data-approve="' + t._id + '" class="text-[11px] px-2.5 py-1 rounded bg-primary-500/10 text-primary-300 hover:bg-primary-500/20 mr-1">Approve</button>' : '') +
                                 '<button data-reject="' + t._id + '" class="text-[11px] px-2.5 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20 mr-1">Reject</button>' +
-                                '<button data-feature="' + t._id + '" class="text-[11px] px-2.5 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">' + (t.featured ? 'Unfeature' : 'Feature') + '</button>' +
+                                '<button data-feature="' + t._id + '" class="text-[11px] px-2.5 py-1 rounded bg-white text-gray-300 hover:bg-primary-50 mr-1">' + (t.featured ? 'Unfeature' : 'Feature') + '</button>' +
                                 '<button data-del="' + t._id + '" class="text-[11px] px-2.5 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20">Delete</button>' +
                                 '</td></tr>';
                         }).join('') + '</tbody></table></div>';
@@ -505,7 +505,7 @@
             var ARTICLE_CATS = ['climate-smart-farming', 'water-management', 'soil-health', 'crop-diversification', 'carbon-credits', 'market-access', 'policy', 'general'];
             var QUIZ_CATS = ['climate-basics', 'soil-management', 'water-conservation', 'crop-planning', 'carbon-footprint', 'sustainability', 'general'];
 
-            var inputCls = 'w-full bg-dark-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary-500';
+            var inputCls = 'w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:border-primary-500';
             var labelCls = 'block text-xs uppercase tracking-wide text-gray-400 mb-1 mt-4 first:mt-0';
 
             function setEdu(t) {
@@ -543,17 +543,17 @@
                             var st = a.published
                                 ? '<span class="text-primary-300 font-semibold">PUBLISHED</span>'
                                 : '<span class="text-gray-500">DRAFT</span>';
-                            return '<tr class="border-t border-white/5">' +
-                                '<td class="py-3 pr-3 text-white">' + esc(a.title) + '<span class="block text-xs text-gray-500">' + esc(a.summary || '') + '</span></td>' +
+                            return '<tr class="border-t border-gray-200">' +
+                                '<td class="py-3 pr-3 text-gray-900">' + esc(a.title) + '<span class="block text-xs text-gray-500">' + esc(a.summary || '') + '</span></td>' +
                                 '<td class="py-3 pr-3 text-gray-400 text-xs">' + esc(a.category) + '</td>' +
                                 '<td class="py-3 pr-3 text-gray-400 text-xs">' + esc(a.author || '—') + '</td>' +
                                 '<td class="py-3 pr-3">' + st + '</td>' +
                                 '<td class="py-3 pr-3 text-gray-500 text-xs">' + fmtDate(a.updatedAt) + '</td>' +
                                 '<td class="py-3">' +
-                                '<button data-edit="' + a._id + '" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Edit</button>' +
+                                '<button data-edit="' + a._id + '" class="text-[11px] px-2 py-1 rounded bg-white text-gray-300 hover:bg-primary-50 mr-1">Edit</button>' +
                                 (a.published
-                                    ? '<button data-pub="' + a._id + '" data-val="false" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Unpublish</button>'
-                                    : '<button data-pub="' + a._id + '" data-val="true" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Publish</button>') +
+                                    ? '<button data-pub="' + a._id + '" data-val="false" class="text-[11px] px-2 py-1 rounded bg-white text-gray-300 hover:bg-primary-50 mr-1">Unpublish</button>'
+                                    : '<button data-pub="' + a._id + '" data-val="true" class="text-[11px] px-2 py-1 rounded bg-white text-gray-300 hover:bg-primary-50 mr-1">Publish</button>') +
                                 '<button data-del="' + a._id + '" class="text-[11px] px-2 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20">Delete</button>' +
                                 '</td></tr>';
                         }).join('') + '</tbody></table></div>';
@@ -595,17 +595,17 @@
                             var st = q.published
                                 ? '<span class="text-primary-300 font-semibold">PUBLISHED</span>'
                                 : '<span class="text-gray-500">DRAFT</span>';
-                            return '<tr class="border-t border-white/5">' +
-                                '<td class="py-3 pr-3 text-white">' + esc(q.title) + '<span class="block text-xs text-gray-500">' + esc(q.description || '') + '</span></td>' +
+                            return '<tr class="border-t border-gray-200">' +
+                                '<td class="py-3 pr-3 text-gray-900">' + esc(q.title) + '<span class="block text-xs text-gray-500">' + esc(q.description || '') + '</span></td>' +
                                 '<td class="py-3 pr-3 text-gray-400 text-xs">' + esc(q.category) + '</td>' +
                                 '<td class="py-3 pr-3 text-gray-300">' + (q.questions || []).length + '</td>' +
                                 '<td class="py-3 pr-3">' + st + '</td>' +
                                 '<td class="py-3 pr-3 text-gray-500 text-xs">' + fmtDate(q.updatedAt) + '</td>' +
                                 '<td class="py-3">' +
-                                '<button data-edit="' + q._id + '" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Edit</button>' +
+                                '<button data-edit="' + q._id + '" class="text-[11px] px-2 py-1 rounded bg-white text-gray-300 hover:bg-primary-50 mr-1">Edit</button>' +
                                 (q.published
-                                    ? '<button data-pub="' + q._id + '" data-val="false" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Unpublish</button>'
-                                    : '<button data-pub="' + q._id + '" data-val="true" class="text-[11px] px-2 py-1 rounded bg-white/5 text-gray-300 hover:bg-white/10 mr-1">Publish</button>') +
+                                    ? '<button data-pub="' + q._id + '" data-val="false" class="text-[11px] px-2 py-1 rounded bg-white text-gray-300 hover:bg-primary-50 mr-1">Unpublish</button>'
+                                    : '<button data-pub="' + q._id + '" data-val="true" class="text-[11px] px-2 py-1 rounded bg-white text-gray-300 hover:bg-primary-50 mr-1">Publish</button>') +
                                 '<button data-del="' + q._id + '" class="text-[11px] px-2 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20">Delete</button>' +
                                 '</td></tr>';
                         }).join('') + '</tbody></table></div>';
@@ -636,9 +636,9 @@
             function editorWrap(title, inner) {
                 document.getElementById('edu-cancel').classList.remove('hidden');
                 document.getElementById('edu-view').innerHTML =
-                    '<div class="max-w-3xl mx-auto"><h3 class="font-heading text-xl font-bold text-white mb-4">' + title + '</h3>' + inner +
+                    '<div class="max-w-3xl mx-auto"><h3 class="font-heading text-xl font-bold text-gray-900 mb-4">' + title + '</h3>' + inner +
                     '<div class="flex gap-3 mt-6"><button type="button" id="edu-save" class="cta-btn px-6 py-2.5 rounded-xl text-white font-semibold text-sm">Save</button>' +
-                    '<button type="button" id="edu-discard" class="px-6 py-2.5 rounded-xl bg-white/5 text-gray-300 hover:bg-white/10 text-sm font-semibold">Discard</button></div></div>';
+                    '<button type="button" id="edu-discard" class="px-6 py-2.5 rounded-xl bg-white text-gray-300 hover:bg-primary-50 text-sm font-semibold">Discard</button></div></div>';
                 document.getElementById('edu-discard').addEventListener('click', loadEduView);
             }
 
@@ -696,7 +696,7 @@
                     '<div><label class="' + labelCls + '">Description (Kiswahili)</label><textarea id="ed-descSw" class="' + inputCls + '" rows="2">' + esc(q.descriptionSw || '') + '</textarea></div>' +
                     '</div>' +
                     '<div class="flex items-end mt-4"><label class="flex items-center gap-2 text-sm text-gray-300 cursor-pointer"><input type="checkbox" id="ed-published"' + (q.published ? ' checked' : '') + ' class="accent-primary-500 w-4 h-4"> Published</label></div>' +
-                    '<div class="flex items-center justify-between mt-6 mb-3"><h4 class="font-heading text-lg font-bold text-white">Questions</h4>' +
+                    '<div class="flex items-center justify-between mt-6 mb-3"><h4 class="font-heading text-lg font-bold text-gray-900">Questions</h4>' +
                     '<button type="button" id="q-add" class="text-[11px] px-3 py-1.5 rounded bg-primary-500/10 text-primary-300 hover:bg-primary-500/20 font-semibold">+ Add Question</button></div>' +
                     '<div id="q-list"></div>';
                 editorWrap(q._id ? 'Edit Quiz' : 'New Quiz', inner);
@@ -748,7 +748,7 @@
                 qq = qq || {};
                 var labelTwo = 'text-xs text-gray-500 mb-1';
                 var row = document.createElement('div');
-                row.className = 'quiz-q border border-white/10 rounded-xl p-4 mb-4 bg-dark-900/40';
+                row.className = 'quiz-q border border-gray-200 rounded-xl p-4 mb-4 bg-primary-50';
                 row.innerHTML =
                     '<div class="flex justify-between items-center mb-3"><span class="text-xs font-bold uppercase tracking-wide text-gray-400">Question ' + (document.getElementById('q-list').children.length + 1) + '</span>' +
                     '<button type="button" class="q-remove text-[11px] px-2 py-1 rounded bg-red-500/10 text-red-300 hover:bg-red-500/20">Remove</button></div>' +
@@ -813,7 +813,7 @@
         })();
     </script>
 
-    <footer class="border-t border-white/5 py-8" role="contentinfo">
+    <footer class="border-t border-gray-200 py-8" role="contentinfo">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
             <p class="text-gray-600 text-xs sm:text-sm">&copy; <span id="current-year"></span> KCNP Agro. Administrative control panel.</p>
             <a href="/" class="text-gray-500 hover:text-primary-400 text-xs sm:text-sm transition-colors">Back to website</a>

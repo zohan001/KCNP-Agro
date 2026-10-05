@@ -2,9 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ==============================
-   Base & Utility Styles
-   ============================== */
+/* ============================================================
+   KCNP Agro - design system
+   ------------------------------------------------------------
+   Palette (see tailwind.config.js for the ramps):
+     page background #F8FAF5   cards/sections #FFFFFF
+     primary green   #2E7D32   light green    #E8F5E9
+     harvest amber   #FFB300   text           #1B2A1B
+     soil brown      #795548
+
+   Rules that appear AFTER `@tailwind utilities` deliberately win
+   over same-specificity utilities, which is how the greys, the
+   primary ramp and the accent ramp get their light-theme values
+   without touching every `class="..."` in the markup.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Responsive foundation
+   ------------------------------------------------------------ */
+html {
+    /* Fluid root size: everything sized in rem scales with the
+       viewport, so a 320px phone and a 2560px monitor both get a
+       layout that fits instead of one that merely scrolls. */
+    font-size: clamp(15px, calc(0.28vw + 14.1px), 18px);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-behavior: smooth;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -13,9 +38,43 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #164a37;
-    color: #e8eef7;
+    background-color: #F8FAF5;
+    color: #1B2A1B;
     overflow-x: hidden;
+    /* Long unbroken strings (URLs, phone numbers, order refs) must
+       wrap rather than push the page sideways. */
+    overflow-wrap: break-word;
+}
+
+/* Replaced elements never exceed their column. */
+img,
+svg,
+video,
+canvas,
+iframe {
+    max-width: 100%;
+}
+
+img,
+video {
+    height: auto;
+}
+
+/* Wide data (tables, code) scrolls inside its own box so it cannot
+   widen the page. */
+table,
+pre,
+code {
+    max-width: 100%;
+}
+
+pre {
+    overflow-x: auto;
+}
+
+/* Any element given `overflow-x-auto` keeps its scrollbar visible. */
+.overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Smooth scrollbar styling */
@@ -24,45 +83,93 @@ body {
     height: 10px;
 }
 ::-webkit-scrollbar-track {
-    background: #111827;
+    background: #E8F5E9;
 }
 ::-webkit-scrollbar-thumb {
-    background: #2fbf5f;
+    background: #2E7D32;
     border-radius: 5px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #4ade80;
+    background: #1F5121;
 }
 
-/* ============================================
-   Readability pass
-   ============================================
-   The greys below were tuned for a pitch deck, not
-   for a dark UI read on a phone in daylight. Every
-   one of them sat under the WCAG AA threshold
-   against the #0c1222 page background, which is
-   what made small print look muddy and tiring.
-   They are re-mapped here rather than in the markup
-   so every page inherits the same legible floor and
-   only has to keep using the usual Tailwind names.
+/* ============================================================
+   Text ramp for the light theme
+   ------------------------------------------------------------
+   The greys are now ON the light background, so the low numbers
+   that used to mean "body copy on dark" become the readable steps
+   and the high numbers become the muted ones. Re-mapped here so
+   every page inherits the same legible floor:
 
-   Ratios are against #0c1222:
-     gray-300  ~14:1     gray-500 ~8.5:1
-     gray-400  ~12:1     gray-600 ~6.6:1
-   ============================================ */
-.text-gray-300 { color: #dfe7f2; }
-.text-gray-400 { color: #ccd7e6; }
-.text-gray-500 { color: #aab8ca; }
-.text-gray-600 { color: #94a3b8; }
+     gray-300 #1B2A1B  14.2:1   primary body/heading copy
+     gray-400 #3A4D38   9.6:1   secondary copy
+     gray-500 #55684F   6.2:1   muted copy
+     gray-600 #6B7A68   4.7:1   de-emphasised copy
+   ============================================================ */
+.text-gray-200 { color: #22331F; }
+.text-gray-300 { color: #1B2A1B; }
+.text-gray-400 { color: #3A4D38; }
+.text-gray-500 { color: #55684F; }
+.text-gray-600 { color: #6B7A68; }
+.text-gray-700 { color: #7E8C7A; }
+.text-gray-800 { color: #1B2A1B; }
+.text-gray-900 { color: #1B2A1B; }
 
-.placeholder-gray-400::placeholder { color: #8d9cb2; opacity: 1; }
-.placeholder-gray-500::placeholder { color: #8d9cb2; opacity: 1; }
-.placeholder-gray-600::placeholder { color: #7d8b9f; opacity: 1; }
+/* Hover / group-hover variants need the same remap or they would
+   fall back to Tailwind's pale greys on hover. */
+.hover\:text-gray-300:hover { color: #2E7D32; }
+.hover\:text-gray-400:hover { color: #1B2A1B; }
+.hover\:text-gray-500:hover { color: #1B2A1B; }
+.hover\:text-gray-600:hover { color: #1B2A1B; }
+.focus\:text-gray-400:focus { color: #1B2A1B; }
 
-/* Field labels and muted copy should never fall below this. */
-.text-gray-700 { color: #8492a6; }
+.placeholder-gray-300::placeholder { color: #7E8C7A; opacity: 1; }
+.placeholder-gray-400::placeholder { color: #7E8C7A; opacity: 1; }
+.placeholder-gray-500::placeholder { color: #8A9887; opacity: 1; }
+.placeholder-gray-600::placeholder { color: #8A9887; opacity: 1; }
 
-/* Form controls need a visible edge, not a hint of one. */
+/* Primary green on light. #2E7D32 is 4.88:1 on #F8FAF5. */
+.text-primary-300 { color: #2E7D32; }
+.text-primary-400 { color: #2E7D32; }
+.text-primary-500 { color: #2E7D32; }
+.text-primary-600 { color: #276729; }
+
+.hover\:text-primary-300:hover { color: #122E13; }
+.hover\:text-primary-400:hover { color: #122E13; }
+.group-hover\:text-primary-400 { color: #122E13; }
+.focus\:text-primary-400:focus { color: #122E13; }
+
+/* Harvest amber. #FFB300 is only 1.67:1 as text on the page
+   background, so text uses the darker steps of the same hue
+   (#966300 = 4.90:1). The bright amber stays on fills. */
+.text-accent-300 { color: #8A5A00; }
+.text-accent-400 { color: #966300; }
+.text-accent-500 { color: #8A5A00; }
+.hover\:text-accent-300:hover { color: #4E3400; }
+.hover\:text-accent-400:hover { color: #4E3400; }
+
+/* Soil brown details. */
+.text-soil-400 { color: #795548; }
+.text-soil-500 { color: #795548; }
+
+/* Titles in the primary green. Scoped to real heading elements so
+   the wordmark and stat blocks keep their own colours. */
+h1.font-heading,
+h2.font-heading,
+h3.font-heading,
+h4.font-heading,
+h5.font-heading,
+h6.font-heading {
+    color: #2E7D32;
+}
+
+/* The hero sits on a dark photo scrim: it keeps white type. */
+#home h1,
+#home h2,
+#home h3 {
+    color: #FFFFFF;
+}
+
 .form-input,
 input[type="text"].form-input,
 input[type="email"].form-input,
@@ -70,18 +177,29 @@ input[type="password"].form-input,
 input[type="tel"].form-input,
 input[type="number"].form-input,
 input[type="search"].form-input,
+input[type="date"].form-input,
 textarea.form-input,
 select.form-input {
-    border-color: rgba(255, 255, 255, 0.22);
-    color: #ffffff;
+    background-color: #FFFFFF;
+    border-color: #D3DCD0;
+    color: #1B2A1B;
 }
 
-.form-input::placeholder { color: #8d9cb2; opacity: 1; }
+.form-input::placeholder { color: #8A9887; opacity: 1; }
 
 .form-input:focus {
-    border-color: #2fbf5f;
-    box-shadow: 0 0 0 3px rgba(47, 191, 95, 0.28);
+    border-color: #2E7D32;
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.18);
     outline: none;
+}
+
+/* Selects get a visible chevron and enough room for it. */
+select.form-input {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232E7D32' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.1em 1.1em;
+    padding-right: 2.5rem;
 }
 
 /* Keyboard users must always be able to see where they are. */
@@ -91,14 +209,14 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible {
-    outline: 2px solid #6ee7a0;
+    outline: 3px solid #2E7D32;
     outline-offset: 2px;
     border-radius: 6px;
 }
 
-/* ============================================
+/* ============================================================
    Bot trap + captcha fallback (registration)
-   ============================================ */
+   ============================================================ */
 .hp-field {
     position: absolute !important;
     left: -9999px !important;
@@ -113,16 +231,16 @@ summary:focus-visible {
     gap: 0.25rem;
     margin-bottom: 1rem;
     padding: 0.85rem 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    border: 1px solid #D3DCD0;
     border-radius: 0.75rem;
-    background: rgba(255, 255, 255, 0.04);
+    background: #F1F8F2;
 }
 
 .hp-fallback[hidden] { display: none; }
 
 .hp-fallback.checked {
-    border-color: rgba(47, 191, 95, 0.55);
-    background: rgba(47, 191, 95, 0.10);
+    border-color: #2E7D32;
+    background: #E8F5E9;
 }
 
 .hp-fallback__label {
@@ -132,20 +250,21 @@ summary:focus-visible {
     cursor: pointer;
     font-size: 0.95rem;
     font-weight: 600;
-    color: #ffffff;
+    color: #1B2A1B;
 }
 
 .hp-fallback__label input[type="checkbox"] {
     width: 1.25rem;
     height: 1.25rem;
-    accent-color: #16a34a;
+    flex-shrink: 0;
+    accent-color: #2E7D32;
     cursor: pointer;
 }
 
 .hp-fallback__hint {
     margin: 0;
     font-size: 0.78rem;
-    color: #aab8ca;
+    color: #55684F;
 }
 
 /* ==============================
@@ -195,10 +314,10 @@ summary:focus-visible {
 
 @keyframes pulse-glow {
     0%, 100% {
-        box-shadow: 0 0 20px rgba(22, 163, 74, 0.3);
+        box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.35);
     }
     50% {
-        box-shadow: 0 0 40px rgba(22, 163, 74, 0.6);
+        box-shadow: 0 0 0 12px rgba(46, 125, 50, 0);
     }
 }
 
@@ -279,26 +398,40 @@ summary:focus-visible {
    Component Styles
    ============================== */
 
-/* Gradient text effect */
+/* Gradient text. Both stops are dark enough to read on the light
+   background (#2E7D32 -> #966300). Over the dark hero scrim the
+   lighter `.hero-gradient-text` variant is used instead. */
 .gradient-text {
-    background: linear-gradient(135deg, #22c55e, #f59e0b);
+    background: linear-gradient(135deg, #2E7D32, #966300);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-/* Glass morphism card */
+.hero-gradient-text {
+    background: linear-gradient(135deg, #A5D6A7, #FFB300);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Card surface */
 .glass-card {
-    background: rgba(15, 23, 42, 0.78);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: #FFFFFF;
+    border: 1px solid #E3E8E2;
+    box-shadow: 0 1px 3px rgba(27, 42, 27, 0.05);
+}
+
+/* Scrim over the hero photograph. */
+.hero-scrim {
+    background: #0E3B21;
+    opacity: 0.58;
 }
 
 /* Gradient border effect */
 .gradient-border {
     position: relative;
-    background: #111827;
+    background: #FFFFFF;
     border-radius: 1rem;
 }
 
@@ -308,7 +441,7 @@ summary:focus-visible {
     inset: -1px;
     border-radius: 1rem;
     padding: 1px;
-    background: linear-gradient(135deg, #22c55e, #f59e0b);
+    background: linear-gradient(135deg, #2E7D32, #FFB300);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -316,11 +449,10 @@ summary:focus-visible {
 }
 
 /* CTA button with glow.
-   The old ramp started at #22c55e, which put white text at 2.2:1 — well
-   below any accessibility floor. The base is now a deep green (>=5:1 with
-   white) and the brighter green is held back for the hover state only. */
+   Base #2E7D32 gives 5.13:1 against white text; the hover state
+   deepens rather than brightens so contrast never drops. */
 .cta-btn {
-    background: linear-gradient(135deg, #15803d, #166534);
+    background: linear-gradient(135deg, #2E7D32, #276729);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
@@ -330,7 +462,7 @@ summary:focus-visible {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, #16a34a, #15803d);
+    background: linear-gradient(135deg, #276729, #1F5121);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -341,7 +473,7 @@ summary:focus-visible {
 
 .cta-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 40px rgba(22, 163, 74, 0.4);
+    box-shadow: 0 10px 30px rgba(46, 125, 50, 0.32);
 }
 
 .cta-btn span {
@@ -355,14 +487,14 @@ summary:focus-visible {
 }
 
 .service-card:hover {
-    transform: translateY(-8px);
-    border-color: rgba(22, 163, 74, 0.3);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 30px rgba(22, 163, 74, 0.1);
+    transform: translateY(-6px);
+    border-color: #C8E6C9;
+    box-shadow: 0 18px 40px rgba(27, 42, 27, 0.10), 0 0 0 4px rgba(232, 245, 233, 0.9);
 }
 
 .service-card:hover .card-icon {
-    transform: scale(1.1) rotate(5deg);
-    background: linear-gradient(135deg, #22c55e, #16a34a);
+    transform: scale(1.06) rotate(4deg);
+    background: linear-gradient(135deg, #2E7D32, #276729);
 }
 
 .card-icon {
@@ -376,21 +508,27 @@ summary:focus-visible {
 
 .testimonial-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 15px 35px rgba(27, 42, 27, 0.10);
 }
 
 /* Navigation backdrop */
 .nav-blur {
-    background: rgba(22, 74, 55, 0.92);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom-color: #E3E8E2;
+}
+
+/* The wordmark keeps ink "KCNP" with a green "Agro". */
+.nav-blur .font-heading {
+    color: #1B2A1B;
 }
 
 /* On phones use a solid header so the open menu
    never shows a blur band behind/around the tabs */
 @media (max-width: 767px) {
     .nav-blur {
-        background: #164a37;
+        background: #FFFFFF;
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
     }
@@ -416,24 +554,26 @@ summary:focus-visible {
 /* Hero background gradient orbs */
 .hero-orb-1 {
     position: absolute;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(22, 163, 74, 0.15), transparent 70%);
+    width: 34rem;
+    height: 34rem;
+    background: radial-gradient(circle, rgba(232, 245, 233, 0.20), transparent 70%);
     border-radius: 50%;
-    top: -200px;
-    right: -100px;
+    top: -12rem;
+    right: -6rem;
     animation: float 8s ease-in-out infinite;
+    pointer-events: none;
 }
 
 .hero-orb-2 {
     position: absolute;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(245, 158, 11, 0.1), transparent 70%);
+    width: 24rem;
+    height: 24rem;
+    background: radial-gradient(circle, rgba(255, 179, 0, 0.14), transparent 70%);
     border-radius: 50%;
-    bottom: -100px;
-    left: -100px;
+    bottom: -6rem;
+    left: -6rem;
     animation: float 10s ease-in-out infinite reverse;
+    pointer-events: none;
 }
 
 /* Hero slideshow crossfade */
@@ -468,7 +608,7 @@ summary:focus-visible {
     width: 10px;
     height: 10px;
     border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.45);
     cursor: pointer;
     transition: all 0.3s ease;
     border: none;
@@ -476,7 +616,7 @@ summary:focus-visible {
 }
 
 .hero-slide-dots .dot.active {
-    background: #22c55e;
+    background: #FFB300;
     width: 26px;
 }
 
@@ -496,16 +636,16 @@ summary:focus-visible {
     gap: 0.5rem;
     padding: 0.8rem 1rem;
     border-radius: 9999px;
-    background: #15803d;
+    background: #2E7D32;
     color: #ffffff;
     font-weight: 700;
     font-size: 0.875rem;
-    box-shadow: 0 8px 24px rgba(22, 163, 74, 0.45);
+    box-shadow: 0 8px 24px rgba(46, 125, 50, 0.35);
     transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .fab-help:hover {
-    background: #166534;
+    background: #1F5121;
     transform: scale(1.05);
     color: #ffffff;
 }
@@ -520,8 +660,8 @@ summary:focus-visible {
     height: 2.75rem;
     padding: 0 0.8rem;
     border-radius: 0.75rem;
-    background: #15803d;
-    border: 2px solid #86efac;
+    background: #2E7D32;
+    border: 2px solid #C8E6C9;
     color: #ffffff;
     font-weight: 700;
     font-size: 0.875rem;
@@ -531,7 +671,7 @@ summary:focus-visible {
 }
 
 .lang-fab:hover {
-    background: #166534;
+    background: #1F5121;
     color: #ffffff;
 }
 
@@ -552,9 +692,9 @@ summary:focus-visible {
     gap: 0.4rem;
     padding: 0.45rem 0.9rem;
     border-radius: 9999px;
-    background: rgba(34, 197, 94, 0.12);
-    border: 1px solid rgba(34, 197, 94, 0.35);
-    color: #4ade80;
+    background: #E8F5E9;
+    border: 1px solid #C8E6C9;
+    color: #1F5121;
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
@@ -562,11 +702,11 @@ summary:focus-visible {
 }
 
 .listen-btn:hover {
-    background: rgba(34, 197, 94, 0.25);
-    color: #ffffff;
+    background: #C8E6C9;
+    color: #122E13;
 }
 
-/* Interest button ("I'm interested" — buyer demand signal) */
+/* Interest button ("I'm interested" - buyer demand signal) */
 .interest-btn {
     display: inline-flex;
     align-items: center;
@@ -574,9 +714,9 @@ summary:focus-visible {
     gap: 0.4rem;
     padding: 0.55rem 1rem;
     border-radius: 9999px;
-    background: rgba(34, 197, 94, 0.1);
-    border: 1px solid rgba(34, 197, 94, 0.4);
-    color: #4ade80;
+    background: #E8F5E9;
+    border: 1px solid #C8E6C9;
+    color: #1F5121;
     font-size: 0.8rem;
     font-weight: 700;
     cursor: pointer;
@@ -584,11 +724,12 @@ summary:focus-visible {
 }
 
 .interest-btn:hover {
-    background: rgba(34, 197, 94, 0.25);
-    color: #ffffff;
+    background: #FFB300;
+    border-color: #FFB300;
+    color: #332300;
 }
 
-/* Form input focus styles — the colour, border and placeholder rules live
+/* Form input focus styles - the colour, border and placeholder rules live
    in the readability block at the top of this file. */
 .form-input {
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
@@ -614,6 +755,7 @@ summary:focus-visible {
 /* Hamburger animation */
 .hamburger span {
     transition: all 0.3s ease;
+    background-color: #1B2A1B;
 }
 
 .hamburger.active span:nth-child(1) {
@@ -630,7 +772,7 @@ summary:focus-visible {
 
 /* Stats counter animation */
 .stat-number {
-    background: linear-gradient(135deg, #22c55e, #f59e0b);
+    background: linear-gradient(135deg, #2E7D32, #966300);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -643,7 +785,7 @@ summary:focus-visible {
 
 .social-link:hover {
     transform: translateY(-3px);
-    color: #22c55e;
+    color: #2E7D32;
 }
 
 /* Skip to main content link for accessibility */
@@ -651,7 +793,7 @@ summary:focus-visible {
     position: absolute;
     top: -100%;
     left: 0;
-    background: #16a34a;
+    background: #2E7D32;
     color: white;
     padding: 0.5rem 1rem;
     z-index: 100;
@@ -667,7 +809,9 @@ summary:focus-visible {
     position: fixed;
     inset: 0;
     z-index: 90;
-    background: rgba(5, 8, 18, 0.78);
+    background: rgba(27, 42, 27, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -685,13 +829,13 @@ body.tour-lock {
 .tour-modal {
     width: 100%;
     max-width: 460px;
-    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
     overflow-y: auto;
-    background: linear-gradient(180deg, #111a2e, #0a0f1f);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #FFFFFF;
+    border: 1px solid #E3E8E2;
     border-radius: 1.25rem;
     padding: 2rem 1.75rem;
-    box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 25px 60px -12px rgba(27, 42, 27, 0.35);
     text-align: center;
     position: relative;
 }
@@ -703,8 +847,8 @@ body.tour-lock {
     width: 2.25rem;
     height: 2.25rem;
     border: none;
-    background: rgba(255, 255, 255, 0.06);
-    color: #9ca3af;
+    background: #E8F5E9;
+    color: #3A4D38;
     font-size: 1.4rem;
     line-height: 1;
     border-radius: 9999px;
@@ -712,8 +856,8 @@ body.tour-lock {
 }
 
 .tour-close:hover {
-    background: rgba(255, 255, 255, 0.14);
-    color: #fff;
+    background: #C8E6C9;
+    color: #1B2A1B;
 }
 
 .tour-icon {
@@ -721,7 +865,7 @@ body.tour-lock {
     height: 3.5rem;
     margin: 0 auto 1rem;
     border-radius: 1rem;
-    background: linear-gradient(135deg, #16a34a, #f59e0b);
+    background: linear-gradient(135deg, #2E7D32, #FFB300);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -732,20 +876,20 @@ body.tour-lock {
     font-family: Poppins, sans-serif;
     font-weight: 700;
     font-size: 1.5rem;
-    color: #fff;
+    color: #2E7D32;
     margin: 0 0 0.4rem;
 }
 
 .tour-sub {
-    color: #9ca3af;
+    color: #55684F;
     font-size: 0.95rem;
     line-height: 1.5;
     margin: 0 0 1.25rem;
 }
 
 .tour-step-box {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #F1F8F2;
+    border: 1px solid #E3E8E2;
     border-radius: 1rem;
     padding: 1.25rem 1rem;
     min-height: 9rem;
@@ -758,12 +902,12 @@ body.tour-lock {
     font-family: Poppins, sans-serif;
     font-weight: 600;
     font-size: 1.1rem;
-    color: #22c55e;
+    color: #2E7D32;
     margin: 0 0 0.5rem;
 }
 
 .tour-step-desc {
-    color: #d1d5db;
+    color: #3A4D38;
     font-size: 0.92rem;
     line-height: 1.65;
     margin: 0;
@@ -780,13 +924,13 @@ body.tour-lock {
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.18);
+    background: #D3DCD0;
     transition: all 0.25s ease;
 }
 
 .tour-dot.active {
     width: 1.5rem;
-    background: linear-gradient(90deg, #16a34a, #f59e0b);
+    background: linear-gradient(90deg, #2E7D32, #FFB300);
 }
 
 .tour-actions {
@@ -799,17 +943,17 @@ body.tour-lock {
     flex: 1;
     padding: 0.75rem 0.5rem;
     border-radius: 0.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    border: 1px solid #D3DCD0;
     background: transparent;
-    color: #9ca3af;
+    color: #55684F;
     font-size: 0.88rem;
     font-weight: 600;
     cursor: pointer;
 }
 
 .tour-skip:hover {
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.3);
+    color: #1B2A1B;
+    border-color: #2E7D32;
 }
 
 .tour-next {
@@ -817,7 +961,7 @@ body.tour-lock {
     padding: 0.75rem 0.5rem;
     border-radius: 0.75rem;
     border: none;
-    background: linear-gradient(135deg, #15803d, #166534);
+    background: linear-gradient(135deg, #2E7D32, #276729);
     color: #fff;
     font-size: 0.88rem;
     font-weight: 700;
@@ -825,7 +969,7 @@ body.tour-lock {
 }
 
 .tour-next:hover {
-    background: linear-gradient(135deg, #16a34a, #15803d);
+    background: linear-gradient(135deg, #276729, #1F5121);
 }
 
 /* Listing photo upload preview */
@@ -841,15 +985,15 @@ body.tour-lock {
     flex-shrink: 0;
     border-radius: 0.75rem;
     object-fit: cover;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px dashed rgba(255, 255, 255, 0.2);
+    background: #E8F5E9;
+    border: 1px dashed #C8E6C9;
 }
 
 .photo-preview--empty {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #6b7280;
+    color: #6B7A68;
     font-size: 0.7rem;
     text-align: center;
 }
@@ -860,10 +1004,161 @@ body.tour-lock {
     object-fit: cover;
     border-radius: 0.75rem;
     margin-bottom: 0.75rem;
-    background: rgba(255, 255, 255, 0.05);
+    background: #E8F5E9;
 }
 
 /* Required field star */
 .req-star {
-    color: #f87171;
+    color: #C0392B;
+}
+
+/* ============================================================
+   Responsive hardening
+   ------------------------------------------------------------
+   Rules that keep every page intact from a 320px phone up to a
+   wide desktop. They only ever ADD a fallback: if a utility class
+   already handles the size, nothing changes.
+   ============================================================ */
+
+/* 1. Nothing may exceed the viewport width. Applied with `:where()`
+   so it never beats a deliberate utility class. */
+:where(body, main, section, article, header, footer, nav, div, form, table) {
+    max-width: 100%;
+}
+
+/* 2. Fixed-width utilities are unsafe on narrow screens. Only apply
+   them from the `sm` breakpoint upward. */
+@media (max-width: 639px) {
+    .w-40,
+    .w-48,
+    .w-56,
+    .w-64,
+    .w-72,
+    .w-80,
+    .w-96,
+    .w-\[400px\] {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* 3. Grids must collapse to a single column before they get cramped. */
+@media (max-width: 639px) {
+    .grid,
+    [class*="grid-cols-"] {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* ...except the stats bar, which reads fine as a 2-up grid. */
+    .grid-cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* 4. Every grid child may shrink; without this a long word or a wide
+   child can blow the column out. */
+:where(.grid) > * {
+    min-width: 0;
+}
+
+/* 5. Buttons stack instead of overflowing on phones. */
+@media (max-width: 639px) {
+    :where(.cta-btn, .interest-btn, .listen-btn) {
+        max-width: 100%;
+    }
+}
+
+/* 6. Multi-button rows wrap. */
+@media (max-width: 639px) {
+    :where(.flex.flex-wrap) {
+        row-gap: 0.5rem;
+    }
+}
+
+/* 7. The hero must never trap the CTA row against the fold on short
+   screens (landscape phones, split view). */
+@media (max-height: 620px) {
+    .min-h-screen {
+        min-height: 0;
+    }
+}
+
+/* 8. Dot navigation for the hero slideshow stays clear of the CTAs. */
+@media (max-width: 767px) {
+    .hero-slide-dots {
+        bottom: 1rem;
+    }
+}
+
+/* 9. Page gutters shrink on the narrowest phones so content is not
+   reduced to a ribbon. */
+@media (max-width: 380px) {
+    .px-4 {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+}
+
+/* 10. Cards need a little less padding on a small screen. */
+@media (max-width: 639px) {
+    .p-8 {
+        padding: 1.25rem;
+    }
+
+    .p-10 {
+        padding: 1.5rem;
+    }
+}
+
+/* 11. The floating help button must not cover page content. */
+@media (max-width: 480px) {
+    .fab-help {
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem);
+        right: calc(env(safe-area-inset-right, 0px) + 0.75rem);
+        padding: 0.65rem 0.85rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* 12. Print: drop the chrome and keep the content legible on paper. */
+@media print {
+    #navbar,
+    .fab-help,
+    .lang-fab,
+    .hero-slide-dots,
+    .tour-backdrop,
+    .skip-link {
+        display: none !important;
+    }
+
+    body {
+        background: #FFFFFF;
+        color: #1B2A1B;
+    }
+
+    .glass-card,
+    .tour-modal {
+        box-shadow: none;
+        border: 1px solid #D3DCD0;
+    }
+}
+
+/* 13. Respect the OS "reduce motion" setting. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .js .reveal {
+        transform: none;
+    }
+
+    .hero-slide {
+        transform: none;
+    }
 }

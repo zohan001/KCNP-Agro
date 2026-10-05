@@ -21,10 +21,33 @@ function requireActiveMembership(req) {
     };
 }
 
+/**
+ * A farmer cannot put produce on the marketplace until an admin has approved
+ * their ID. This runs BEFORE the subscription check so an unverified farmer is
+ * told to fix their identity rather than being sent to the pricing page first.
+ *
+ * Only farmers are held to this. Admins manage the catalogue and traders buy,
+ * so neither is gated.
+ */
+function requireVerifiedIdentity(req) {
+    if (!req.user || req.user.role !== 'farmer') return null;
+    if (req.user.identityVerified) return null;
+    return {
+        code: 'VERIFICATION_REQUIRED',
+        message: 'Verify your identity before listing produce. Upload your National ID (front and back) and a live face photo — it takes a couple of minutes and an admin reviews it.',
+        data: { redirect: '/verification' }
+    };
+}
+
 async function createProduct(req, res) {
     const { title, description, category, price, unit, location, contactEmail, contactPhone, image } = req.body;
 
     try {
+        const verifyReq = requireVerifiedIdentity(req);
+        if (verifyReq) {
+            return res.status(403).json({ success: false, ...verifyReq });
+        }
+
         const subReq = requireActiveMembership(req);
         if (subReq) {
             return res.status(402).json({ success: false, ...subReq });
@@ -143,6 +166,11 @@ async function updateProduct(req, res) {
                 success: false,
                 message: 'You can only edit your own listings.'
             });
+        }
+
+        const verifyReq = requireVerifiedIdentity(req);
+        if (verifyReq) {
+            return res.status(403).json({ success: false, ...verifyReq });
         }
 
         const subReq = requireActiveMembership(req);

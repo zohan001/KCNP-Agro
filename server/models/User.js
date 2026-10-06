@@ -28,6 +28,9 @@ const userSchema = new mongoose.Schema(
             enum: ['farmer', 'trader', 'admin'],
             default: 'farmer'
         },
+        // The single super admin (God mode). Exactly one account can carry
+        // this flag; it is protected from demotion, deactivation and deletion.
+        isRoot: { type: Boolean, default: false },
         passwordResetToken: {
             type: String,
             select: false

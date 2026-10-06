@@ -51,6 +51,11 @@ module.exports = {
     // Frontend base URL (used to build password reset links)
     frontendUrl: process.env.FRONTEND_URL || '',
 
+    // The one true super admin (God mode). Exactly one account is root:
+    // it owns role 'admin' plus isRoot, and it cannot be demoted, deactivated
+    // or deleted. Falls back to the seeded demo admin on fresh databases.
+    rootAdminEmail: process.env.ROOT_ADMIN_EMAIL || 'admin@kcnpagro.org',
+
     // SMTP / email configuration (used for password reset emails)
     mail: {
         host: process.env.SMTP_HOST || '',

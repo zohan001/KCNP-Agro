@@ -20,7 +20,7 @@
  */
 
 const SEED_USERS = [
-    { name: 'KCNP Admin', email: 'admin@kcnpagro.org', password: 'adminpass123', role: 'admin' },
+    { name: 'KCNP Admin', email: 'admin@kcnpagro.org', password: 'adminpass123', role: 'admin', isRoot: true },
     { name: 'Demo Farmer', email: 'demofarmer@gmail.com', password: 'farmer123', role: 'farmer' },
     { name: 'Demo Trader', email: 'demotrader@gmail.com', password: 'trader123', role: 'trader' },
     // Extra demo farmers (the marketplace relies on farmers posting listings)

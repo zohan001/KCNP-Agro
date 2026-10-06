@@ -74,6 +74,82 @@ describe('Admin authorization', () => {
         expect(res.status).toBe(200);
         expect(res.body.data.length).toBeGreaterThanOrEqual(2);
     });
+
+    test('an admin cannot promote a member to admin via the role switch', async () => {
+        await seedUser('admin', 'admin@example.com');
+        await seedUser('farmer', 'farmer@example.com');
+        const token = await loginUser('admin@example.com');
+        const farmer = await require('../server/models/User').findOne({ email: 'farmer@example.com' });
+
+        const res = await request(app)
+            .put('/api/admin/users/' + farmer._id)
+            .set('Authorization', 'Bearer ' + token)
+            .send({ role: 'admin' });
+        expect(res.status).toBe(200);
+
+        const reloaded = await require('../server/models/User').findById(farmer._id);
+        expect(reloaded.role).toBe('farmer');
+    });
+
+    test('an admin can still change a member between the two tiers', async () => {
+        await seedUser('admin', 'admin@example.com');
+        await seedUser('farmer', 'farmer@example.com');
+        const token = await loginUser('admin@example.com');
+        const farmer = await require('../server/models/User').findOne({ email: 'farmer@example.com' });
+
+        const res = await request(app)
+            .put('/api/admin/users/' + farmer._id)
+            .set('Authorization', 'Bearer ' + token)
+            .send({ role: 'trader' });
+        expect(res.status).toBe(200);
+
+        const reloaded = await require('../server/models/User').findById(farmer._id);
+        expect(reloaded.role).toBe('trader');
+    });
+
+    test('the root super admin cannot be demoted or deactivated', async () => {
+        await seedUser('admin', 'admin@example.com');
+        const User = require('../server/models/User');
+        const root = await User.findOne({ email: 'admin@example.com' });
+        root.isRoot = true;
+        await root.save();
+        const token = await loginUser('admin@example.com');
+
+        const demote = await request(app)
+            .put('/api/admin/users/' + root._id)
+            .set('Authorization', 'Bearer ' + token)
+            .send({ role: 'farmer' });
+        expect(demote.status).toBe(400);
+
+        const deactivate = await request(app)
+            .put('/api/admin/users/' + root._id)
+            .set('Authorization', 'Bearer ' + token)
+            .send({ isActive: false });
+        expect(deactivate.status).toBe(400);
+
+        const reloaded = await User.findById(root._id);
+        expect(reloaded.role).toBe('admin');
+        expect(reloaded.isActive).toBe(true);
+        expect(reloaded.isRoot).toBe(true);
+    });
+
+    test('the root super admin cannot be deleted', async () => {
+        await seedUser('admin', 'admin@example.com');
+        await seedUser('farmer', 'farmer@example.com');
+        const User = require('../server/models/User');
+        const root = await User.findOne({ email: 'admin@example.com' });
+        root.isRoot = true;
+        await root.save();
+        const token = await loginUser('admin@example.com');
+
+        const res = await request(app)
+            .delete('/api/admin/users/' + root._id)
+            .set('Authorization', 'Bearer ' + token);
+        expect(res.status).toBe(400);
+
+        const stillThere = await User.findById(root._id);
+        expect(stillThere).toBeTruthy();
+    });
 });
 
 describe('Payment notifications', () => {

@@ -64,15 +64,28 @@ async function initializeDatabase() {
  * Idempotently ensure demo/seed accounts stay usable:
  *  - seed users are active (isActive true)
  *  - the demo farmer holds an active membership so the marketplace demo works
+ *  - the ONE super admin (role admin + isRoot) is always active so a
+ *    deployed app can never lose admin access to its own database
  */
 async function ensureDemoAccounts() {
     try {
         const User = require('../models/User');
+        const config = require('../config');
         const emails = ['admin@kcnpagro.org', 'demofarmer@gmail.com', 'demotrader@gmail.com'];
         const update = { $set: { isActive: true } };
         if (User.updateMany) {
             await User.updateMany({ email: { $in: emails } }, update);
         }
+        await User.updateOne(
+            { email: config.rootAdminEmail },
+            { $set: { role: 'admin', isRoot: true, isActive: true } }
+        );
+        // Enforce the single-admin policy: any OTHER account still holding
+        // the admin role is demoted to farmer, so only the root stays admin.
+        await User.updateMany(
+            { role: 'admin', isRoot: { $ne: true }, email: { $ne: config.rootAdminEmail } },
+            { $set: { role: 'farmer' } }
+        );
         const farmer = await User.findOne({ email: 'demofarmer@gmail.com' }).lean();
         if (farmer && (!farmer.membership || farmer.membership.status !== 'active' ||
             !farmer.membership.expiresAt || new Date(farmer.membership.expiresAt) <= new Date())) {

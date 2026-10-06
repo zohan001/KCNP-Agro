@@ -220,8 +220,10 @@
                             var status = m.status === 'active'
                                 ? '<span class="text-primary-300 font-semibold">' + (m.plan || '').toUpperCase() + '</span>'
                                 : (m.status === 'pending' ? '<span class="text-accent-300">Pending</span>' : '<span class="text-gray-500">' + (m.status || 'none') + '</span>');
-                            var roleSel = '<select data-role="' + u._id + '" class="bg-white border border-gray-200 rounded-lg text-xs px-2 py-1.5 text-gray-900">' +
-                                ['farmer', 'trader', 'admin'].map(function (r) {
+                            var roleSel = u.role === 'admin'
+                                ? '<span class="inline-block text-xs px-2 py-1.5 font-semibold text-primary-300">Admin</span>'
+                                : '<select data-role="' + u._id + '" class="bg-white border border-gray-200 rounded-lg text-xs px-2 py-1.5 text-gray-900">' +
+                                ['farmer', 'trader'].map(function (r) {
                                     return '<option value="' + r + '"' + (u.role === r ? ' selected' : '') + '>' + r + '</option>';
                                 }).join('') + '</select>';
                             return '<tr class="border-t border-gray-200">' +

@@ -69,7 +69,13 @@ async function updateUser(req, res) {
             return res.status(400).json({ success: false, message: 'You cannot demote or deactivate yourself.' });
         }
 
-        if (req.body.role && ['farmer', 'trader', 'admin'].includes(req.body.role)) {
+        // The single super admin is untouchable: nobody (including the root
+        // itself through this endpoint) may demote or deactivate it.
+        if (user.isRoot && (req.body.role || req.body.isActive === false)) {
+            return res.status(400).json({ success: false, message: 'The super admin account cannot be demoted or deactivated.' });
+        }
+        // Role changes only pick between member tiers; admin is never assignable here.
+        if (req.body.role && ['farmer', 'trader'].includes(req.body.role)) {
             user.role = req.body.role;
         }
         if (typeof req.body.isActive === 'boolean') {
@@ -117,6 +123,9 @@ async function deleteUser(req, res) {
     try {
         const user = await User.findById(req.params.id);
         if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+        if (user.isRoot) {
+            return res.status(400).json({ success: false, message: 'The super admin account cannot be deleted.' });
+        }
         if (req.params.id === String(req.user._id)) {
             return res.status(400).json({ success: false, message: 'You cannot delete your own account.' });
         }

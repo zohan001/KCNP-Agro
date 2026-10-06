@@ -86,6 +86,12 @@ async function ensureDemoAccounts() {
             { role: 'admin', isRoot: { $ne: true }, email: { $ne: config.rootAdminEmail } },
             { $set: { role: 'farmer' } }
         );
+        // Admins are staff, not members — strip any membership that may have
+        // been granted to an admin account so the panel shows them as staff.
+        await User.updateMany(
+            { role: 'admin' },
+            { $set: { membership: { plan: null, status: 'none', expiresAt: null } } }
+        );
         const farmer = await User.findOne({ email: 'demofarmer@gmail.com' }).lean();
         if (farmer && (!farmer.membership || farmer.membership.status !== 'active' ||
             !farmer.membership.expiresAt || new Date(farmer.membership.expiresAt) <= new Date())) {

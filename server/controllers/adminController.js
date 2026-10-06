@@ -74,6 +74,10 @@ async function updateUser(req, res) {
         if (user.isRoot && (req.body.role || req.body.isActive === false)) {
             return res.status(400).json({ success: false, message: 'The super admin account cannot be demoted or deactivated.' });
         }
+        // Staff accounts never hold memberships — the Grant button is not for them.
+        if (user.role === 'admin' && (req.body.grantMembership || req.body.expireMembership)) {
+            return res.status(400).json({ success: false, message: 'Admin accounts do not hold memberships.' });
+        }
         // Role changes only pick between member tiers; admin is never assignable here.
         if (req.body.role && ['farmer', 'trader'].includes(req.body.role)) {
             user.role = req.body.role;

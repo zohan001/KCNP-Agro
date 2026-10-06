@@ -234,7 +234,7 @@
                                 '<td class="py-3 pr-3">' + status + '</td>' +
                                 '<td class="py-3 pr-3 text-gray-500 text-xs">' + fmtDate(u.createdAt) + '</td>' +
                                 '<td class="py-3">' +
-                                (m.status !== 'active' ? '<button data-grant="' + u._id + '" class="text-[11px] px-2 py-1 rounded bg-primary-500/10 text-primary-300 hover:bg-primary-500/20 mr-1">Grant</button>' : '') +
+                                (u.role !== 'admin' && m.status !== 'active' ? '<button data-grant="' + u._id + '" class="text-[11px] px-2 py-1 rounded bg-primary-500/10 text-primary-300 hover:bg-primary-500/20 mr-1">Grant</button>' : '') +
                                 (me ? '' : (u.isActive
                                     ? '<button data-toggle="' + u._id + '" data-target="false" class="text-[11px] px-2 py-1 rounded bg-white text-gray-300 hover:bg-primary-50 mr-1">Deactivate</button>'
                                     : '<button data-toggle="' + u._id + '" data-target="true" class="text-[11px] px-2 py-1 rounded bg-white text-gray-300 hover:bg-primary-50 mr-1">Activate</button>')) +
@@ -1010,38 +1010,63 @@
 
             function init() {
                 var auth = getAuth();
-                if (!auth.token || !auth.user || auth.user.role !== 'admin') {
+
+                function showGuard() {
                     document.getElementById('admin-guard').classList.remove('hidden');
-                    return;
                 }
-                document.getElementById('admin-app').classList.remove('hidden');
-                document.getElementById('logout-btn').addEventListener('click', function () {
-                    // Clear the httpOnly session cookie server-side first.
-                    fetch(API + '/auth/logout', {
-                        method: 'POST',
-                        headers: { 'Authorization': 'Bearer ' + getAuth().token },
-                        credentials: 'same-origin'
-                    }).catch(function () {});
-                    ['kcnp_token', 'kcnp_user', 'token', 'user'].forEach(function (k) { localStorage.removeItem(k); });
-                    window.location.href = '/login';
-                });
-                document.getElementById('refresh-btn').addEventListener('click', function () {
+
+                function enter(user) {
+                    // Persist the server-confirmed profile so the users tab
+                    // (role badges, self-actions) always sees fresh data.
+                    try {
+                        localStorage.setItem('kcnp_user', JSON.stringify(user));
+                        localStorage.setItem('user', JSON.stringify(user));
+                    } catch (e) { /* storage unavailable */ }
+                    document.getElementById('admin-app').classList.remove('hidden');
+                    document.getElementById('logout-btn').addEventListener('click', function () {
+                        // Clear the httpOnly session cookie server-side first.
+                        fetch(API + '/auth/logout', {
+                            method: 'POST',
+                            headers: { 'Authorization': 'Bearer ' + getAuth().token },
+                            credentials: 'same-origin'
+                        }).catch(function () {});
+                        ['kcnp_token', 'kcnp_user', 'token', 'user'].forEach(function (k) { localStorage.removeItem(k); });
+                        window.location.href = '/login';
+                    });
+                    document.getElementById('refresh-btn').addEventListener('click', function () {
+                        loadOverview();
+                        switchTab(activeTab);
+                    });
+                    document.querySelectorAll('.admin-tab').forEach(function (b) {
+                        b.addEventListener('click', function () { switchTab(b.getAttribute('data-tab')); });
+                    });
+                    document.querySelectorAll('[data-ektab]').forEach(function (b) {
+                        b.addEventListener('click', function () { setEdu(b.getAttribute('data-ektab')); });
+                    });
+                    document.getElementById('edu-new').addEventListener('click', function () {
+                        if (eduTab === 'articles') articleEditor();
+                        else quizEditor();
+                    });
+                    document.getElementById('edu-cancel').addEventListener('click', loadEduView);
                     loadOverview();
-                    switchTab(activeTab);
-                });
-                document.querySelectorAll('.admin-tab').forEach(function (b) {
-                    b.addEventListener('click', function () { switchTab(b.getAttribute('data-tab')); });
-                });
-                document.querySelectorAll('[data-ektab]').forEach(function (b) {
-                    b.addEventListener('click', function () { setEdu(b.getAttribute('data-ektab')); });
-                });
-                document.getElementById('edu-new').addEventListener('click', function () {
-                    if (eduTab === 'articles') articleEditor();
-                    else quizEditor();
-                });
-                document.getElementById('edu-cancel').addEventListener('click', loadEduView);
-                loadOverview();
-                switchTab('users');
+                    switchTab('users');
+                }
+
+                if (!auth.token || !auth.user) {
+                    return showGuard();
+                }
+
+                // The guard must trust the server, not local storage. A stale
+                // token (issued before promotion) or a cached kcnp_user is what
+                // caused "Restricted area" on accounts that were admin all along.
+                api('/auth/profile').then(function (r) {
+                    var user = r && r.data && r.data.data && r.data.data.user;
+                    if (user && user.role === 'admin') {
+                        enter(user);
+                    } else {
+                        showGuard();
+                    }
+                }).catch(showGuard);
             }
 
             if (document.readyState === 'loading') {

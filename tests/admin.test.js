@@ -150,6 +150,32 @@ describe('Admin authorization', () => {
         const stillThere = await User.findById(root._id);
         expect(stillThere).toBeTruthy();
     });
+
+    test('membership cannot be granted to an admin account', async () => {
+        await seedUser('admin', 'admin@example.com');
+        await seedUser('farmer', 'farmer@example.com');
+        const User = require('../server/models/User');
+        const admin = await User.findOne({ email: 'admin@example.com' });
+        admin.isRoot = true;
+        await admin.save();
+        const token = await loginUser('admin@example.com');
+        const farmer = await User.findOne({ email: 'farmer@example.com' });
+
+        const adminGrant = await request(app)
+            .put('/api/admin/users/' + admin._id)
+            .set('Authorization', 'Bearer ' + token)
+            .send({ grantMembership: { plan: 'grower', periodMonths: 12 } });
+        expect(adminGrant.status).toBe(400);
+
+        const reloadedAdmin = await User.findById(admin._id);
+        expect(reloadedAdmin.membership.status).toBe('none');
+
+        const farmerGrant = await request(app)
+            .put('/api/admin/users/' + farmer._id)
+            .set('Authorization', 'Bearer ' + token)
+            .send({ grantMembership: { plan: 'grower', periodMonths: 12 } });
+        expect(farmerGrant.status).toBe(200);
+    });
 });
 
 describe('Payment notifications', () => {

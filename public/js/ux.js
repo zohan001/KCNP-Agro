@@ -41,6 +41,8 @@
             nav_dashboard: 'Dashboard',
             nav_login: 'Login',
             nav_register: 'Register',
+            pw_show: 'Show password',
+            pw_hide: 'Hide password',
             hero_title: 'Promoting <span class="text-white">Climate Smart</span><br>Agriculture &amp;<br><span class="gradient-text">Trade Initiatives</span>',
             hero_subtitle: 'Driving sustainable economic growth through innovative agricultural practices, equitable trade partnerships, and community-powered climate resilience.',
             btn_join: 'Join the Movement',
@@ -344,6 +346,8 @@
             nav_dashboard: 'Dashibodi',
             nav_login: 'Ingia',
             nav_register: 'Jisajili',
+            pw_show: 'Onyesha nenosiri',
+            pw_hide: 'Ficha nenosiri',
             hero_title: '<span class="text-white">Kukuza Kilimo</span><br>Bora kwa Mazingira<br><span class="gradient-text">na Biashara Nzuri</span>',
             hero_subtitle: 'Kukuza ukuaji wa uchumi endelevu kupitia mbinu bora za kilimo, ubia wa haki kibiashara, na jumuiya zinazostahimili mabadiliko ya tabianchi.',
             btn_join: 'Jiunge na Harakati',
@@ -1363,8 +1367,23 @@ var PHRASE_REV = {};
         tourShown = true;
     }
 
+    var AUTH_ONLY_PAGES = [
+        '/login', '/register', '/reset-password', '/forgot-password', '/activate'
+    ];
+
+    function isAuthPage() {
+        var p = window.location.pathname || '/';
+        for (var i = 0; i < AUTH_ONLY_PAGES.length; i++) {
+            if (p === AUTH_ONLY_PAGES[i] || p.indexOf(AUTH_ONLY_PAGES[i] + '/') === 0) return true;
+        }
+        return false;
+    }
+
     function maybeShowTour() {
         if (tourShown) return;
+        // The quick guide is a distraction on auth screens - it floats over
+        // the form and swallows clicks on login/register controls. Skip it.
+        if (isAuthPage()) { tourShown = true; return; }
         var done = false;
         try { done = localStorage.getItem(TOUR_KEY) === '1'; } catch (e) {}
         if (done) return;
@@ -1488,9 +1507,87 @@ var PHRASE_REV = {};
     // ==============================
     // Init
     // ==============================
+    var PW_SHOW_ICON =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+        '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"></path>' +
+        '<circle cx="12" cy="12" r="3"></circle></svg>';
+    var PW_HIDE_ICON =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+        '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>' +
+        '<path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>' +
+        '<path d="M14.12 14.12A3 3 0 1 1 9.88 9.88"></path>' +
+        '<line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+
+    /**
+     * Give every password field a show/hide control so people can check what
+     * they typed. The control is a real <button type="button"> so it never
+     * submits the form, and it toggles the input's type rather than copying
+     * the value, so autofill and validation keep working.
+     */
+    function initPasswordToggles() {
+        if (!document.body) return;
+
+        document.querySelectorAll('input[type="password"]').forEach(function (input) {
+            if (input.closest && input.closest('.pw-wrap')) return;
+            if (input.dataset.pwToggle === 'done') return;
+            input.dataset.pwToggle = 'done';
+
+            var wrap = document.createElement('div');
+            wrap.className = 'pw-wrap';
+            input.parentNode.insertBefore(wrap, input);
+            wrap.appendChild(input);
+
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'pw-toggle';
+            btn.setAttribute('aria-label', tr('pw_show'));
+            btn.setAttribute('aria-pressed', 'false');
+            btn.title = tr('pw_show');
+            btn.innerHTML = PW_SHOW_ICON;
+            // Keep focus in the field, otherwise the caret jumps as you type.
+            btn.addEventListener('mousedown', function (e) { e.preventDefault(); });
+            btn.addEventListener('click', function () {
+                var showing = input.type === 'text';
+                input.type = showing ? 'password' : 'text';
+                btn.setAttribute('aria-pressed', showing ? 'false' : 'true');
+                var label = showing ? tr('pw_show') : tr('pw_hide');
+                btn.setAttribute('aria-label', label);
+                btn.title = label;
+                btn.innerHTML = showing ? PW_SHOW_ICON : PW_HIDE_ICON;
+                // Refocus so the user can keep typing straight away.
+                input.focus();
+                var end = input.value.length;
+                try { input.setSelectionRange(end, end); } catch (e) { /* n/a */ }
+            });
+            wrap.appendChild(btn);
+        });
+
+        // Keep the label in the active language after a language switch.
+        document.querySelectorAll('.pw-toggle').forEach(function (btn) {
+            if (btn.dataset.pwBound === 'done') return;
+            btn.dataset.pwBound = 'done';
+            btn.addEventListener('pw:lang', function () {
+                var input = btn.parentNode.querySelector('input');
+                var showing = input && input.type === 'text';
+                var label = showing ? tr('pw_hide') : tr('pw_show');
+                btn.setAttribute('aria-label', label);
+                btn.title = label;
+            });
+        });
+    }
+
     function init() {
         applyLang();
         initCounters();
+        initPasswordToggles();
+
+        document.addEventListener('kcnp:lang', function () {
+            document.querySelectorAll('.pw-toggle').forEach(function (btn) {
+                btn.dispatchEvent(new Event('pw:lang'));
+            });
+        });
 
         var toggle = document.getElementById('lang-toggle');
         if (toggle && !toggle.getAttribute('data-bound')) {

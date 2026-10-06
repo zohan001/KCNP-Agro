@@ -316,9 +316,16 @@
                     // Only allow same-site relative paths so `next` cannot be
                     // used as an open redirect.
                     const safeNext = next && /^\/[a-z0-9\-/_]*$/i.test(next) ? next : null;
-                    const target = safeNext || (needsVerify ? '/verification' : '/dashboard');
+                    // Admins go straight to the super admin panel. Sending them
+                    // to the dashboard left them stuck, because the only link
+                    // to /admin lived on a page they may never notice.
+                    const isAdmin = user.role === 'admin';
+                    const target = safeNext
+                        || (isAdmin ? '/admin' : needsVerify ? '/verification' : '/dashboard');
                     formError.className = 'mt-4 p-4 rounded-xl bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm text-center';
-                    formError.textContent = needsVerify && !safeNext
+                    formError.textContent = isAdmin && !safeNext
+                        ? P('Login successful! Taking you to the admin panel...')
+                        : needsVerify && !safeNext
                         ? P('Login successful! Let us verify your identity so you can start listing.')
                         : P('Login successful! Taking you to your dashboard...');
                     formError.classList.remove('hidden');

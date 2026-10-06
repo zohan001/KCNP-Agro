@@ -17,7 +17,8 @@
     var AUTH_NAV = [
         ['/dashboard', 'nav_dashboard', 'Dashboard'],
         ['/orders', 'Orders', 'My Orders'],
-        ['/verification', '', 'Verify Identity']
+        ['/verification', '', 'Verify Identity'],
+        ['/admin', '', 'Admin Panel']
     ];
 
     function esc(s) {
@@ -66,6 +67,7 @@
         var html = '';
         AUTH_NAV.forEach(function (item) {
             if (item[0] === '/verification' && user.role !== 'farmer') return;
+            if (item[0] === '/admin' && user.role !== 'admin') return;
             html += link(item[0], item[1], item[2], cls);
         });
         html += '<a href="#" class="' + cls + '" data-chrome-logout>Logout (' + esc(name) + ')</a>';

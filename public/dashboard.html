@@ -373,14 +373,23 @@
             const auth = getUser();
             const desktop = document.getElementById('nav-auth-desktop');
             const mobile = document.getElementById('nav-auth-mobile');
+            // Admins get a direct link to the panel so the admin account is
+            // never stranded on a page that only mentions it in passing.
+            const label = auth && auth.name ? String(auth.name).split(' ')[0] : 'Account';
+            const isAdmin = Boolean(auth && auth.role === 'admin');
+            const adminLink = (cls) => isAdmin
+                ? `<a href="/admin" class="${cls}">Admin Panel</a>`
+                : '';
             if (desktop) {
                 desktop.innerHTML = token && auth
-                    ? `<a href="#" onclick="logout()" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors">Logout (${auth.name.split(' ')[0]})</a>`
+                    ? adminLink('text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors mr-4 inline-block')
+                      + `<a href="#" onclick="logout()" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors">Logout (${label})</a>`
                     : `<a href="/login" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors"><span data-i18n="nav_login">Login</span></a>`;
             }
             if (mobile) {
                 mobile.innerHTML = token && auth
-                    ? `<a href="#" onclick="logout()" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300">Logout (${auth.name.split(' ')[0]})</a>`
+                    ? adminLink('block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300')
+                      + `<a href="#" onclick="logout()" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300">Logout (${label})</a>`
                     : `<a href="/login" class="block px-4 py-3 rounded-lg text-primary-400 hover:bg-primary-50 transition-all duration-300">Login / Register</a>`;
             }
         }
@@ -637,7 +646,8 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const role = user && user.role ? user.role : 'farmer';
-            document.getElementById('user-name').textContent = user.name.split(' ')[0];
+            const firstName = user && user.name ? String(user.name).split(' ')[0] : 'there';
+            document.getElementById('user-name').textContent = firstName;
             document.getElementById('signed-in-as').innerHTML = `Signed in as ${roleBadge(role)}`;
             setupAuthNav();
             showRoleView(role);

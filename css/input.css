@@ -735,6 +735,54 @@ summary:focus-visible {
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
+/* Password show/hide control.
+   The button is injected by ux.js and absolutely positioned inside a
+   relative wrapper, so padding on the field keeps the masked dots clear
+   of the eye icon. */
+.pw-wrap {
+    position: relative;
+}
+
+.pw-wrap .form-input {
+    padding-right: 3rem;
+}
+
+.pw-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: #6B7280;
+    cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    /* Sitting over an input means it must never swallow the field's height. */
+    padding: 0;
+}
+
+.pw-toggle:hover {
+    color: #111827;
+    background: rgba(17, 24, 39, 0.06);
+}
+
+.pw-toggle:focus-visible {
+    outline: 2px solid #2E7D32;
+    outline-offset: 1px;
+}
+
+.pw-toggle svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    pointer-events: none;
+}
+
 /* Mobile menu animation */
 .mobile-menu {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

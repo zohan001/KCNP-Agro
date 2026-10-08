@@ -63,7 +63,11 @@ function createApp() {
                 styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
                 fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
                 imgSrc: ["'self'", 'data:', 'https://images.unsplash.com', 'https://www.google.com', 'https://www.gstatic.com'],
-                connectSrc: ["'self'"],
+                // reCAPTCHA's own fetch calls (api2/clr) go to google.com —
+                // without this the browser blocks them and Google rejects the
+                // token the widget mints, which fails every registration.
+                // See https://developers.google.com/recaptcha/docs/faq#csp
+                connectSrc: ["'self'", 'https://www.google.com/recaptcha/', 'https://www.gstatic.com/recaptcha/'],
                 frameSrc: ["'self'", 'https://www.google.com'],
                 objectSrc: ["'none'"],
                 frameAncestors: ["'self'"],

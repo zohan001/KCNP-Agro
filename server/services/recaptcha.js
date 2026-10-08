@@ -22,10 +22,16 @@
  * a bot. A missing token simply means the captcha
  * could not be reached, so the request falls through
  * to the cheap server-side heuristics in
- * `passesHeuristicChecks`. A token that IS present
- * must always verify, which keeps the bot protection
- * intact for the traffic that can complete the
- * challenge.
+ * `passesHeuristicChecks`. The same is true when
+ * Google REFUSES a token we did send: a rejection
+ * with a wrong/stale secret, a key whose domain list
+ * does not cover this host, or a Google outage all
+ * look identical from here and none of them prove a
+ * bot — an attacker skips the captcha entirely by
+ * sending no token at all. Rejecting on Google's
+ * verdict therefore locked real members out while
+ * adding no protection, so a rejected token falls
+ * back to the same heuristics (and is logged).
  * ============================================
  */
 
@@ -67,15 +73,20 @@ async function verifyRecaptchaToken(token, remoteIp, expectedAction) {
         });
         const data = await res.json().catch(() => ({}));
         if (!data || data.success !== true) {
+            // These lines are the only way to learn WHY Google refused
+            // (invalid-input-secret = keys do not pair up, a hostname in
+            // error-codes = the key's domain list excludes this host, ...).
+            // Check them in the host's logs before touching the config.
             console.warn('[Recaptcha] Verification rejected:', data && data['error-codes']
-                ? data['error-codes'].join(', ') : 'unknown reason');
+                ? data['error-codes'].join(', ') : 'unknown reason',
+                '| hostname:', data.hostname || 'n/a');
             return false;
         }
         // v3 tokens carry a confidence score (0.0-1.0). Reject bots that fall
         // below the configured threshold. v2 invisible tokens have no score, so
         // the check is skipped for them.
         if (typeof data.score === 'number' && data.score < config.recaptcha.minScore) {
-            console.warn('[Recaptcha] Score too low:', data.score);
+            console.warn('[Recaptcha] Score too low:', data.score, '| hostname:', data.hostname || 'n/a');
             return false;
         }
         // When an action was expected, make sure the token was minted for it.
@@ -114,53 +125,52 @@ function passesHeuristicChecks(req) {
     const startedAt = Number(body.formStartedAt);
     if (Number.isFinite(startedAt) && startedAt > 0) {
         const elapsed = Date.now() - startedAt;
-        if (elapsed < MIN_FILL_MS) return { ok: false, reason: 'too-fast' };
         // A stamp from the future means a tampered or badly skewed client.
+        // Checked first: every future stamp is also "too fast" to fill in.
         if (elapsed < -MAX_CLOCK_SKEW_MS) return { ok: false, reason: 'bad-timestamp' };
+        if (elapsed < MIN_FILL_MS) return { ok: false, reason: 'too-fast' };
     }
 
     return { ok: true };
 }
 
 /**
- * Express middleware for registration. When reCAPTCHA is configured the request
- * must either carry a token Google accepts, or come from a client that could not
- * reach the widget and still looks human by the heuristics above. Anything else
- * is rejected.
+ * Express middleware for registration. A request is accepted when reCAPTCHA
+ * vouches for it (token Google accepts), when the captcha never ran at all, or
+ * when Google refused a token we sent but the cheap heuristics below still
+ * look human. Only a submission that trips a heuristic — a honeypot field or
+ * an impossible fill time — is rejected.
  */
 function requireRecaptcha(req, res, next) {
     if (!config.recaptchaConfigured()) return next();
 
     const token = String((req.body && req.body.recaptchaToken) || '');
 
-    // No token: the widget never ran (offline, blocked, slow). Fall back to the
-    // heuristics instead of failing a genuine member.
-    if (!token) {
+    // Captcha unavailable or unusable: the widget never ran (offline,
+    // blocked, slow) or Google would not accept what it minted (mispaired
+    // keys, a domain list that excludes this host, a Google hiccup). Either
+    // way the captcha has nothing to say about this visitor, so the request
+    // falls through to the heuristics instead of failing a genuine member.
+    const fallBackToHeuristics = () => {
         const verdict = passesHeuristicChecks(req);
         if (!verdict.ok) {
-            console.warn(`[Recaptcha] Blocked registration without token (${verdict.reason})`);
+            console.warn(`[Recaptcha] Blocked registration (${verdict.reason}${token ? ', token rejected' : ', no token'})`);
             return res.status(400).json({
                 success: false,
                 message: 'Your submission was flagged as automated. Please reload the page and try again.'
             });
         }
+        if (token) {
+            console.warn('[Recaptcha] Allowing registration on heuristics after Google rejected the token.');
+        }
         return next();
-    }
+    };
+
+    if (!token) return fallBackToHeuristics();
 
     verifyRecaptchaToken(token, req.ip)
-        .then(ok => {
-            if (!ok) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'We could not confirm you are human. Please reload the page and try again.'
-                });
-            }
-            return next();
-        })
-        .catch(() => res.status(400).json({
-            success: false,
-            message: 'We could not confirm you are human. Please reload the page and try again.'
-        }));
+        .then(ok => (ok ? next() : fallBackToHeuristics()))
+        .catch(() => fallBackToHeuristics());
 }
 
 module.exports = { verifyRecaptchaToken, requireRecaptcha, passesHeuristicChecks };

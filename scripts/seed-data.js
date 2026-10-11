@@ -702,6 +702,107 @@ const SEED_PRODUCTS = [
         contactEmail: 'peterotieno@gmail.com',
         contactPhone: '+254 725 184 639',
         image: '/images/products/poultry-coop.jpg'
+    },
+    // --- Coastal basket the pitch is built around (feeds the Price Board) ---
+    {
+        title: 'Fresh Ngowe Mangoes (Wholesale)',
+        description: 'Sweet, firm Ngowe mangoes picked this week on the Kilifi coast. Sold by the kilogram, wholesale quantities available.',
+        category: 'produce',
+        price: 90,
+        unit: 'kg',
+        location: 'Kilifi, Kenya',
+        contactEmail: 'demofarmer@gmail.com',
+        contactPhone: '+254 701 234 567',
+        image: ''
+    },
+    {
+        title: 'Raw Cashew Nuts (Korosho)',
+        description: 'Sun-dried raw cashew nuts (korosho) from Kilifi farms, ready for processing or export. Clean, well-graded.',
+        category: 'produce',
+        price: 145,
+        unit: 'kg',
+        location: 'Kilifi, Kenya',
+        contactEmail: 'marywanjiru@gmail.com',
+        contactPhone: '+254 785 302 714',
+        image: ''
+    },
+    {
+        title: 'Fresh Coconuts (Nazi)',
+        description: 'Mature green and dry coconuts from Kwale. Great for copra, coconut oil and fresh market. Price is per nut.',
+        category: 'produce',
+        price: 25,
+        unit: 'piece',
+        location: 'Kwale, Kenya',
+        contactEmail: 'danielmutua@gmail.com',
+        contactPhone: '+254 753 918 476',
+        image: ''
+    },
+    {
+        title: 'Dry Maize (Mahindi) - 90kg Bag',
+        description: 'Properly dried and cleaned white maize in 90kg bags from the current harvest. Bulk traders welcome.',
+        category: 'produce',
+        price: 3600,
+        unit: 'bag',
+        location: 'Kilifi, Kenya',
+        contactEmail: 'johnkamau@gmail.com',
+        contactPhone: '+254 792 441 860',
+        image: ''
+    },
+    {
+        title: 'Paddy Rice (Mpunga) - 50kg Bag',
+        description: 'Locally grown paddy rice from Kwale irrigation scheme, mill-ready. Sold in 50kg bags for millers and traders.',
+        category: 'produce',
+        price: 4200,
+        unit: 'bag',
+        location: 'Kwale, Kenya',
+        contactEmail: 'aminahassan@gmail.com',
+        contactPhone: '+254 769 403 285',
+        image: ''
+    },
+    // --- A couple of already-recorded sales so the Price Board shows real sold prices ---
+    {
+        title: 'Ngowe Mangoes - Sold Lot (Coastal)',
+        description: 'A completed wholesale mango sale recorded on the platform. Kept as a price reference.',
+        category: 'produce',
+        price: 95,
+        unit: 'kg',
+        location: 'Mombasa, Kenya',
+        contactEmail: 'demofarmer@gmail.com',
+        contactPhone: '+254 701 234 567',
+        image: '',
+        active: false,
+        sale: {
+            soldAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
+            soldPrice: 95,
+            soldQuantity: 320,
+            unit: 'kg',
+            buyer: null,
+            buyerName: 'Coastal Fruits Ltd',
+            channel: 'middleman',
+            note: 'Recorded by the farmer after a roadside sale.'
+        }
+    },
+    {
+        title: 'Coconuts - Sold Lot (Kwale)',
+        description: 'A completed coconut sale recorded on the platform. Kept as a price reference.',
+        category: 'produce',
+        price: 24,
+        unit: 'piece',
+        location: 'Kwale, Kenya',
+        contactEmail: 'danielmutua@gmail.com',
+        contactPhone: '+254 753 918 476',
+        image: '',
+        active: false,
+        sale: {
+            soldAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
+            soldPrice: 24,
+            soldQuantity: 800,
+            unit: 'piece',
+            buyer: null,
+            buyerName: 'Beach Hotel Group',
+            channel: 'direct',
+            note: 'Bulk sale to a hotel buyer.'
+        }
     }
 ];
 

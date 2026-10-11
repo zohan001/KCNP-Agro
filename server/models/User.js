@@ -60,6 +60,12 @@ const userSchema = new mongoose.Schema(
         // the flag is surfaced to the user for UX.
         identityVerified: { type: Boolean, default: false },
         identityVerifiedAt: { type: Date, default: null },
+        // Reputation, mirrored from Reviews so a name can carry a score
+        // without a per-view aggregate.
+        rating: {
+            average: { type: Number, default: 0, min: 0, max: 5 },
+            count: { type: Number, default: 0, min: 0 }
+        },
         lastLogin: { type: Date, default: null }
     },
     { timestamps: true }

@@ -14,6 +14,9 @@ const adminController = require('../controllers/adminController');
 const testimonialController = require('../controllers/testimonialController');
 const orderController = require('../controllers/orderController');
 const verificationController = require('../controllers/verificationController');
+const offerController = require('../controllers/offerController');
+const reviewController = require('../controllers/reviewController');
+const priceBoardController = require('../controllers/priceBoardController');
 
 const {
     validateContactMessage,
@@ -72,11 +75,26 @@ router.get('/products', productController.getProducts);
 router.get('/products/my', authenticate, productController.getMyProducts);
 router.get('/products/:id', productController.getProduct);
 router.put('/products/:id', authenticate, authorize('farmer'), productController.updateProduct);
+router.post('/products/:id/sold', authenticate, authorize('farmer', 'admin'), productController.markSold);
 router.delete('/products/:id', authenticate, productController.deleteProduct);
 
 // Buyer demand signals (public, lightweight)
 router.post('/products/:id/view', marketInsightsController.recordView);
 router.post('/products/:id/interest', marketInsightsController.recordInterest);
+
+// ==============================
+// Offers / price negotiation
+// ==============================
+// A trader names a price; the farmer compares bids and accepts one, which
+// opens an escrow order at the agreed price. This is the mechanism that
+// replaces the single-middleman take-it-or-leave-it price.
+router.post('/products/:id/offers', authenticate, offerController.createOffer);
+router.get('/products/:id/offers', authenticate, offerController.listOffersForProduct);
+router.get('/offers/mine', authenticate, offerController.listMyOffers);
+router.get('/offers/received', authenticate, authorize('farmer', 'admin'), offerController.listReceivedOffers);
+router.post('/offers/:id/accept', authenticate, authorize('farmer', 'admin'), offerController.acceptOffer);
+router.post('/offers/:id/decline', authenticate, authorize('farmer', 'admin'), offerController.declineOffer);
+router.post('/offers/:id/withdraw', authenticate, offerController.withdrawOffer);
 
 // ==============================
 // Escrow Orders
@@ -113,6 +131,9 @@ router.post('/verification/:id/revoke', authenticate, authorize('admin'), verifi
 
 // Supply/demand analysis
 router.get('/market-insights', marketInsightsController.getMarketInsights);
+
+// Public price transparency board (asking + recorded sale prices)
+router.get('/price-board', priceBoardController.getPriceBoard);
 
 // ==============================
 // Article / Knowledge Base Routes
@@ -152,6 +173,13 @@ router.get('/payment/status/:reference', authenticate, paymentController.getPaym
 // ==============================
 router.post('/testimonials', authenticate, testimonialController.createTestimonial);
 router.get('/testimonials', testimonialController.getPublicTestimonials);
+
+// ==============================
+// Reviews / Reputation (tied to completed trades only)
+// ==============================
+router.post('/reviews', authenticate, reviewController.createReview);
+router.get('/reviews/mine', authenticate, reviewController.listMyReviews);
+router.get('/users/:id/reviews', reviewController.listReviewsForUser);
 
 // ==============================
 // Super Admin

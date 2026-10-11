@@ -109,6 +109,30 @@
                     <div id="opportunities-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </section>
 
+                <!-- Price Board -->
+                <section id="price-board-panel" class="glass-card rounded-2xl p-6 md:p-8 mb-8 reveal">
+                    <div class="flex items-center justify-between mb-2">
+                        <h2 class="font-heading text-2xl font-bold text-gray-900">Price Board</h2>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-6">What crops are actually selling for — asking prices on live listings plus prices farmers recorded when they sold.</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-left text-gray-400 uppercase tracking-wide text-xs">
+                                    <th class="pb-3 pr-4">Crop</th>
+                                    <th class="pb-3 pr-4">Unit</th>
+                                    <th class="pb-3 pr-4">Listings</th>
+                                    <th class="pb-3 pr-4">Asking (median)</th>
+                                    <th class="pb-3 pr-4">Sold (median)</th>
+                                    <th class="pb-3">Last sale</th>
+                                </tr>
+                            </thead>
+                            <tbody id="price-board-body"></tbody>
+                        </table>
+                    </div>
+                    <div id="price-board-recent" class="mt-6"></div>
+                </section>
+
                 <!-- Segments table -->
                 <section id="segments-panel" class="glass-card rounded-2xl p-6 md:p-8 reveal">
                     <div class="flex items-center justify-between mb-6">
@@ -387,6 +411,61 @@
 
             function el(id) { return document.getElementById(id); }
 
+            function pbMoney(n) {
+                var num = Number(n);
+                return isFinite(num) ? 'Ksh ' + num.toLocaleString() : '—';
+            }
+
+            function whenShort(value) {
+                if (!value) return '';
+                var d = new Date(value);
+                if (isNaN(d.getTime())) return '';
+                return d.toLocaleDateString('en-KE', { day: 'numeric', month: 'short' });
+            }
+
+            function loadPriceBoard() {
+                var body = document.getElementById('price-board-body');
+                var recent = document.getElementById('price-board-recent');
+                if (!body) return;
+                fetch('/api/price-board', { headers: { 'Accept': 'application/json' } })
+                    .then(function (r) { return r.json(); })
+                    .then(function (res) {
+                        if (!res || !res.success) throw new Error('price board failed');
+                        var data = res.data || {};
+                        var crops = data.crops || [];
+                        if (!crops.length) {
+                            body.innerHTML = '<tr class="border-t border-gray-200"><td colspan="6" class="py-6 text-center text-gray-500">No prices yet. Once farmers post listings or mark produce sold, real prices appear here.</td></tr>';
+                        } else {
+                            body.innerHTML = crops.map(function (c) {
+                                var asking = c.asking ? pbMoney(c.asking.median) : '—';
+                                var sold = c.sold ? pbMoney(c.sold.median) + ' (' + Number(c.sold.count).toLocaleString() + ')' : '—';
+                                var last = (c.sold && c.sold.last != null) ? pbMoney(c.sold.last) : '—';
+                                return '<tr class="border-t border-gray-200">' +
+                                    '<td class="py-3 pr-4 text-gray-900 font-medium">' + esc(c.label) + '</td>' +
+                                    '<td class="py-3 pr-4 text-gray-400">' + esc(c.unit) + '</td>' +
+                                    '<td class="py-3 pr-4 text-gray-300">' + Number(c.listings || 0).toLocaleString() + '</td>' +
+                                    '<td class="py-3 pr-4 text-gray-300">' + asking + '</td>' +
+                                    '<td class="py-3 pr-4 text-accent-400 font-semibold">' + sold + '</td>' +
+                                    '<td class="py-3 text-gray-300">' + last + '</td>' +
+                                '</tr>';
+                            }).join('');
+                        }
+                        var sales = data.recentSales || [];
+                        recent.innerHTML = sales.length
+                            ? '<h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">Recent sales</h3><ul class="space-y-2 text-sm">' +
+                                sales.map(function (s) {
+                                    return '<li class="flex items-center justify-between border-b border-gray-200 pb-2 gap-3">' +
+                                        '<span class="text-gray-900">' + esc(s.label) + (s.location ? ' · ' + esc(s.location) : '') + '</span>' +
+                                        '<span class="text-gray-400 whitespace-nowrap">' + pbMoney(s.price) + '/' + esc(s.unit) + ' · ' + whenShort(s.at) + '</span>' +
+                                    '</li>';
+                                }).join('') + '</ul>'
+                            : '';
+                    })
+                    .catch(function () {
+                        body.innerHTML = '<tr class="border-t border-gray-200"><td colspan="6" class="py-6 text-center text-red-400">Could not load the price board.</td></tr>';
+                    });
+            }
+
             var inFlight = false;
             function load() {
                 if (inFlight) return;
@@ -422,7 +501,7 @@
 
             function bootstrap() {
                 var refresh = document.getElementById('insights-refresh');
-                if (refresh) refresh.addEventListener('click', load);
+                if (refresh) refresh.addEventListener('click', function () { load(); loadPriceBoard(); });
                 var mobileBtn = document.getElementById('mobile-menu-btn');
                 var mobileMenu = document.getElementById('mobile-menu');
                 if (mobileBtn && mobileMenu) {
@@ -441,8 +520,9 @@
                         }
                     });
                 }
-                document.addEventListener('kcnp:lang', load);
+                document.addEventListener('kcnp:lang', function () { load(); loadPriceBoard(); });
                 load();
+                loadPriceBoard();
 
                 var newsletterForm = document.getElementById('newsletter-form');
                 if (newsletterForm) {

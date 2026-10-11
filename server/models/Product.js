@@ -69,6 +69,20 @@ const productSchema = new mongoose.Schema(
         active: {
             type: Boolean,
             default: true
+        },
+        // Set when the farmer records that the produce has been sold. Most
+        // produce changes hands offline, so this is how we capture the real
+        // trade — and its price — instead of only counting listings. It feeds
+        // the Price Board, which is the transparency our pitch rests on.
+        sale: {
+            soldAt: { type: Date, default: null },
+            soldPrice: { type: Number, default: null, min: [0, 'Sold price cannot be negative.'] },
+            soldQuantity: { type: Number, default: null, min: [0, 'Sold quantity cannot be negative.'] },
+            unit: { type: String, default: '' },
+            buyer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+            buyerName: { type: String, default: '', trim: true, maxlength: 120 },
+            channel: { type: String, enum: ['direct', 'middleman', 'market', 'escrow', 'other'], default: 'direct' },
+            note: { type: String, default: '', trim: true, maxlength: 500 }
         }
     },
     { timestamps: true }

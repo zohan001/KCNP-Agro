@@ -146,6 +146,11 @@
                     break;
             }
         });
+        // A completed trade is the only thing that can be reviewed, so the
+        // button appears exactly when the money has been released.
+        if (order.status === 'released') {
+            html += '<button type="button" class="px-5 py-2 rounded-lg border border-primary-500/40 text-primary-300 font-semibold" data-action="review">Leave a Review</button>';
+        }
         return html;
     }
 
@@ -481,6 +486,26 @@
         }
     }
 
+    async function leaveReview() {
+        var order = state.current;
+        if (!order) return;
+        var rating = window.prompt('Rate the other party from 1 (poor) to 5 (excellent):');
+        if (rating === null) return;
+        var n = parseInt(rating, 10);
+        if (!(n >= 1 && n <= 5)) { setStatus('Please enter a whole number from 1 to 5.', 'err'); return; }
+        var comment = window.prompt('Add a short comment (optional):') || '';
+        try {
+            var out = await api('/api/reviews', { orderId: order._id, rating: n, comment: comment });
+            if (!out.data.success) {
+                setStatus(out.data.message || 'Could not save your review.', 'err');
+                return;
+            }
+            setStatus(out.data.message || 'Thanks for your review.', 'ok');
+        } catch (e) {
+            setStatus('Network error.', 'err');
+        }
+    }
+
     async function adminResolve() {
         var order = state.current;
         if (!order) return;
@@ -567,6 +592,7 @@
                     var reason = $('modal-dispute-reason');
                     if (reason) reason.focus();
                 } else if (action === 'acknowledge') { /* informational only */ }
+                else if (action === 'review') leaveReview();
                 else if (action === 'admin-release') adminRelease();
                 else if (action === 'admin-resolve') adminResolve();
             });

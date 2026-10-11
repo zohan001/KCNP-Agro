@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Product = require('../models/Product');
 const ListingEvent = require('../models/ListingEvent');
 const { attachEventCounts } = require('./marketInsightsController');
@@ -198,6 +199,86 @@ async function updateProduct(req, res) {
     }
 }
 
+/**
+ * POST /api/products/:id/sold — the farmer records that the produce has gone,
+ * and at what price. Most produce sells offline, so this is how a real trade
+ * (and the price that was actually paid) enters the platform instead of the
+ * listing silently going stale. It closes the listing and feeds the Price
+ * Board, which is the transparency our value proposition rests on.
+ *
+ * @route POST /api/products/:id/sold
+ *   { soldPrice, soldQuantity, unit?, buyerId?, buyerName?, channel?, note? }
+ */
+async function markSold(req, res) {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Listing not found.' });
+        }
+        if (req.user && product.seller && product.seller.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+            return res.status(403).json({ success: false, message: 'You can only mark your own listings as sold.' });
+        }
+        if (product.sale && product.sale.soldAt) {
+            return res.status(409).json({ success: false, message: 'This listing is already marked sold.' });
+        }
+
+        const soldPrice = req.body.soldPrice === undefined || req.body.soldPrice === ''
+            ? null
+            : Number(req.body.soldPrice);
+        const soldQuantity = req.body.soldQuantity === undefined || req.body.soldQuantity === ''
+            ? null
+            : Number(req.body.soldQuantity);
+
+        if (soldPrice !== null && (!Number.isFinite(soldPrice) || soldPrice < 0)) {
+            return res.status(400).json({ success: false, message: 'Sold price must be a positive number.' });
+        }
+        if (soldQuantity !== null && (!Number.isFinite(soldQuantity) || soldQuantity < 0)) {
+            return res.status(400).json({ success: false, message: 'Sold quantity must be a positive number.' });
+        }
+
+        const channels = ['direct', 'middleman', 'market', 'escrow', 'other'];
+        const channel = channels.includes(req.body.channel) ? req.body.channel : 'direct';
+
+        // An optional registered buyer (for a later two-sided review). An
+        // invalid id must not blow up the save, so it is simply ignored.
+        let buyerId = null;
+        if (req.body.buyerId) {
+            if (!mongoose.isValidObjectId(req.body.buyerId)) {
+                return res.status(400).json({ success: false, message: 'That buyer reference is not valid.' });
+            }
+            buyerId = req.body.buyerId;
+        }
+
+        product.sale = {
+            soldAt: new Date(),
+            soldPrice: soldPrice === null ? null : Math.round(soldPrice * 100) / 100,
+            soldQuantity,
+            unit: String(req.body.unit || product.unit || 'unit'),
+            buyer: buyerId,
+            buyerName: String(req.body.buyerName || '').slice(0, 120),
+            channel,
+            note: String(req.body.note || '').slice(0, 500)
+        };
+        product.active = false;
+        await product.save();
+
+        logAudit('PRODUCT_SOLD', `Product: ${product.title} marked sold${soldPrice !== null ? ` at KES ${product.sale.soldPrice}/${product.sale.unit}` : ''} by ${req.user ? req.user.email : 'system'}`)
+            .catch(err => console.error('[Audit] Failed to log:', err.message));
+
+        return res.status(200).json({
+            success: true,
+            message: 'Marked sold. Thanks — this price now helps other farmers see the real market.',
+            data: { product }
+        });
+    } catch (err) {
+        if (err.name === 'CastError') {
+            return res.status(404).json({ success: false, message: 'Listing not found.' });
+        }
+        console.error('[Product] Mark sold failed:', err.message);
+        return res.status(500).json({ success: false, message: 'Failed to mark the listing as sold.' });
+    }
+}
+
 async function deleteProduct(req, res) {
     try {
         const product = await Product.findById(req.params.id);
@@ -230,4 +311,4 @@ async function deleteProduct(req, res) {
     }
 }
 
-module.exports = { createProduct, getProducts, getMyProducts, getProduct, updateProduct, deleteProduct };
+module.exports = { createProduct, getProducts, getMyProducts, getProduct, updateProduct, markSold, deleteProduct };

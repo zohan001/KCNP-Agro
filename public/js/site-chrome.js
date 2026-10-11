@@ -10,6 +10,8 @@
     var NAV = [
         ['/', 'nav_home', 'Home'],
         ['/marketplace', 'nav_marketplace', 'Marketplace'],
+        ['/demand-board', 'nav_demand', 'Demand Board'],
+        ['/logistics', 'nav_logistics', 'Transport & Storage'],
         ['/education', 'nav_education', 'Education'],
         ['/market-insights', 'nav_insights', 'Market Insights'],
         ['/pricing', 'nav_pricing', 'Pricing']
@@ -127,6 +129,8 @@
     '                    <h3 class="text-gray-900 font-semibold text-sm uppercase tracking-wider mb-4">Quick Links</h3>\n' +
     '                    <ul class="space-y-3">\n' +
     '                        <li>' + link('/marketplace', 'nav_marketplace', 'Marketplace', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
+    '                        <li>' + link('/demand-board', 'nav_demand', 'Demand Board', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
+    '                        <li>' + link('/logistics', 'nav_logistics', 'Transport & Storage', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
     '                        <li>' + link('/education', 'nav_education', 'Education', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
     '                        <li>' + link('/dashboard', 'nav_dashboard', 'Dashboard', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
     '                        <li>' + link('/orders', '', 'My Orders', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +

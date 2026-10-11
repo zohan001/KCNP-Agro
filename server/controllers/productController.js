@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Product = require('../models/Product');
+const User = require('../models/User');
 const ListingEvent = require('../models/ListingEvent');
 const { attachEventCounts } = require('./marketInsightsController');
 const { logAudit } = require('../db/database');
@@ -78,6 +79,25 @@ async function createProduct(req, res) {
     }
 }
 
+/**
+ * Attach each listing's seller name, verified flag and rating in a single
+ * lookup, so the marketplace can show reputation on every card without an
+ * aggregate query per listing.
+ */
+async function attachSellerRatings(products) {
+    const ids = [...new Set(products.filter((p) => p.seller).map((p) => String(p.seller)))];
+    if (!ids.length) return;
+    const users = await User.find({ _id: { $in: ids } }).select('name rating identityVerified').lean();
+    const byId = {};
+    users.forEach((u) => { byId[String(u._id)] = u; });
+    products.forEach((p) => {
+        const u = p.seller ? byId[String(p.seller)] : null;
+        p.sellerName = u ? u.name : '';
+        p.sellerVerified = u ? !!u.identityVerified : false;
+        p.sellerRating = u && u.rating ? { average: u.rating.average || 0, count: u.rating.count || 0 } : { average: 0, count: 0 };
+    });
+}
+
 async function getProducts(req, res) {
     try {
         const { category, search, seller, page = 1, limit = 20 } = req.query;
@@ -94,6 +114,7 @@ async function getProducts(req, res) {
         ]);
 
         await attachEventCounts(products);
+        await attachSellerRatings(products);
 
         return res.status(200).json({
             success: true,
@@ -132,13 +153,14 @@ async function getMyProducts(req, res) {
 
 async function getProduct(req, res) {
     try {
-        const product = await Product.findById(req.params.id);
+        const product = await Product.findById(req.params.id).lean();
         if (!product) {
             return res.status(404).json({
                 success: false,
                 message: 'Listing not found.'
             });
         }
+        await attachSellerRatings([product]);
         return res.status(200).json({
             success: true,
             data: { product }

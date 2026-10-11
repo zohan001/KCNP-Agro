@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KCNP Agro Transport & Storage registry - find and register collection points, transporters and cold stores on the Kenyan coast.">
+    <title>Transport &amp; Storage | KCNP Agro</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <script src="/js/ux.js" defer></script>
+</head>
+<body class="bg-canvas text-gray-900 font-sans antialiased" style="font-family: Inter, system-ui, sans-serif;">
+    <script>
+        document.documentElement.classList.add('js');
+        function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }
+    </script>
+
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-gray-200">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" role="navigation" aria-label="Main navigation">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="/" class="flex items-center gap-2 group" aria-label="KCNP Agro Home">
+                    <img src="/logo.jpg" alt="KCNP Agro logo" class="w-10 h-10 rounded-xl object-cover transition-transform duration-300 group-hover:scale-110" width="40" height="40">
+                    <span class="font-heading font-bold text-xl text-gray-900">KCNP<span class="text-primary-400">Agro</span></span>
+                </a>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="/" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_home">Home</span></a>
+                    <a href="/marketplace" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_marketplace">Marketplace</span></a>
+                    <a href="/demand-board" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_demand">Demand Board</span></a>
+                    <a href="/logistics" class="text-sm font-medium text-primary-400 transition-colors duration-300"><span data-i18n="nav_logistics">Transport &amp; Storage</span></a>
+                    <a href="/market-insights" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_insights">Market Insights</span></a>
+                    <a href="/pricing" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_pricing">Pricing</span></a>
+                    <span id="nav-auth-desktop" class="hidden md:inline-flex"></span>
+                </div>
+                <button id="mobile-menu-btn" class="hamburger md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <span class="block w-6 h-0.5 bg-gray-800 rounded-full"></span>
+                    <span class="block w-6 h-0.5 bg-gray-800 rounded-full"></span>
+                    <span class="block w-6 h-0.5 bg-gray-800 rounded-full"></span>
+                </button>
+            </div>
+            <div id="mobile-menu" class="mobile-menu closed md:hidden pb-4" role="menu">
+                <div class="flex flex-col gap-2 pt-2">
+                    <a href="/" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_home">Home</span></a>
+                    <a href="/marketplace" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_marketplace">Marketplace</span></a>
+                    <a href="/demand-board" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_demand">Demand Board</span></a>
+                    <a href="/logistics" class="block px-4 py-3 rounded-lg text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_logistics">Transport &amp; Storage</span></a>
+                    <a href="/market-insights" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_insights">Market Insights</span></a>
+                    <a href="/pricing" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_pricing">Pricing</span></a>
+                    <div id="nav-auth-mobile" class="pt-2 px-4"></div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content" class="pt-20 md:pt-24">
+        <section class="relative py-12 md:py-16">
+            <div class="hero-orb-1" aria-hidden="true"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+
+                <!-- Header -->
+                <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10 reveal">
+                    <div>
+                        <span class="inline-block text-sm font-semibold text-accent-400 uppercase tracking-widest mb-2">Partnered, not pretended</span>
+                        <h1 class="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2">Transport &amp; Storage</h1>
+                        <p class="text-gray-400 text-base max-w-2xl">
+                            The middleman is also the farmer's truck, collection point and cold store. This registry maps the people who already do that work — collection points, transporters and cold stores — so a farmer never loses a buyer to a lack of logistics.
+                        </p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                        <button id="toggle-register" type="button" class="cta-btn inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-white font-semibold text-sm">Register a service</button>
+                    </div>
+                </div>
+
+                <!-- Register form -->
+                <section id="register-panel" class="hidden glass-card rounded-2xl p-6 md:p-8 mb-8 reveal">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="font-heading text-2xl font-bold text-gray-900">List your service</h2>
+                        <button id="close-register" type="button" class="text-gray-500 hover:text-gray-400 text-sm font-semibold">Close</button>
+                    </div>
+                    <form id="provider-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="p-name" class="block text-sm font-medium text-gray-700 mb-1">Service name</label>
+                            <input id="p-name" required maxlength="120" placeholder="e.g. Kilifi Fresh Produce Depot" class="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-500 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all">
+                        </div>
+                        <div>
+                            <label for="p-type" class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                            <select id="p-type" class="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all">
+                                <option value="collection_point">Collection point</option>
+                                <option value="transporter">Transporter</option>
+                                <option value="cold_storage">Cold storage</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="p-description" class="block text-sm font-medium text-gray-700 mb-1">Description (optional)</label>
+                            <textarea id="p-description" rows="3" maxlength="1000" placeholder="What you do, equipment, reliability, experience..." class="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-500 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all"></textarea>
+                        </div>
+                        <div>
+                            <label for="p-location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                            <input id="p-location" maxlength="120" placeholder="e.g. Kilifi, Kenya" class="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-500 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all">
+                        </div>
+                        <div>
+                            <label for="p-coverage" class="block text-sm font-medium text-gray-700 mb-1">Coverage areas (comma separated)</label>
+                            <input id="p-coverage" maxlength="400" placeholder="e.g. Kilifi, Mombasa, Kwale" class="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-500 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all">
+                        </div>
+                        <div>
+                            <label for="p-crops" class="block text-sm font-medium text-gray-700 mb-1">Crops handled (comma separated, blank = any)</label>
+                            <input id="p-crops" maxlength="400" placeholder="e.g. mango, coconut, maize" class="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-500 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all">
+                        </div>
+                        <div>
+                            <label for="p-capacity" class="block text-sm font-medium text-gray-700 mb-1">Capacity (optional)</label>
+                            <input id="p-capacity" type="number" min="0" step="0.01" placeholder="e.g. 8" class="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-500 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all">
+                        </div>
+                        <div>
+                            <label for="p-capacity-unit" class="block text-sm font-medium text-gray-700 mb-1">Capacity unit</label>
+                            <input id="p-capacity-unit" maxlength="32" placeholder="e.g. tonnes/day" class="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-500 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all">
+                        </div>
+                        <div>
+                            <label for="p-fee-model" class="block text-sm font-medium text-gray-700 mb-1">Fee model</label>
+                            <select id="p-fee-model" class="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all">
+                                <option value="negotiable">Negotiable</option>
+                                <option value="free">Free / community</option>
+                                <option value="per_load">Per load</option>
+                                <option value="per_km">Per km</option>
+                                <option value="per_kg">Per kg</option>
+                                <option value="commission">Commission</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="p-fee-note" class="block text-sm font-medium text-gray-700 mb-1">Fee note (optional)</label>
+                            <input id="p-fee-note" maxlength="200" placeholder="e.g. KES 35/km, fuel included" class="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-500 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all">
+                        </div>
+                        <div>
+                            <label for="p-phone" class="block text-sm font-medium text-gray-700 mb-1">Contact phone</label>
+                            <input id="p-phone" maxlength="30" placeholder="07XX XXX XXX" class="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-500 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all">
+                        </div>
+                        <div>
+                            <label for="p-email" class="block text-sm font-medium text-gray-700 mb-1">Contact email</label>
+                            <input id="p-email" type="email" maxlength="120" placeholder="you@example.com" class="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-500 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all">
+                        </div>
+                        <div class="md:col-span-2">
+                            <span class="block text-sm font-medium text-gray-700 mb-2">Services offered</span>
+                            <div id="p-services" class="flex flex-wrap gap-x-5 gap-y-2 text-sm text-gray-700">
+                                <label class="inline-flex items-center gap-2"><input type="checkbox" value="bulking" class="rounded border-gray-300"> Bulking</label>
+                                <label class="inline-flex items-center gap-2"><input type="checkbox" value="grading" class="rounded border-gray-300"> Grading</label>
+                                <label class="inline-flex items-center gap-2"><input type="checkbox" value="sorting" class="rounded border-gray-300"> Sorting</label>
+                                <label class="inline-flex items-center gap-2"><input type="checkbox" value="weighing" class="rounded border-gray-300"> Weighing</label>
+                                <label class="inline-flex items-center gap-2"><input type="checkbox" value="storage" class="rounded border-gray-300"> Storage</label>
+                                <label class="inline-flex items-center gap-2"><input type="checkbox" value="cold_chain" class="rounded border-gray-300"> Cold chain</label>
+                                <label class="inline-flex items-center gap-2"><input type="checkbox" value="haulage" class="rounded border-gray-300"> Haulage</label>
+                                <label class="inline-flex items-center gap-2"><input type="checkbox" value="packaging" class="rounded border-gray-300"> Packaging</label>
+                                <label class="inline-flex items-center gap-2"><input type="checkbox" value="credit" class="rounded border-gray-300"> Credit / advance</label>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2 flex items-center gap-3">
+                            <button type="submit" class="cta-btn inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-white font-semibold text-sm">Register service</button>
+                            <span id="provider-status" class="text-sm text-gray-500"></span>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Filters -->
+                <section class="glass-card rounded-2xl p-5 md:p-6 mb-8 reveal">
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                        <div>
+                            <label for="f-type" class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Type</label>
+                            <select id="f-type" class="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm">
+                                <option value="">All services</option>
+                                <option value="collection_point">Collection points</option>
+                                <option value="transporter">Transporters</option>
+                                <option value="cold_storage">Cold storage</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="f-crop" class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Crop</label>
+                            <select id="f-crop" class="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm">
+                                <option value="">All crops</option>
+                                <option value="mango">Mango</option>
+                                <option value="cashew">Cashew</option>
+                                <option value="coconut">Coconut</option>
+                                <option value="maize">Maize</option>
+                                <option value="rice">Rice</option>
+                                <option value="banana">Banana</option>
+                                <option value="tomato">Tomato</option>
+                                <option value="cassava">Cassava</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="f-location" class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Location</label>
+                            <input id="f-location" placeholder="e.g. Kilifi" class="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-500 text-sm">
+                        </div>
+                        <div>
+                            <label for="f-q" class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Search</label>
+                            <input id="f-q" placeholder="e.g. truck" class="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-500 text-sm">
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between">
+                        <p id="provider-count" class="text-sm text-gray-500"></p>
+                        <button id="refresh-provider" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-900 text-sm font-medium hover:bg-primary-50 transition-colors">Refresh</button>
+                    </div>
+                </section>
+
+                <div id="directory-status" class="hidden mb-8 p-6 rounded-2xl glass-card text-center"><p class="text-gray-300"></p></div>
+                <div id="provider-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-gray-200 py-12 md:py-16" role="contentinfo">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="pt-0 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p class="text-gray-600 text-xs sm:text-sm">&copy; <span id="current-year"></span> KCNP Agro. <span data-i18n="f_rights">All rights reserved.</span></p>
+                <div class="flex gap-6">
+                    <a href="/privacy" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_privacy">Privacy Policy</span></a>
+                    <a href="/terms" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_terms">Terms of Service</span></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a href="tel:+254745756470" class="fab-help" aria-label="Call for help">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.4 21 3 13.6 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.25 1.01l-2.2 2.2z"/></svg>
+        <span class="fab-help-label" data-i18n="btn_help">Help</span>
+    </a>
+    <button id="lang-toggle" type="button" class="lang-fab" aria-label="Switch language">SW</button>
+
+    <script>
+        (function () {
+            function revealAll() {
+                var els = document.querySelectorAll('.reveal:not(.active)');
+                for (var i = 0; i < els.length; i++) els[i].classList.add('active');
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function () { setTimeout(revealAll, 900); });
+            } else {
+                setTimeout(revealAll, 900);
+            }
+        })();
+    </script>
+
+    <script>
+        (function () {
+            'use strict';
+            var API = '/api';
+            var TYPE_LABELS = { collection_point: 'Collection point', transporter: 'Transporter', cold_storage: 'Cold storage' };
+            var FEE_LABELS = { negotiable: 'Negotiable', free: 'Free / community', per_load: 'per load', per_km: 'per km', per_kg: 'per kg', commission: 'commission' };
+
+            function readStored(name) {
+                try { var v = localStorage.getItem(name); if (v !== null && v !== undefined) return v; } catch (e) {}
+                var m = document.cookie.match('(?:^|; )' + name + '=([^;]*)');
+                return m ? decodeURIComponent(m[1]) : null;
+            }
+            function getToken() { return readStored('kcnp_token') || readStored('token'); }
+            function getUser() {
+                try { return JSON.parse(readStored('kcnp_user') || readStored('user') || 'null'); }
+                catch (e) { return null; }
+            }
+            function esc(s) {
+                return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            }
+            function fetchJSON(url, options) {
+                options = options || {};
+                var controller = new AbortController();
+                var timer = setTimeout(function () { controller.abort(); }, 12000);
+                return fetch(url, Object.assign({}, options, { signal: controller.signal }))
+                    .then(function (res) { return res.json().then(function (data) { return { res: res, data: data }; }); })
+                    .finally(function () { clearTimeout(timer); });
+            }
+            function authHeaders() {
+                var h = { 'Content-Type': 'application/json' };
+                var t = getToken();
+                if (t) h['Authorization'] = 'Bearer ' + t;
+                return h;
+            }
+            function setStatus(msg, tone) {
+                var el = document.getElementById('directory-status');
+                var p = el.querySelector('p');
+                p.textContent = msg;
+                p.className = tone === 'err' ? 'text-red-400' : 'text-gray-300';
+                el.classList.remove('hidden');
+            }
+            function clearStatus() { document.getElementById('directory-status').classList.add('hidden'); }
+
+            var state = { providers: [] };
+
+            function chipList(items, tone) {
+                return items.map(function (s) {
+                    return '<span class="inline-block px-2 py-0.5 rounded-full ' + tone + ' text-xs font-semibold capitalize">' + esc(String(s).replace(/_/g, ' ')) + '</span>';
+                }).join('');
+            }
+
+            function providerCard(p) {
+                var user = getUser();
+                var typeBadge = TYPE_LABELS[p.type] || p.type;
+                var capacity = (p.capacity != null && p.capacity !== '') ? esc(p.capacity) + (p.capacityUnit ? ' ' + esc(p.capacityUnit) : '') : '';
+                var fee = FEE_LABELS[p.feeModel] || p.feeModel;
+                var contact = '';
+                if (p.isOwner || (user && user.role === 'admin')) {
+                    var bits = [];
+                    if (p.contactPhone) bits.push(esc(p.contactPhone));
+                    if (p.contactEmail) bits.push(esc(p.contactEmail));
+                    if (bits.length) contact = '<p class="text-gray-500 text-xs mt-3">Contact: ' + bits.join(' · ') + '</p>';
+                }
+                var actions = '';
+                if (p.isOwner) {
+                    actions += '<button type="button" class="px-3 py-1.5 rounded-lg border border-gray-300 text-gray-900 text-xs font-medium hover:bg-primary-50" data-remove="' + p._id + '">Remove</button>';
+                }
+                if (user && user.role === 'admin') {
+                    actions += '<button type="button" class="px-3 py-1.5 rounded-lg ' + (p.verified ? 'border border-gray-300 text-gray-900' : 'bg-emerald-500 text-white') + ' text-xs font-semibold" data-verify="' + p._id + '" data-verified="' + (p.verified ? '1' : '0') + '">' + (p.verified ? 'Unverify' : 'Verify') + '</button>';
+                }
+                return '<article class="glass-card rounded-2xl p-5 sm:p-6 reveal active flex flex-col">' +
+                    '<div class="flex items-start justify-between gap-3 mb-2">' +
+                        '<span class="inline-block px-2 py-1 rounded-full bg-accent-500/10 text-accent-300 text-xs font-semibold uppercase tracking-wide">' + esc(typeBadge) + '</span>' +
+                        (p.verified ? '<span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 uppercase tracking-wide">&#10003; Verified</span>' : '') +
+                    '</div>' +
+                    '<h3 class="text-lg font-bold text-gray-900 mb-1">' + esc(p.name) + '</h3>' +
+                    (p.description ? '<p class="text-gray-400 text-sm leading-relaxed mb-3">' + esc(p.description) + '</p>' : '') +
+                    '<dl class="text-sm space-y-2 mb-3">' +
+                        '<div class="flex gap-2"><dt class="text-gray-500 w-24 shrink-0">Location</dt><dd class="text-gray-900 font-medium">' + (esc(p.location) || '—') + '</dd></div>' +
+                        (p.coverageAreas && p.coverageAreas.length ? '<div class="flex gap-2"><dt class="text-gray-500 w-24 shrink-0">Covers</dt><dd class="text-gray-900 font-medium">' + esc(p.coverageAreas.join(', ')) + '</dd></div>' : '') +
+                        (capacity ? '<div class="flex gap-2"><dt class="text-gray-500 w-24 shrink-0">Capacity</dt><dd class="text-gray-900 font-medium">' + capacity + '</dd></div>' : '') +
+                        '<div class="flex gap-2"><dt class="text-gray-500 w-24 shrink-0">Fee</dt><dd class="text-gray-900 font-medium">' + esc(fee) + (p.feeNote ? ' · ' + esc(p.feeNote) : '') + '</dd></div>' +
+                    '</dl>' +
+                    (p.services && p.services.length ? '<div class="flex flex-wrap gap-1.5 mb-2">' + chipList(p.services, 'bg-primary-500/10 text-primary-300') + '</div>' : '') +
+                    (p.cropsHandled && p.cropsHandled.length ? '<div class="flex flex-wrap gap-1.5 mb-3">' + chipList(p.cropsHandled, 'bg-gray-500/10 text-gray-500') + '</div>' : '') +
+                    contact +
+                    (actions ? '<div class="flex flex-wrap items-center gap-2 mt-auto pt-4">' + actions + '</div>' : '') +
+                '</article>';
+            }
+
+            function render() {
+                var list = document.getElementById('provider-list');
+                var count = document.getElementById('provider-count');
+                if (!state.providers.length) {
+                    list.innerHTML = '';
+                    count.textContent = '';
+                    setStatus('No services listed here yet. Register yours and farmers will find you.', '');
+                    return;
+                }
+                clearStatus();
+                count.textContent = state.providers.length + ' service' + (state.providers.length === 1 ? '' : 's');
+                list.innerHTML = state.providers.map(providerCard).join('');
+            }
+
+            function load() {
+                var params = new URLSearchParams();
+                var type = document.getElementById('f-type').value;
+                var crop = document.getElementById('f-crop').value;
+                var loc = document.getElementById('f-location').value.trim();
+                var q = document.getElementById('f-q').value.trim();
+                if (type) params.set('type', type);
+                if (crop) params.set('crop', crop);
+                if (loc) params.set('location', loc);
+                if (q) params.set('q', q);
+                setStatus('Loading services...', '');
+                fetchJSON(API + '/logistics?' + params.toString(), { headers: { 'Accept': 'application/json' } })
+                    .then(function (out) {
+                        if (!out.data || !out.data.success) throw new Error('load failed');
+                        state.providers = out.data.data || [];
+                        render();
+                    })
+                    .catch(function () { setStatus('Could not load the directory. Please try again.', 'err'); });
+            }
+
+            function submitProvider(e) {
+                e.preventDefault();
+                var status = document.getElementById('provider-status');
+                if (!getToken()) { window.location.href = '/login?next=/logistics'; return; }
+                var crops = document.getElementById('p-crops').value.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+                var coverage = document.getElementById('p-coverage').value.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+                var services = Array.prototype.slice.call(document.querySelectorAll('#p-services input:checked')).map(function (c) { return c.value; });
+                var body = {
+                    name: document.getElementById('p-name').value,
+                    type: document.getElementById('p-type').value,
+                    description: document.getElementById('p-description').value,
+                    location: document.getElementById('p-location').value,
+                    coverageAreas: coverage,
+                    cropsHandled: crops,
+                    capacity: document.getElementById('p-capacity').value,
+                    capacityUnit: document.getElementById('p-capacity-unit').value,
+                    feeModel: document.getElementById('p-fee-model').value,
+                    feeNote: document.getElementById('p-fee-note').value,
+                    contactPhone: document.getElementById('p-phone').value,
+                    contactEmail: document.getElementById('p-email').value,
+                    services: services
+                };
+                status.textContent = 'Saving...';
+                fetchJSON(API + '/logistics', { method: 'POST', headers: authHeaders(), body: JSON.stringify(body) })
+                    .then(function (out) {
+                        if (out.res.status === 401) { window.location.href = '/login?next=/logistics'; return; }
+                        if (!out.data.success) { status.textContent = out.data.message || 'Could not register your service.'; return; }
+                        status.textContent = out.data.message;
+                        document.getElementById('provider-form').reset();
+                        document.getElementById('register-panel').classList.add('hidden');
+                        load();
+                    })
+                    .catch(function () { status.textContent = 'Network error. Please try again.'; });
+            }
+
+            function removeProvider(id) {
+                if (!confirm('Remove this service from the directory?')) return;
+                fetchJSON(API + '/logistics/' + id, { method: 'DELETE', headers: authHeaders() })
+                    .then(function (out) {
+                        if (!out.data.success) { alert(out.data.message || 'Could not remove the service.'); return; }
+                        load();
+                    })
+                    .catch(function () { alert('Network error.'); });
+            }
+
+            function verifyProvider(id, verified) {
+                fetchJSON(API + '/logistics/' + id + '/verify', { method: 'POST', headers: authHeaders(), body: JSON.stringify({ verified: verified }) })
+                    .then(function (out) {
+                        if (!out.data.success) { alert(out.data.message || 'Could not update verification.'); return; }
+                        load();
+                    })
+                    .catch(function () { alert('Network error.'); });
+            }
+
+            function bindDelegation() {
+                document.getElementById('provider-list').addEventListener('click', function (e) {
+                    var remove = e.target.closest('[data-remove]');
+                    if (remove) { removeProvider(remove.getAttribute('data-remove')); return; }
+                    var verify = e.target.closest('[data-verify]');
+                    if (verify) { verifyProvider(verify.getAttribute('data-verify'), verify.getAttribute('data-verified') !== '1'); return; }
+                });
+            }
+
+            function bootstrap() {
+                document.getElementById('toggle-register').addEventListener('click', function () {
+                    document.getElementById('register-panel').classList.toggle('hidden');
+                });
+                document.getElementById('close-register').addEventListener('click', function () {
+                    document.getElementById('register-panel').classList.add('hidden');
+                });
+                document.getElementById('refresh-provider').addEventListener('click', load);
+                ['f-type', 'f-crop', 'f-location', 'f-q'].forEach(function (id) {
+                    var el = document.getElementById(id);
+                    el.addEventListener('change', load);
+                    if (el.tagName === 'INPUT') {
+                        var t;
+                        el.addEventListener('input', function () { clearTimeout(t); t = setTimeout(load, 350); });
+                    }
+                });
+                document.getElementById('provider-form').addEventListener('submit', submitProvider);
+                bindDelegation();
+
+                var mobileBtn = document.getElementById('mobile-menu-btn');
+                var mobileMenu = document.getElementById('mobile-menu');
+                if (mobileBtn && mobileMenu) {
+                    mobileBtn.addEventListener('click', function () {
+                        var open = mobileMenu.classList.contains('open');
+                        mobileMenu.classList.toggle('open', !open);
+                        mobileMenu.classList.toggle('closed', open);
+                        mobileBtn.classList.toggle('active', !open);
+                        mobileBtn.setAttribute('aria-expanded', String(!open));
+                    });
+                }
+                document.addEventListener('kcnp:lang', load);
+                var year = document.getElementById('current-year');
+                if (year) year.textContent = new Date().getFullYear();
+
+                load();
+            }
+
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootstrap);
+            else bootstrap();
+        })();
+    </script>
+</body>
+</html>

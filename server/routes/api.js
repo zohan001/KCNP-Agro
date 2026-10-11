@@ -18,6 +18,7 @@ const offerController = require('../controllers/offerController');
 const reviewController = require('../controllers/reviewController');
 const priceBoardController = require('../controllers/priceBoardController');
 const demandController = require('../controllers/demandController');
+const logisticsController = require('../controllers/logisticsController');
 
 const {
     validateContactMessage,
@@ -115,6 +116,21 @@ router.get('/responses/mine', authenticate, demandController.listMyResponses);
 router.post('/responses/:id/accept', authenticate, demandController.acceptResponse);
 router.post('/responses/:id/decline', authenticate, demandController.declineResponse);
 router.post('/responses/:id/withdraw', authenticate, demandController.withdrawResponse);
+
+// ==============================
+// Transport & Collection Registry
+// ==============================
+// The directory of collection points, transporters and cold stores. The
+// public can browse; any signed-in user can register a service; admins
+// vouch for the ones they trust. This is how we partner on logistics
+// instead of pretending to own trucks and warehouses.
+router.post('/logistics', authenticate, logisticsController.createProvider);
+router.get('/logistics', optionalAuthenticate, logisticsController.listProviders);
+router.get('/logistics/mine', authenticate, logisticsController.listMine);
+router.get('/logistics/:id', optionalAuthenticate, logisticsController.getProvider);
+router.put('/logistics/:id', authenticate, logisticsController.updateProvider);
+router.delete('/logistics/:id', authenticate, logisticsController.deleteProvider);
+router.post('/logistics/:id/verify', authenticate, authorize('admin'), logisticsController.verifyProvider);
 
 // ==============================
 // Escrow Orders

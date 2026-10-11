@@ -47,10 +47,19 @@ const orderSchema = new mongoose.Schema(
             unique: true,
             index: true
         },
+        // Set for a normal marketplace order. Null when the order came from
+        // an accepted Demand-Board response, where there is no listing.
         product: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Product',
-            required: true,
+            default: null,
+            index: true
+        },
+        // Set when this order fulfils a Demand-Board request.
+        demand: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Demand',
+            default: null,
             index: true
         },
         // Snapshot of the listing so history stays truthful even if the

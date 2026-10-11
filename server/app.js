@@ -153,6 +153,7 @@ function createApp() {
         ['/forgot-password', 'forgot-password.html'],
         ['/reset-password', 'reset-password.html'],
         ['/market-insights', 'market-insights.html'],
+        ['/demand-board', 'demand-board.html'],
         ['/pricing', 'pricing.html'],
         ['/activate', 'activate.html'],
         ['/contact', 'contact.html'],

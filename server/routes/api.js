@@ -17,6 +17,7 @@ const verificationController = require('../controllers/verificationController');
 const offerController = require('../controllers/offerController');
 const reviewController = require('../controllers/reviewController');
 const priceBoardController = require('../controllers/priceBoardController');
+const demandController = require('../controllers/demandController');
 
 const {
     validateContactMessage,
@@ -95,6 +96,25 @@ router.get('/offers/received', authenticate, authorize('farmer', 'admin'), offer
 router.post('/offers/:id/accept', authenticate, authorize('farmer', 'admin'), offerController.acceptOffer);
 router.post('/offers/:id/decline', authenticate, authorize('farmer', 'admin'), offerController.declineOffer);
 router.post('/offers/:id/withdraw', authenticate, offerController.withdrawOffer);
+
+// ==============================
+// Demand Board (reverse marketplace)
+// ==============================
+// A buyer says what they want and at what price; farmers with that crop
+// answer, and the buyer accepts one. An accepted answer opens a normal
+// escrow order, so demand-led trades get the same protection.
+router.post('/demands', authenticate, demandController.createDemand);
+router.get('/demands', optionalAuthenticate, demandController.listDemands);
+router.get('/demands/mine', authenticate, demandController.listMyDemands);
+router.get('/demands/matching', authenticate, demandController.listMatchingDemands);
+router.get('/demands/:id', optionalAuthenticate, demandController.getDemand);
+router.post('/demands/:id/close', authenticate, demandController.closeDemand);
+router.post('/demands/:id/respond', authenticate, authorize('farmer', 'admin'), demandController.createResponse);
+router.get('/demands/:id/responses', authenticate, demandController.listResponsesForDemand);
+router.get('/responses/mine', authenticate, demandController.listMyResponses);
+router.post('/responses/:id/accept', authenticate, demandController.acceptResponse);
+router.post('/responses/:id/decline', authenticate, demandController.declineResponse);
+router.post('/responses/:id/withdraw', authenticate, demandController.withdrawResponse);
 
 // ==============================
 // Escrow Orders

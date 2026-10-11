@@ -30,6 +30,7 @@
                 <div class="hidden md:flex items-center gap-8">
                     <a href="/" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_home">Home</span></a>
                     <a href="/marketplace" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_marketplace">Marketplace</span></a>
+                    <a href="/demand-board" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_demand">Demand Board</span></a>
                     <a href="/education" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_education">Education</span></a>
                     <a href="/market-insights" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_insights">Market Insights</span></a>
                     <a href="/pricing" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_pricing">Pricing</span></a>
@@ -46,6 +47,7 @@
                 <div class="flex flex-col gap-2 pt-2">
                     <a href="/" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_home">Home</span></a>
                     <a href="/marketplace" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_marketplace">Marketplace</span></a>
+                    <a href="/demand-board" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_demand">Demand Board</span></a>
                     <a href="/education" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_education">Education</span></a>
                     <a href="/market-insights" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_insights">Market Insights</span></a>
                     <a href="/pricing" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_pricing">Pricing</span></a>
@@ -113,6 +115,18 @@
                     <div id="my-listings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div class="text-center py-10 text-gray-500 col-span-full">Loading your listings...</div>
                     </div>
+                </div>
+
+                <!-- Demand Board panel -->
+                <div id="demand-panel" class="mt-12">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+                        <h2 class="font-heading text-2xl font-bold text-gray-900">Demand Board</h2>
+                        <a href="/demand-board" class="text-sm font-semibold text-primary-400 hover:text-primary-300 transition-colors">Open the Demand Board &rarr;</a>
+                    </div>
+                    <h3 id="matching-heading" class="hidden text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">Open demands for your crops</h3>
+                    <div id="matching-demands" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
+                    <h3 id="mydemands-heading" class="hidden text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">Demands you posted</h3>
+                    <div id="my-demands" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </div>
 
                 <!-- Trader panel -->
@@ -198,6 +212,7 @@
                     <h3 data-i18n="f_quick" class="text-gray-900 font-semibold text-sm uppercase tracking-wider mb-4">Quick Links</h3>
                     <ul class="space-y-3">
                         <li><a href="/marketplace" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_marketplace">Marketplace</span></a></li>
+                        <li><a href="/demand-board" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_demand">Demand Board</span></a></li>
                         <li><a href="/education" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_education">Education</span></a></li>
                         <li><a href="/dashboard" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_dashboard">Dashboard</span></a></li>
                         <li><a href="/login" class="text-gray-500 hover:text-primary-400 text-sm transition-colors"><span data-i18n="nav_login">Login</span></a></li>
@@ -583,6 +598,54 @@
             }
         }
 
+        function demandMiniCard(d) {
+            const price = d.targetPrice != null ? `Ksh ${parseFloat(d.targetPrice).toLocaleString()}/${d.unit}` : 'Open to offers';
+            const statusTone = d.status === 'open' ? 'text-emerald-400' : 'text-gray-500';
+            return `
+                <a href="/demand-board" class="listen-block glass-card rounded-xl p-5 block">
+                    <div class="flex items-start justify-between gap-3 mb-2">
+                        <span class="inline-block px-2 py-1 rounded-full bg-accent-500/10 text-accent-300 text-xs font-semibold uppercase tracking-wide">${d.cropLabel || 'Other'}</span>
+                        <span class="text-xs font-semibold ${statusTone} uppercase tracking-wide">${d.status}</span>
+                    </div>
+                    <h3 class="text-base font-bold text-gray-900 mb-1">${d.title}</h3>
+                    <p class="text-gray-400 text-sm mb-2">${d.quantity} ${d.unit}${d.location ? ' · ' + d.location : ''}</p>
+                    <p class="text-primary-400 font-semibold text-sm">${price}</p>
+                </a>`;
+        }
+
+        async function loadMyDemands() {
+            const heading = document.getElementById('mydemands-heading');
+            const box = document.getElementById('my-demands');
+            if (!box || !getToken()) return;
+            try {
+                const data = await fetchJSON(`${API}/demands/mine`, { headers: { Authorization: `Bearer ${getToken()}` } });
+                const items = (data && data.data) || [];
+                if (!items.length) { heading.classList.add('hidden'); box.classList.add('hidden'); return; }
+                heading.classList.remove('hidden');
+                box.classList.remove('hidden');
+                box.innerHTML = items.map(demandMiniCard).join('');
+            } catch (err) { /* leave the panel hidden */ }
+        }
+
+        async function loadMatchingDemands() {
+            const heading = document.getElementById('matching-heading');
+            const box = document.getElementById('matching-demands');
+            if (!box || !getToken()) return;
+            try {
+                const data = await fetchJSON(`${API}/demands/matching`, { headers: { Authorization: `Bearer ${getToken()}` } });
+                const items = (data && data.data) || [];
+                if (!items.length) { heading.classList.add('hidden'); box.classList.add('hidden'); return; }
+                heading.classList.remove('hidden');
+                box.classList.remove('hidden');
+                box.innerHTML = items.map(demandMiniCard).join('');
+            } catch (err) { /* leave the panel hidden */ }
+        }
+
+        function loadDemandBoard() {
+            loadMyDemands();
+            loadMatchingDemands();
+        }
+
         /**
          * Recording a sale is how offline trades enter the platform. The price
          * is optional but, when given, it feeds the public Price Board so other
@@ -704,6 +767,7 @@
                 if (role === 'farmer') loadMyListings();
             });
             loadInsights();
+            loadDemandBoard();
 
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');

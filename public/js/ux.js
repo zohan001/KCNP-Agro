@@ -35,6 +35,7 @@
         en: {
             nav_home: 'Home',
             nav_marketplace: 'Marketplace',
+            nav_demand: 'Demand Board',
             nav_education: 'Education',
             nav_insights: 'Market Insights',
             nav_pricing: 'Pricing',
@@ -340,6 +341,7 @@
         sw: {
             nav_home: 'Nyumbani',
             nav_marketplace: 'Soko',
+            nav_demand: 'Uhitaji wa Soko',
             nav_education: 'Elimu',
             nav_insights: 'Uchambuzi wa Soko',
             nav_pricing: 'Bei',

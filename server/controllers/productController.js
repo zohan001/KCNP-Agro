@@ -5,6 +5,63 @@ const ListingEvent = require('../models/ListingEvent');
 const { attachEventCounts } = require('./marketInsightsController');
 const { logAudit } = require('../db/database');
 const { getPlans } = require('./paymentController');
+const { classifyCrop } = require('./priceBoardController');
+
+const BATCH_ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+
+/**
+ * Short, shareable batch code such as `MNG-8H3K`. The prefix comes from the
+ * crop so a farmer can recognise it; the tail keeps it unique.
+ *
+ * @param {string} prefix
+ * @returns {string}
+ */
+function generateBatchCode(prefix) {
+    const p = String(prefix || 'KCN')
+        .toUpperCase()
+        .replace(/[^A-Z]/g, '')
+        .slice(0, 3) || 'KCN';
+    let tail = '';
+    for (let i = 0; i < 4; i += 1) {
+        tail += BATCH_ALPHABET[Math.floor(Math.random() * BATCH_ALPHABET.length)];
+    }
+    return `${p}-${tail}`;
+}
+
+/**
+ * Sanitize an optional batch object from the request body. Returns null when
+ * the farmer supplied nothing, so listings without provenance stay untouched.
+ *
+ * @param {Object} body
+ * @returns {Object|null}
+ */
+function parseBatch(body) {
+    const raw = body && typeof body.batch === 'object' && body.batch !== null ? body.batch : null;
+    if (!raw) return null;
+    const harvestDate = raw.harvestDate ? new Date(raw.harvestDate) : null;
+    return {
+        code: String(raw.code || '').trim().toUpperCase().slice(0, 40),
+        harvestDate: harvestDate && !isNaN(harvestDate.getTime()) ? harvestDate : null,
+        grade: String(raw.grade || '').trim().slice(0, 40),
+        origin: String(raw.origin || '').trim().slice(0, 120),
+        note: String(raw.note || '').trim().slice(0, 300)
+    };
+}
+
+/**
+ * True when the farmer actually supplied provenance worth storing.
+ */
+function hasBatchContent(batch) {
+    return Boolean(batch && (batch.code || batch.harvestDate || batch.grade || batch.origin));
+}
+
+/**
+ * Mint a crop-prefixed code for a traceable listing that has none yet.
+ */
+function batchPrefixFor(title, description) {
+    const crop = classifyCrop(`${title || ''} ${description || ''}`);
+    return crop ? crop.label : (title || 'KCN');
+}
 
 /**
  * Farmers must hold an active subscription (or an admin grant) to post or
@@ -55,12 +112,34 @@ async function createProduct(req, res) {
             return res.status(402).json({ success: false, ...subReq });
         }
 
-        const product = await Product.create({
+        const batch = parseBatch(req.body);
+        if (hasBatchContent(batch) && !batch.code) {
+            batch.code = generateBatchCode(batchPrefixFor(title, description));
+        }
+
+        const base = {
             title, description, category, price, unit, location,
             contactEmail, contactPhone, image,
             stock: req.body.stock !== undefined ? req.body.stock : null,
             seller: req.user ? req.user._id : undefined
-        });
+        };
+        if (hasBatchContent(batch)) base.batch = batch;
+
+        // A generated code can rarely collide with an existing one; retry a
+        // couple of times rather than failing the farmer's listing.
+        let product;
+        for (let attempt = 0; ; attempt += 1) {
+            try {
+                product = await Product.create(base);
+                break;
+            } catch (err) {
+                if (err.code === 11000 && base.batch && base.batch.code && attempt < 3) {
+                    base.batch.code = generateBatchCode(batchPrefixFor(title, description));
+                    continue;
+                }
+                throw err;
+            }
+        }
 
         logAudit('PRODUCT_CREATED', `Product: ${title} by ${contactEmail}`)
             .catch(err => console.error('[Audit] Failed to log:', err.message));
@@ -206,6 +285,16 @@ async function updateProduct(req, res) {
             if (req.body[field] !== undefined) product[field] = req.body[field];
         });
 
+        if (req.body.batch !== undefined) {
+            const batch = parseBatch(req.body);
+            if (hasBatchContent(batch)) {
+                if (!batch.code) batch.code = generateBatchCode(batchPrefixFor(product.title, product.description));
+                product.batch = batch;
+            } else {
+                product.batch = undefined;
+            }
+        }
+
         await product.save();
         return res.status(200).json({
             success: true,
@@ -213,6 +302,9 @@ async function updateProduct(req, res) {
             data: { product }
         });
     } catch (err) {
+        if (err.code === 11000) {
+            return res.status(409).json({ success: false, message: 'That batch code is already used by another listing.' });
+        }
         console.error('[Product] Update failed:', err.message);
         return res.status(500).json({
             success: false,
@@ -333,4 +425,4 @@ async function deleteProduct(req, res) {
     }
 }
 
-module.exports = { createProduct, getProducts, getMyProducts, getProduct, updateProduct, markSold, deleteProduct };
+module.exports = { createProduct, getProducts, getMyProducts, getProduct, updateProduct, markSold, deleteProduct, generateBatchCode, parseBatch };

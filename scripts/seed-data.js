@@ -713,7 +713,15 @@ const SEED_PRODUCTS = [
         location: 'Kilifi, Kenya',
         contactEmail: 'demofarmer@gmail.com',
         contactPhone: '+254 701 234 567',
-        image: ''
+        image: '',
+        // Demo provenance so the public /trace page has something to show.
+        batch: {
+            code: 'MNG-DEMO',
+            harvestDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+            grade: 'Grade A',
+            origin: 'Kilifi, Kenya',
+            note: 'Hand-picked, ripened on the tree and packed the same day.'
+        }
     },
     {
         title: 'Raw Cashew Nuts (Korosho)',

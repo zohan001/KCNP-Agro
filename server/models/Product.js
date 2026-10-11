@@ -70,6 +70,17 @@ const productSchema = new mongoose.Schema(
             type: Boolean,
             default: true
         },
+        // Optional provenance. When a farmer adds a batch, the listing becomes
+        // traceable: a public /trace/:code page shows where the produce came
+        // from and every escrow trade tied to it. Left blank, the listing
+        // works exactly as before and simply carries no trace.
+        batch: {
+            code: { type: String, trim: true, uppercase: true, maxlength: 40 },
+            harvestDate: { type: Date, default: null },
+            grade: { type: String, trim: true, maxlength: 40 },
+            origin: { type: String, trim: true, maxlength: 120 },
+            note: { type: String, trim: true, maxlength: 300 }
+        },
         // Set when the farmer records that the produce has been sold. Most
         // produce changes hands offline, so this is how we capture the real
         // trade — and its price — instead of only counting listings. It feeds
@@ -91,5 +102,8 @@ const productSchema = new mongoose.Schema(
 productSchema.index({ title: 'text', description: 'text' });
 productSchema.index({ category: 1 });
 productSchema.index({ createdAt: -1 });
+// A batch code identifies one harvest on the public trace page, so it must be
+// unique — but only among listings that actually have one (sparse).
+productSchema.index({ 'batch.code': 1 }, { unique: true, sparse: true });
 
 module.exports = mongoose.models.Product || mongoose.model('Product', productSchema);

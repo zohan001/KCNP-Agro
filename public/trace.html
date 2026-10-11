@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trace a harvest - KCNP Agro</title>
+    <meta name="description" content="Follow a KCNP Agro harvest from the farm to the buyer: origin, harvest date, grade and every escrow trade on the batch.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="bg-canvas text-gray-900 font-sans antialiased">
+    <a class="skip-link" href="#trace-main">Skip to content</a>
+
+    <header id="site-header"></header>
+
+    <main id="trace-main" class="pt-24 pb-20">
+        <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-8">
+                <span class="inline-block text-sm font-semibold text-accent-400 uppercase tracking-widest mb-2">Farm to buyer</span>
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3">
+                    <span class="bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">Harvest traceability</span>
+                </h1>
+                <p class="text-lg text-gray-600">Where this produce came from, how it was graded, and every step it travelled to reach the buyer.</p>
+            </div>
+
+            <div id="trace-loading" class="text-center py-16 text-gray-500">Loading trace…</div>
+
+            <div id="trace-error" class="hidden text-center py-16 glass-card rounded-2xl">
+                <h2 class="text-xl font-semibold text-gray-900 mb-2">No trace found</h2>
+                <p class="text-gray-500" id="trace-error-msg">We could not find a harvest with that batch code. Check the code and try again.</p>
+                <a href="/marketplace" class="inline-block mt-6 px-6 py-3 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 text-gray-900 font-semibold hover:opacity-95">Browse the marketplace</a>
+            </div>
+
+            <div id="trace-content" class="hidden">
+                <div class="glass-card rounded-2xl p-6 sm:p-8 mb-8">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Batch code</p>
+                            <p id="t-code" class="text-2xl font-bold text-primary-400">—</p>
+                        </div>
+                        <div id="t-badge" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm font-semibold">🌱 Verified on KCNP Agro</div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Produce</p>
+                            <p id="t-title" class="text-lg font-semibold text-gray-900">—</p>
+                            <p id="t-location" class="text-sm text-gray-500"></p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Farmer</p>
+                            <p id="t-farmer" class="text-lg font-semibold text-gray-900">—</p>
+                            <p id="t-farmer-meta" class="text-sm text-gray-500"></p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-gray-200">
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Harvested</p>
+                            <p id="t-harvest" class="text-sm text-gray-900">—</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Grade</p>
+                            <p id="t-grade" class="text-sm text-gray-900">—</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Origin</p>
+                            <p id="t-origin" class="text-sm text-gray-900">—</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Trades</p>
+                            <p id="t-trades" class="text-sm text-gray-900">—</p>
+                        </div>
+                    </div>
+
+                    <p id="t-note" class="hidden mt-6 pt-4 border-t border-gray-200 text-sm text-gray-600"></p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-6 sm:p-8">
+                    <h2 class="text-lg font-bold text-gray-900 mb-6">The journey</h2>
+                    <ol id="t-events" class="relative border-l-2 border-gray-200 ml-3 space-y-6"></ol>
+                </div>
+
+                <p class="text-center text-xs text-gray-400 mt-8">
+                    Buyer identities are hidden. Every trade shown here moved through escrow on KCNP Agro.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer id="site-footer"></footer>
+
+    <script src="/js/ux.js"></script>
+    <script src="/js/site-chrome.js"></script>
+    <script>
+        (function () {
+            const API = '/api';
+            const code = decodeURIComponent((location.pathname.replace(/^\/trace\//, '').replace(/\/+$/, '')) || '');
+
+            const el = (id) => document.getElementById(id);
+            const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+            function fmtDate(value) {
+                if (!value) return '—';
+                const d = new Date(value);
+                if (isNaN(d.getTime())) return '—';
+                return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+            }
+
+            function fmtDateTime(value) {
+                if (!value) return '';
+                const d = new Date(value);
+                if (isNaN(d.getTime())) return '';
+                return d.toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            }
+
+            function actorClass(actor) {
+                if (actor === 'Farmer') return 'bg-primary-500/15 text-primary-300';
+                if (actor === 'Buyer') return 'bg-accent-500/15 text-accent-400';
+                return 'bg-gray-500/15 text-gray-400';
+            }
+
+            function showError(message) {
+                el('trace-loading').classList.add('hidden');
+                el('trace-content').classList.add('hidden');
+                if (message) el('trace-error-msg').textContent = message;
+                el('trace-error').classList.remove('hidden');
+            }
+
+            function render(data) {
+                const { batch, listing, farmer, summary, events } = data;
+
+                el('t-code').textContent = batch.code;
+                el('t-title').textContent = listing.title;
+                el('t-location').textContent = listing.location ? '📍 ' + listing.location : '';
+                el('t-farmer').textContent = farmer.name || 'KCNP farmer';
+
+                const meta = [];
+                if (farmer.verified) meta.push('Verified identity');
+                if (farmer.rating && farmer.rating.count) meta.push('★ ' + Number(farmer.rating.average).toFixed(1) + ' (' + farmer.rating.count + ')');
+                else meta.push('New farmer');
+                el('t-farmer-meta').textContent = meta.join(' · ');
+
+                el('t-harvest').textContent = fmtDate(batch.harvestDate);
+                el('t-grade').textContent = batch.grade || '—';
+                el('t-origin').textContent = batch.origin || '—';
+                el('t-trades').textContent = (summary.orders || 0) + ' orders · ' + (summary.reservations || 0) + ' reserves';
+
+                const note = el('t-note');
+                if (batch.note) {
+                    note.textContent = batch.note;
+                    note.classList.remove('hidden');
+                }
+
+                const list = el('t-events');
+                if (!events || !events.length) {
+                    list.innerHTML = '<li class="ml-6 text-sm text-gray-500">No trades recorded yet.</li>';
+                } else {
+                    list.innerHTML = events.map((ev) => `
+                        <li class="ml-6">
+                            <span class="absolute -left-[9px] mt-1.5 w-4 h-4 rounded-full bg-primary-500 border-4 border-canvas"></span>
+                            <div class="flex flex-wrap items-center gap-2 mb-1">
+                                <span class="text-sm font-semibold text-gray-900">${esc(ev.label)}</span>
+                                <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full ${actorClass(ev.actor)}">${esc(ev.actor)}</span>
+                            </div>
+                            <p class="text-xs text-gray-500">${esc(fmtDateTime(ev.at))}</p>
+                        </li>
+                    `).join('');
+                }
+
+                el('trace-loading').classList.add('hidden');
+                el('trace-error').classList.add('hidden');
+                el('trace-content').classList.remove('hidden');
+            }
+
+            if (!code) {
+                showError('No batch code was provided in the link.');
+                return;
+            }
+
+            fetch(API + '/trace/' + encodeURIComponent(code))
+                .then((res) => res.json().then((body) => ({ ok: res.ok, body })))
+                .then(({ ok, body }) => {
+                    if (!ok || !body || !body.success) {
+                        showError(body && body.message ? body.message : undefined);
+                        return;
+                    }
+                    render(body.data);
+                })
+                .catch(() => showError('We could not load this trace right now. Please try again.'));
+        })();
+    </script>
+</body>
+</html>

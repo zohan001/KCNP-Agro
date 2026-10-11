@@ -143,6 +143,17 @@ function createApp() {
         res.sendFile(path.join(__dirname, '..', 'public', 'terms.html'));
     });
 
+    // Public traceability page. The batch code lives in the URL so a link is
+    // shareable; the page itself reads it and calls the public API.
+    app.get(['/trace/:code', '/trace/:code/'], (req, res) => {
+        res.set({
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+        });
+        res.sendFile(path.join(__dirname, '..', 'public', 'trace.html'));
+    });
+
     // App pages (clean URLs for the SPA sections)
     const pageRoutes = [
         ['/marketplace', 'marketplace.html'],

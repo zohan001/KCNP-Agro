@@ -137,15 +137,27 @@ async function createOrder(req, res) {
             return res.status(400).json({ success: false, message: 'This seller is not available right now.' });
         }
 
+        const item = {
+            title: product.title,
+            unit: product.unit || 'unit',
+            unitPrice: escrow.round2(product.price),
+            image: product.image || ''
+        };
+        // Carry the listing's provenance into the order so the public trace
+        // survives later edits to the listing.
+        if (product.batch && product.batch.code) {
+            item.batch = {
+                code: product.batch.code,
+                harvestDate: product.batch.harvestDate || null,
+                grade: product.batch.grade || '',
+                origin: product.batch.origin || ''
+            };
+        }
+
         const order = await Order.create({
             reference: escrow.generateReference(),
             product: product._id,
-            item: {
-                title: product.title,
-                unit: product.unit || 'unit',
-                unitPrice: escrow.round2(product.price),
-                image: product.image || ''
-            },
+            item,
             quantity: escrow.round2(quantity),
             total: totals.total,
             buyer: req.user._id,

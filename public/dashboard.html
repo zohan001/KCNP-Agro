@@ -610,6 +610,7 @@
                             </div>
                         </div>
                         <h3 class="text-lg font-bold text-gray-900 mb-1">${p.title}</h3>
+                        ${(p.batch && p.batch.code) ? `<a href="/trace/${encodeURIComponent(p.batch.code)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 mb-2 text-xs font-semibold text-primary-400 hover:text-primary-300">🌱 ${t('mp_traceable') || 'Traceable'} · ${p.batch.code}</a>` : ''}
                         <p class="text-gray-400 text-sm leading-relaxed mb-3">${p.description || 'No description.'}</p>
                         <div class="flex items-center justify-between">
                             <span class="text-primary-400 font-bold text-lg">${formatPrice(p.price, p.unit)}</span>

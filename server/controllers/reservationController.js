@@ -40,6 +40,21 @@ function refId(value) {
     return value && value._id ? String(value._id) : String(value);
 }
 
+/**
+ * Copy a reservation item's provenance into an escrow order, if there is any.
+ */
+function batchSnapshot(item) {
+    if (item && item.batch && item.batch.code) {
+        return {
+            code: item.batch.code,
+            harvestDate: item.batch.harvestDate || null,
+            grade: item.batch.grade || '',
+            origin: item.batch.origin || ''
+        };
+    }
+    return null;
+}
+
 function presentReservation(reservation, viewer) {
     const isBuyer = viewer && refId(reservation.buyer) === String(viewer._id);
     const isSeller = viewer && refId(reservation.seller) === String(viewer._id);
@@ -209,18 +224,28 @@ async function createReservation(req, res) {
         const crop = cropOf(`${product.title} ${product.description || ''}`);
         const expiryDays = Math.max(parseInt(config.escrow.reservationExpiryDays, 10) || 7, 1);
 
+        const item = {
+            title: product.title,
+            unit: product.unit || 'unit',
+            unitPrice: escrow.round2(unitPrice),
+            image: product.image || ''
+        };
+        if (product.batch && product.batch.code) {
+            item.batch = {
+                code: product.batch.code,
+                harvestDate: product.batch.harvestDate || null,
+                grade: product.batch.grade || '',
+                origin: product.batch.origin || ''
+            };
+        }
+
         const reservation = await Reservation.create({
             listing: product._id,
             buyer: req.user._id,
             seller: product.seller,
             cropKey: crop.key,
             cropLabel: crop.label,
-            item: {
-                title: product.title,
-                unit: product.unit || 'unit',
-                unitPrice: escrow.round2(unitPrice),
-                image: product.image || ''
-            },
+            item,
             quantity: escrow.round2(quantity),
             totalValue: totals.total,
             depositPercent,
@@ -362,7 +387,8 @@ async function acceptReservation(req, res) {
                 title: `Deposit (${reservation.depositPercent}%) — ${reservation.item.title}`,
                 unit: 'deposit',
                 unitPrice: reservation.depositAmount,
-                image: reservation.item.image || ''
+                image: reservation.item.image || '',
+                batch: batchSnapshot(reservation.item) || undefined
             },
             quantity: 1,
             total: reservation.depositAmount,
@@ -461,7 +487,8 @@ async function fulfilReservation(req, res) {
                 title: `Balance — ${reservation.item.title}`,
                 unit: reservation.item.unit,
                 unitPrice: reservation.balanceAmount,
-                image: reservation.item.image || ''
+                image: reservation.item.image || '',
+                batch: batchSnapshot(reservation.item) || undefined
             },
             quantity: 1,
             total: reservation.balanceAmount,

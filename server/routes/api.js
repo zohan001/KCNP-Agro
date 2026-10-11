@@ -20,6 +20,7 @@ const priceBoardController = require('../controllers/priceBoardController');
 const demandController = require('../controllers/demandController');
 const logisticsController = require('../controllers/logisticsController');
 const reservationController = require('../controllers/reservationController');
+const traceController = require('../controllers/traceController');
 
 const {
     validateContactMessage,
@@ -75,6 +76,8 @@ router.get('/recaptcha-config', (req, res) => {
 // ==============================
 router.post('/products', authenticate, authorize('farmer'), validateProduct, productController.createProduct);
 router.get('/products', productController.getProducts);
+// Public provenance lookup: no auth, keyed by a shareable batch code.
+router.get('/trace/:code', traceController.getTrace);
 router.get('/products/my', authenticate, productController.getMyProducts);
 router.get('/products/:id', productController.getProduct);
 router.put('/products/:id', authenticate, authorize('farmer'), productController.updateProduct);

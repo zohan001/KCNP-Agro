@@ -82,7 +82,15 @@ const reservationSchema = new mongoose.Schema(
             title: { type: String, required: true },
             unit: { type: String, default: 'unit' },
             unitPrice: { type: Number, required: true, min: 0 },
-            image: { type: String, default: '' }
+            image: { type: String, default: '' },
+            // Provenance snapshotted from the listing, carried into both the
+            // deposit and the balance escrow orders.
+            batch: {
+                code: { type: String, default: '' },
+                harvestDate: { type: Date, default: null },
+                grade: { type: String, default: '' },
+                origin: { type: String, default: '' }
+            }
         },
         quantity: {
             type: Number,

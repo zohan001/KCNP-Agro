@@ -84,7 +84,15 @@ const orderSchema = new mongoose.Schema(
             title: { type: String, required: true },
             unit: { type: String, default: 'unit' },
             unitPrice: { type: Number, required: true, min: 0 },
-            image: { type: String, default: '' }
+            image: { type: String, default: '' },
+            // Snapshot of the listing's provenance at the time of the trade,
+            // so the public trace stays truthful even if the listing changes.
+            batch: {
+                code: { type: String, default: '' },
+                harvestDate: { type: Date, default: null },
+                grade: { type: String, default: '' },
+                origin: { type: String, default: '' }
+            }
         },
         quantity: {
             type: Number,

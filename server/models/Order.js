@@ -62,6 +62,22 @@ const orderSchema = new mongoose.Schema(
             default: null,
             index: true
         },
+        // Set when this order carries the money for a harvest reservation:
+        // either the buyer's deposit or the balance on hand-over.
+        reservation: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Reservation',
+            default: null,
+            index: true
+        },
+        // What this order is for. 'purchase' is a normal marketplace order;
+        // 'deposit' and 'balance' are the two halves of a reservation.
+        purpose: {
+            type: String,
+            enum: ['purchase', 'deposit', 'balance'],
+            default: 'purchase',
+            index: true
+        },
         // Snapshot of the listing so history stays truthful even if the
         // farmer later edits the title, price or photo.
         item: {

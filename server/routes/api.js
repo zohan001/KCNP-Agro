@@ -19,6 +19,7 @@ const reviewController = require('../controllers/reviewController');
 const priceBoardController = require('../controllers/priceBoardController');
 const demandController = require('../controllers/demandController');
 const logisticsController = require('../controllers/logisticsController');
+const reservationController = require('../controllers/reservationController');
 
 const {
     validateContactMessage,
@@ -116,6 +117,23 @@ router.get('/responses/mine', authenticate, demandController.listMyResponses);
 router.post('/responses/:id/accept', authenticate, demandController.acceptResponse);
 router.post('/responses/:id/decline', authenticate, demandController.declineResponse);
 router.post('/responses/:id/withdraw', authenticate, demandController.withdrawResponse);
+
+// ==============================
+// Harvest Reservations (off-take before harvest)
+// ==============================
+// A buyer reserves part of a listing's next harvest and pays a deposit into
+// the same escrow as a normal order. The deposit and the balance are each an
+// escrow Order, so a farmer gets committed demand and money before he picks,
+// and a buyer gets first call on the crop at an agreed price.
+router.post('/products/:id/reserve', authenticate, reservationController.createReservation);
+router.get('/products/:id/reservations', authenticate, reservationController.listReservationsForListing);
+router.get('/reservations/mine', authenticate, reservationController.listMyReservations);
+router.get('/reservations/:id', authenticate, reservationController.getReservation);
+router.post('/reservations/:id/accept', authenticate, authorize('farmer', 'admin'), reservationController.acceptReservation);
+router.post('/reservations/:id/decline', authenticate, authorize('farmer', 'admin'), reservationController.declineReservation);
+router.post('/reservations/:id/fulfil', authenticate, authorize('farmer', 'admin'), reservationController.fulfilReservation);
+router.post('/reservations/:id/cancel', authenticate, reservationController.cancelReservation);
+router.post('/reservations/:id/resolve', authenticate, authorize('admin'), reservationController.adminResolveReservation);
 
 // ==============================
 // Transport & Collection Registry

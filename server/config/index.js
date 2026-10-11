@@ -101,7 +101,11 @@ module.exports = {
         platformFeePercent: parseFloat(process.env.ESCROW_PLATFORM_FEE_PERCENT || '0'),
         autoReleaseDays: parseInt(process.env.ESCROW_AUTO_RELEASE_DAYS || '7', 10),
         maxQuantity: parseFloat(process.env.ESCROW_MAX_QUANTITY || '100000'),
-        deliveryProofMaxBytes: parseInt(process.env.ESCROW_PROOF_MAX_BYTES || String(2 * 1024 * 1024), 10)
+        deliveryProofMaxBytes: parseInt(process.env.ESCROW_PROOF_MAX_BYTES || String(2 * 1024 * 1024), 10),
+        // Harvest reservations: the share of the deal a buyer must put into
+        // escrow to lock it in, and how long a proposal stays open.
+        reservationDepositPercent: parseFloat(process.env.RESERVATION_DEPOSIT_PERCENT || '20'),
+        reservationExpiryDays: parseInt(process.env.RESERVATION_EXPIRY_DAYS || '7', 10)
     },
 
     // Google reCAPTCHA (invisible, background token). Protects auth +

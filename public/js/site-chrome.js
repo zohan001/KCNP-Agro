@@ -1,8 +1,8 @@
 /**
- * Header, footer and mobile-menu wiring for the two signed-in utility pages
- * (verification and orders). The marketing pages ship their own copy of this
- * markup inline; these two pages are generated from a single source so the
- * auth-aware slots cannot drift apart.
+ * Header and mobile-menu wiring for the utility pages (verification, orders,
+ * trace, privacy, terms). The marketing pages ship their own copy of this
+ * markup inline; these pages are generated from a single source so the
+ * auth-aware slots cannot drift apart. Footers are static on every page.
  */
 (function () {
     'use strict';
@@ -111,58 +111,6 @@
     '    </header>';
     }
 
-    function buildFooter() {
-        var year = new Date().getFullYear();
-        return '' +
-    '<footer class="border-t border-gray-200 py-12 md:py-16" role="contentinfo">\n' +
-    '        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">\n' +
-    '            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">\n' +
-    '                <div>\n' +
-    '                    <a href="/" class="flex items-center gap-2 mb-4" aria-label="Vuna Digital Home">\n' +
-    '                        <img src="/logo.jpg" alt="Vuna Digital logo" class="h-10 w-auto rounded-xl object-contain" width="40" height="40">\n' +
-    '                        <span class="font-heading font-bold text-xl text-gray-900">Vuna<span class="text-primary-400">Digital</span></span>\n' +
-    '                    </a>\n' +
-    '                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Promoting climate smart agriculture and trade initiatives for sustainable economic growth worldwide.</p>\n' +
-    '                </div>\n' +
-    '                <div>\n' +
-    '                    <h3 class="text-gray-900 font-semibold text-sm uppercase tracking-wider mb-4">Quick Links</h3>\n' +
-    '                    <ul class="space-y-3">\n' +
-    '                        <li>' + link('/marketplace', 'nav_marketplace', 'Marketplace', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
-    '                        <li>' + link('/demand-board', 'nav_demand', 'Demand Board', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
-    '                        <li>' + link('/logistics', 'nav_logistics', 'Transport & Storage', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
-    '                        <li>' + link('/education', 'nav_education', 'Education', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
-    '                        <li>' + link('/dashboard', 'nav_dashboard', 'Dashboard', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
-    '                        <li>' + link('/orders', '', 'My Orders', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
-    '                    </ul>\n' +
-    '                </div>\n' +
-    '                <div>\n' +
-    '                    <h3 class="text-gray-900 font-semibold text-sm uppercase tracking-wider mb-4">Services</h3>\n' +
-    '                    <ul class="space-y-3">\n' +
-    '                        <li>' + link('/education', '', 'Climate Smart Farming', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
-    '                        <li>' + link('/marketplace', '', 'Trade Facilitation', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
-    '                        <li>' + link('/pricing', 'nav_pricing', 'Pricing', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
-    '                    </ul>\n' +
-    '                </div>\n' +
-    '                <div>\n' +
-    '                    <h3 class="text-gray-900 font-semibold text-sm uppercase tracking-wider mb-4">Account</h3>\n' +
-    '                    <ul class="space-y-3">\n' +
-    '                        <li>' + link('/verification', '', 'Farmer Verification', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
-    '                        <li>' + link('/orders', '', 'Track Orders', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
-    '                        <li>' + link('/contact', '', 'Contact Support', 'text-gray-500 hover:text-primary-400 text-sm transition-colors') + '</li>\n' +
-    '                    </ul>\n' +
-    '                </div>\n' +
-    '            </div>\n' +
-    '            <div class="border-t border-gray-200 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">\n' +
-    '                <p>&copy; ' + year + ' Vuna Digital. All rights reserved.</p>\n' +
-    '                <div class="flex gap-6">\n' +
-    '                    ' + link('/terms', '', 'Terms of Service', 'text-gray-500 hover:text-primary-400 transition-colors') + '\n' +
-    '                    ' + link('/privacy', '', 'Privacy Policy', 'text-gray-500 hover:text-primary-400 transition-colors') + '\n' +
-    '                </div>\n' +
-    '            </div>\n' +
-    '        </div>\n' +
-    '    </footer>';
-    }
-
     function renderAuthSlots() {
         var signedIn = hasToken() && currentUser();
         var desktop = document.getElementById('nav-auth-desktop');
@@ -211,8 +159,6 @@
     function init() {
         var header = document.getElementById('site-header');
         if (header && !header.innerHTML.trim()) header.outerHTML = buildHeader();
-        var footer = document.getElementById('site-footer');
-        if (footer && !footer.innerHTML.trim()) footer.outerHTML = buildFooter();
 
         wireMobileMenu();
         renderAuthSlots();

@@ -137,9 +137,45 @@
         });
     }
 
+    function t(str) {
+        try { return (window.Vuna && window.Vuna.t) ? window.Vuna.t(str) : str; }
+        catch (e) { return str; }
+    }
+
+    function bindFooter() {
+        var yearEl = document.getElementById('current-year');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+        document.querySelectorAll('form.js-newsletter-form').forEach(function (form) {
+            if (form.getAttribute('data-bound')) return;
+            form.setAttribute('data-bound', '1');
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                var input = form.querySelector('input[type="email"]');
+                var email = input ? input.value.trim() : '';
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    alert(t('Please enter a valid email address.'));
+                    return;
+                }
+                fetch('/api/newsletter', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                })
+                    .then(function (r) { return r.json(); })
+                    .then(function (data) {
+                        alert(data.message || t('Thank you for subscribing!'));
+                        if (data.success && input) input.value = '';
+                    })
+                    .catch(function () { alert(t('Network error. Please try again.')); });
+            });
+        });
+    }
+
     function enhance() {
         renderAuthSlots();
         highlightActive();
+        bindFooter();
     }
 
     document.addEventListener('DOMContentLoaded', enhance);

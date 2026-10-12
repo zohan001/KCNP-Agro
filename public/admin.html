@@ -19,6 +19,7 @@
         function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }
     </script>
     <script src="/js/ux.js" defer></script>
+    <script src="/js/nav.js" defer></script>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -32,10 +33,14 @@
                 </a>
                 <div class="flex items-center gap-6">
                     <span class="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full bg-red-500/10 text-red-300 border border-red-500/30">Admin</span>
-                    <a href="/dashboard" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300">Dashboard</a>
+                    <a href="/" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_home">Home</span></a>
+                    <a href="/marketplace" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_marketplace">Marketplace</span></a>
                     <a href="/demand-board" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_demand">Demand Board</span></a>
                     <a href="/logistics" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_logistics">Transport &amp; Storage</span></a>
-                    <a href="/" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300">Site</a>
+                    <a href="/education" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_education">Education</span></a>
+                    <a href="/market-insights" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_insights">Market Insights</span></a>
+                    <a href="/pricing" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_pricing">Pricing</span></a>
+                    <a href="/dashboard" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_dashboard">Dashboard</span></a>
                     <button id="logout-btn" type="button" class="cta-btn inline-flex items-center px-4 py-2 rounded-xl text-white font-semibold text-sm">Logout</button>
                 </div>
             </div>

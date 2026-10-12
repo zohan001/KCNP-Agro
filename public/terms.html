@@ -24,9 +24,12 @@
         .legal-box { background: #FFFFFF; border: 1px solid #E3E8E2; border-radius: 1rem; padding: 3rem 2.5rem; }
     </style>
     <script src="/js/ux.js" defer></script>
+    <script src="/js/nav.js" defer></script>
 </head>
 <body>
-    <div class="legal-wrap px-5 py-16">
+    <header id="site-header"></header>
+
+    <div class="legal-wrap px-5 pt-28 pb-16">
         <a href="/" class="inline-block mb-6 text-sm text-gray-400 hover:text-primary-400 transition-colors">&larr; Back to site</a>
         <div class="legal-box legal">
             <p class="text-sm text-primary-400 font-medium uppercase tracking-wider mb-1">Legal</p>
@@ -222,5 +225,6 @@
     </a>
     <button id="lang-toggle" type="button" class="lang-fab" aria-label="Switch language">SW</button>
 
+    <script src="/js/site-chrome.js"></script>
 </body>
 </html>

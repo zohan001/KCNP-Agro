@@ -54,13 +54,13 @@
     }
 
     function link(href, labelKey, label, extra) {
-        return '<a href="' + href + '" class="' + (extra || 'text-sm font-medium text-gray-700 hover:text-primary-400 transition-colors duration-300') + '">' +
+        return '<a href="' + href + '" class="' + (extra || 'text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300') + '">' +
             (labelKey ? '<span data-i18n="' + labelKey + '">' + label + '</span>' : label) +
             '</a>';
     }
 
-    var INLINE_CLS = 'text-sm font-medium text-gray-700 hover:text-primary-400 transition-colors duration-300';
-    var BLOCK_CLS = 'block px-4 py-3 rounded-lg text-gray-700 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300';
+    var INLINE_CLS = 'text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300';
+    var BLOCK_CLS = 'block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300';
 
     function authLinks(cls) {
         var user = currentUser();
@@ -79,11 +79,10 @@
     function buildHeader() {
         var nav = '';
         NAV.forEach(function (i) { nav += link(i[0], i[1], i[2]); });
-        nav += link('/dashboard', 'nav_dashboard', 'Dashboard');
 
         var mobile = '';
         NAV.forEach(function (i) {
-            mobile += link(i[0], i[1], i[2], 'block px-4 py-3 rounded-lg text-gray-700 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300') + '\n';
+            mobile += link(i[0], i[1], i[2], 'block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300') + '\n';
         });
 
         return '' +
@@ -94,7 +93,7 @@
     '                    <img src="/logo.jpg" alt="KCNP Agro logo" class="w-10 h-10 rounded-xl object-cover transition-transform duration-300 group-hover:scale-110" width="40" height="40">\n' +
     '                    <span class="font-heading font-bold text-xl text-gray-900">KCNP<span class="text-primary-400">Agro</span></span>\n' +
     '                </a>\n' +
-    '                <div class="hidden md:flex items-center gap-6 lg:gap-8">' + nav + '\n' +
+    '                <div class="hidden md:flex items-center gap-4 lg:gap-8">' + nav + '\n' +
     '                    <span id="nav-auth-desktop" class="hidden md:inline-flex"></span>\n' +
     '                </div>\n' +
     '                <button id="mobile-menu-btn" class="hamburger md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">\n' +

@@ -17,6 +17,7 @@
         function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }
     </script>
     <script src="/js/ux.js" defer></script>
+    <script src="/js/nav.js" defer></script>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -40,8 +41,7 @@
                     <a href="/education" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_education">Education</span></a>
                     <a href="/market-insights" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_insights">Market Insights</span></a>
                     <a href="/pricing" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_pricing">Pricing</span></a>
-                    <span id="dashboard-nav-desktop"></span>
-                    <a href="/contact" class="text-sm font-medium text-primary-400 transition-colors duration-300" aria-current="page">Contact</a>
+                    <span id="nav-auth-desktop" class="hidden lg:inline-flex"></span>
                 </div>
 
                 <div class="hidden lg:block">
@@ -67,7 +67,6 @@
                     <a href="/education" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_education">Education</span></a>
                     <a href="/market-insights" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_insights">Market Insights</span></a>
                     <a href="/pricing" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_pricing">Pricing</span></a>
-                    <a href="/contact" class="block px-4 py-3 rounded-lg text-primary-400 bg-primary-50 transition-all duration-300" role="menuitem" aria-current="page">Contact</a>
                     <div id="mobile-auth-area" class="pt-3 px-1">
                         <a href="/login" id="mobile-auth-link" class="cta-btn block text-center px-5 py-3 rounded-xl text-white font-semibold text-sm">
                             <span id="mobile-auth-text">Get Started</span>

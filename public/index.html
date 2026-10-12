@@ -26,6 +26,7 @@
     </script>
 
     <script src="/js/ux.js" defer></script>
+    <script src="/js/nav.js" defer></script>
 </head>
 
 <body>
@@ -51,21 +52,19 @@
                 </a>
 
                 <!-- Desktop Navigation Links -->
-                <div class="hidden md:flex items-center gap-8">
-                    <a href="#home" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_home">Home</span></a>
+                <div class="hidden md:flex items-center gap-4 lg:gap-8">
+                    <a href="/" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_home">Home</span></a>
                     <a href="/marketplace" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_marketplace">Marketplace</span></a>
                     <a href="/demand-board" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_demand">Demand Board</span></a>
                     <a href="/logistics" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_logistics">Transport &amp; Storage</span></a>
                     <a href="/education" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_education">Education</span></a>
                     <a href="/market-insights" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_insights">Market Insights</span></a>
                     <a href="/pricing" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_pricing">Pricing</span></a>
-                    <span id="dashboard-nav-desktop"></span>
-                    <a href="#impact" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300">Impact</a>
-                    <a href="/contact" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300">Contact</a>
+                    <span id="nav-auth-desktop" class="hidden md:inline-flex"></span>
                 </div>
 
                 <!-- Desktop CTA Button -->
-                <div class="hidden md:block">
+                <div class="hidden lg:block">
                     <a id="navbar-auth-link" href="/login" class="cta-btn inline-flex items-center px-5 py-2.5 rounded-xl text-white font-semibold text-sm">
                         <span id="navbar-auth-text">Get Started</span>
                     </a>
@@ -88,15 +87,13 @@
             <!-- Mobile Navigation Menu -->
             <div id="mobile-menu" class="mobile-menu closed md:hidden pb-4" role="menu">
                 <div class="flex flex-col gap-2 pt-2">
-                    <a href="#home" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_home">Home</span></a>
+                    <a href="/" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_home">Home</span></a>
                     <a href="/marketplace" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_marketplace">Marketplace</span></a>
                     <a href="/demand-board" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_demand">Demand Board</span></a>
                     <a href="/logistics" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_logistics">Transport &amp; Storage</span></a>
                     <a href="/education" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_education">Education</span></a>
                     <a href="/market-insights" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_insights">Market Insights</span></a>
                     <a href="/pricing" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem"><span data-i18n="nav_pricing">Pricing</span></a>
-                    <a href="#impact" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem">Impact</a>
-                    <a href="/contact" class="block px-4 py-3 rounded-lg text-gray-300 hover:text-primary-400 hover:bg-primary-50 transition-all duration-300" role="menuitem">Contact</a>
                     <div id="mobile-auth-area" class="pt-2 px-4">
                         <a href="/login" id="mobile-auth-link" class="cta-btn block text-center px-5 py-3 rounded-xl text-white font-semibold text-sm">
                             <span id="mobile-auth-text">Get Started</span>

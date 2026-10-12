@@ -116,7 +116,7 @@ async function getTrace(req, res) {
                     listedAt: product.createdAt
                 },
                 farmer: {
-                    name: seller ? seller.name : 'KCNP farmer',
+                    name: seller ? seller.name : 'Vuna farmer',
                     verified: seller ? !!seller.identityVerified : false,
                     rating: seller && seller.rating
                         ? { average: seller.rating.average || 0, count: seller.rating.count || 0 }

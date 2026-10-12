@@ -1,4 +1,4 @@
-# KCNP Agro — New Slides (drop-in copy for the deck)
+# Vuna Digital — New Slides (drop-in copy for the deck)
 
 Two slides to insert after the "Uniqueness & Competition" slide. Paste the copy into the .pptx;
 speaker note included.

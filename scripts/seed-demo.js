@@ -1,5 +1,5 @@
 /**
- * Idempotent prod seed script for KCNP Agro.
+ * Idempotent prod seed script for Vuna Digital.
  *
  * Usage:
  *   node scripts/seed-demo.js --dry-run   # print what would be created
@@ -118,7 +118,7 @@ const LISTINGS = [
 ];
 
 const TESTIMONIALS = [
-    { userRef: 'farmer0', name: 'Mwanahamisi Charo', role: 'farmer', message: 'KCNP Agro helped me find a trader for my mangoes within two days. I used to sell at the local market for less, now my whole harvest is pre-booked before the season even starts.', rating: 5, featured: true },
+    { userRef: 'farmer0', name: 'Mwanahamisi Charo', role: 'farmer', message: 'Vuna Digital helped me find a trader for my mangoes within two days. I used to sell at the local market for less, now my whole harvest is pre-booked before the season even starts.', rating: 5, featured: true },
     { userRef: 'farmer1', name: 'Kazungu Mwero', role: 'farmer', message: 'The education articles on soil health changed how I farm. My maize survived this dry season while neighbours lost half their crop. I tell every farmer in my village to join.', rating: 5, featured: true },
     { userRef: 'trader0', name: 'Abubakar Shariff', role: 'trader', message: 'I source produce through the marketplace without travelling to the farms. The listings are always fresh and the farmers are reliable. My restaurant supply chain has never been this smooth.', rating: 5, featured: true },
     { userRef: 'farmer4', name: 'Rehema Kadzo', role: 'farmer', message: 'Affordable subscription and the platform paid for itself after my first sale. The admin responds fast when you need help. I upgraded to the 6-month grower plan happily.', rating: 4, featured: false },
@@ -128,7 +128,7 @@ const TESTIMONIALS = [
 
 // Single-word handles, no dot between the two names (e.g. mwanahamisicharo).
 function emailFor(n) {
-    return `${n.first.toLowerCase()}${n.last.toLowerCase()}@kcnpagro.co.ke`;
+    return `${n.first.toLowerCase()}${n.last.toLowerCase()}@vunadigital.co.ke`;
 }
 
 function displayName(n) {

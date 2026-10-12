@@ -71,7 +71,7 @@ async function ensureDemoAccounts() {
     try {
         const User = require('../models/User');
         const config = require('../config');
-        const emails = ['admin@kcnpagro.org', 'demofarmer@gmail.com', 'demotrader@gmail.com'];
+        const emails = ['admin@vunadigital.org', 'demofarmer@gmail.com', 'demotrader@gmail.com'];
         const update = { $set: { isActive: true } };
         if (User.updateMany) {
             await User.updateMany({ email: { $in: emails } }, update);

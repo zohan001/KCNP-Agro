@@ -43,7 +43,7 @@ module.exports = {
     // Auth session cookie (httpOnly JWT transport). The token is ALSO accepted
     // via the Authorization header for backwards compatibility / API tooling.
     auth: {
-        cookieName: process.env.AUTH_COOKIE_NAME || 'kcnp_session',
+        cookieName: process.env.AUTH_COOKIE_NAME || 'vuna_session',
         cookieMaxAge: 7 * 24 * 60 * 60 * 1000, // matches JWT_EXPIRES_IN default
         cookieSecure: process.env.NODE_ENV === 'production'
     },
@@ -54,7 +54,7 @@ module.exports = {
     // The one true super admin (God mode). Exactly one account is root:
     // it owns role 'admin' plus isRoot, and it cannot be demoted, deactivated
     // or deleted. Falls back to the seeded demo admin on fresh databases.
-    rootAdminEmail: process.env.ROOT_ADMIN_EMAIL || 'admin@kcnpagro.org',
+    rootAdminEmail: process.env.ROOT_ADMIN_EMAIL || 'admin@vunadigital.org',
 
     // SMTP / email configuration (used for password reset emails)
     mail: {
@@ -63,7 +63,7 @@ module.exports = {
         secure: process.env.SMTP_SECURE === 'true',
         user: process.env.SMTP_USER || '',
         pass: process.env.SMTP_PASS || '',
-        from: process.env.MAIL_FROM || 'KCNP Agro <no-reply@kcnpagro.org>',
+        from: process.env.MAIL_FROM || 'Vuna Digital <no-reply@vunadigital.org>',
         apiKey: process.env.BREVO_API_KEY || ''
     },
 

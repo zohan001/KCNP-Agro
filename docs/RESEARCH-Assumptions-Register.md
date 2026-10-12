@@ -1,6 +1,6 @@
-# KCNP Agro — Assumptions Register
+# Vuna Digital — Assumptions Register
 
-**Purpose:** Audit every belief the KCNP Agro pitch treats as a fact, grade how well it is
+**Purpose:** Audit every belief the Vuna Digital pitch treats as a fact, grade how well it is
 proven, and define the cheapest way to prove or kill it. This is the direct answer to the
 judges' first assignment ("what assumptions are you making?") and the due-diligence backbone
 for investors.

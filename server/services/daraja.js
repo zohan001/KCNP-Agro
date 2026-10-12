@@ -105,7 +105,7 @@ async function stkPush(phone, amount, accountRef, desc) {
         PartyB: d.shortcode,
         PhoneNumber: party,
         CallBackURL: d.callbackUrl,
-        AccountReference: String(accountRef || 'KCNP').slice(0, 12),
+        AccountReference: String(accountRef || 'VUNADIGITAL').slice(0, 12),
         TransactionDesc: String(desc || 'Subscription').slice(0, 20)
     };
 

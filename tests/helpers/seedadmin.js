@@ -9,10 +9,10 @@ async function boot({ port = 3996 } = {}) {
     process.env.MONGOMS_VERSION = process.env.MONGOMS_VERSION || '4.4.14';
 
     const mongod = await MongoMemoryServer.create();
-    await mongoose.connect(mongod.getUri('kcnp'));
+    await mongoose.connect(mongod.getUri('vuna'));
     const User = require('../../server/models/User');
     await User.create({
-        name: 'KCNP Admin', email: 'admin@kcnpagro.org',
+        name: 'Vuna Digital Admin', email: 'admin@vunadigital.org',
         password: 'adminpass123', role: 'admin', isActive: true
     });
     const createApp = require('../../server/app');

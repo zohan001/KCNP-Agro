@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trace a harvest - KCNP Agro</title>
-    <meta name="description" content="Follow a KCNP Agro harvest from the farm to the buyer: origin, harvest date, grade and every escrow trade on the batch.">
+    <title>Trace a harvest - Vuna Digital</title>
+    <meta name="description" content="Follow a Vuna Digital harvest from the farm to the buyer: origin, harvest date, grade and every escrow trade on the batch.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
                             <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Batch code</p>
                             <p id="t-code" class="text-2xl font-bold text-primary-400">—</p>
                         </div>
-                        <div id="t-badge" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm font-semibold">🌱 Verified on KCNP Agro</div>
+                        <div id="t-badge" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary-500/10 border border-primary-500/20 text-primary-300 text-sm font-semibold">🌱 Verified on Vuna Digital</div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -84,7 +84,7 @@
                 </div>
 
                 <p class="text-center text-xs text-gray-400 mt-8">
-                    Buyer identities are hidden. Every trade shown here moved through escrow on KCNP Agro.
+                    Buyer identities are hidden. Every trade shown here moved through escrow on Vuna Digital.
                 </p>
             </div>
         </section>
@@ -136,7 +136,7 @@
                 el('t-code').textContent = batch.code;
                 el('t-title').textContent = listing.title;
                 el('t-location').textContent = listing.location ? '📍 ' + listing.location : '';
-                el('t-farmer').textContent = farmer.name || 'KCNP farmer';
+                el('t-farmer').textContent = farmer.name || 'Vuna farmer';
 
                 const meta = [];
                 if (farmer.verified) meta.push('Verified identity');

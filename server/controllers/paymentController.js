@@ -108,7 +108,7 @@ async function requestPayment(req, res) {
         //    prompt itself; result arrives via the paystack webhook).
         if (config.paystackConfigured()) {
             try {
-                const reference = `KCNP${pending._id}`;
+                const reference = `VUNA${pending._id}`;
                 const resp = await paystack.charge({
                     email: req.user.email,
                     amountKes: p.price,
@@ -186,7 +186,7 @@ async function requestPayment(req, res) {
                 const resp = await daraja.stkPush(
                     String(phone).trim(),
                     p.price,
-                    `KCNP${p.id}`,
+                    `VUNA${p.id}`,
                     `${p.name} subscription`
                 );
                 const accepted = resp && (String(resp.ResponseCode) === '0' || resp.ResponseCode === 0);

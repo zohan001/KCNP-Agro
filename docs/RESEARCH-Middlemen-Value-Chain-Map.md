@@ -1,4 +1,4 @@
-# KCNP Agro — Middlemen Value-Chain Map (Coastal Kenya)
+# Vuna Digital — Middlemen Value-Chain Map (Coastal Kenya)
 
 **Assignment answered:** *"Map the role of middlemen."* This document shows who stands
 between the coastal farmer and the final buyer, **what each one actually does**, what they earn,
@@ -7,7 +7,7 @@ and which of their functions a software platform can replace versus must partner
 **Thesis in one line:** the middleman is not a fee — he is a bundle of services (aggregation,
 transport, grading, storage, price knowledge, and **cash advance**). A platform that deletes
 him without replacing those services loses the farmer's buyer, transport and credit — which is
-why most "remove the middleman" projects fail. KCNP Agro's defensible position is to
+why most "remove the middleman" projects fail. Vuna Digital's defensible position is to
 **digitise the information layer and make the chain accountable**, not to pretend the physical
 and financial layers do not exist.
 
@@ -75,7 +75,7 @@ Two actors the foten-missed but important:
 
 ## 3. Actor-by-actor function table
 
-| Actor | What they actually provide | How they're paid | Replace by software? | KCNP strategy |
+| Actor | What they actually provide | How they're paid | Replace by software? | Vuna strategy |
 |---|---|---|---|---|
 | Farm-gate broker | Finds buyer, buys any volume, **pays cash today**, absorbs first-mile hassle | Margin on resale | **No** | **Verify + rate as an "aggregator partner"**; expose their margin |
 | Local collector / aggregator | Bulking, basic sorting, sometimes storage | Margin / fee | Partially (matching, not bulking) | Register collection points; enable group listings |
@@ -85,13 +85,13 @@ Two actors the foten-missed but important:
 | Processor | Value addition (oil, nuts, mill) | Product margin | **No** | Channel raw supply via verified listings |
 | Retailer/hotel/exporter | Final demand, quality standards | Product margin | **No** (but reachable directly) | Buyer accounts + bulk demand requests |
 | **Credit provider** (overlaps broker/wholesaler) | **Advance cash / inputs before harvest** | Interest embedded in price | **Not alone** | Off-take reservation + escrow with a finance partner (SACCO/fintech) — roadmap |
-| KCNP Agro | Information, matching, reputation, traceability, payment rails | Subscription/featured | — | **Owns the information layer only** |
+| Vuna Digital | Information, matching, reputation, traceability, payment rails | Subscription/featured | — | **Owns the information layer only** |
 
 ---
 
 ## 4. Function matrix — what a platform can and cannot replace
 
-| Function | Nature | Can KCNP do it? | Why |
+| Function | Nature | Can Vuna do it? | Why |
 |---|---|---|---|
 | Price discovery / market information | Digital | ✅ **Yes (core)** | `Price Board` from real listings + trades |
 | Matching farmers ↔ buyers | Digital | ✅ **Yes (core)** | Marketplace + demand board + offers |
@@ -103,11 +103,11 @@ Two actors the foten-missed but important:
 | Transport / cold chain | Physical | ❌ Partner | Roads, trucks, cooling `[S3]` |
 | Storage / grading / packaging | Physical | ❌ Partner | 83% of farmers lack storage `[S3]` |
 | Working capital / advance credit | Financial | ❌ Partner | The middleman's killer feature `[S13]`,`[S14]`,`[S15]` |
-| Risk-bearing (spoilage, default) | Financial | ❌ Partner/insurance | Needs a balance sheet KCNP doesn't have yet |
+| Risk-bearing (spoilage, default) | Financial | ❌ Partner/insurance | Needs a balance sheet Vuna doesn't have yet |
 | County cess / KEBS / export compliance | Regulatory | ❌ Facilitate | Link buyers to compliant aggregators |
 
 **Conclusion:** a pure marketplace can only credibly own ~4–5 of the 12 functions. The other
-7 must be **partnered**, not promised. That is the difference between KCNP and the 40 projects.
+7 must be **partnered**, not promised. That is the difference between Vuna and the 40 projects.
 
 ---
 
@@ -152,7 +152,7 @@ useful for food security and volume aggregation but weak for a commission/subscr
 
 ## 6. Why projects like this fail (the 40+ problem)
 
-| Failure pattern | Evidence | What it means for KCNP |
+| Failure pattern | Evidence | What it means for Vuna |
 |---|---|---|
 | **Information ≠ the bottleneck** | M-Farm: "the root problem was not pricing transparency but low volume and buyers' hassle" `[S24]` | Don't sell information alone; solve aggregation or demand |
 | **Low, fragmented volume** | Smallholders <2 acres; average coastal farm 6–8 ha mixed `[S10]` | Bulk via groups/collection points; demand-led |
@@ -161,7 +161,7 @@ useful for food security and volume aggregation but weak for a commission/subscr
 | **Trust & quality disputes** | Direct trades lack grading/weighing/recourse `[S3]` | Ratings, verification, dispute flow |
 | **Channel mismatch** | Only ~53% of rural Kenyans own an internet phone `[S20]`; iCow won on USSD/SMS `[S25]` | Web + WhatsApp/USSD assist; field onboarding |
 | **Weak willingness to pay** | Shareable info; affordability a named barrier `[S12]`,`[S30]` | Charge for transactions/value, not info |
-| **No completed-trade data** | KCNP's own gap; view counts ≠ trades | Capture "mark as sold" and rating after every trade |
+| **No completed-trade data** | Vuna's own gap; view counts ≠ trades | Capture "mark as sold" and rating after every trade |
 | **Donor/subsidy dependence** | Many pilots die post-grant `[S12]` | Revenue from day one of the pilot |
 | **Competition already deeper** | AgriVesta (RFQ + escrow), TijaHub (logistics + certification) `[S31]` | Differentiate on coast specificity + aggregator accountability |
 
@@ -172,7 +172,7 @@ useful for food security and volume aggregation but weak for a commission/subscr
 | Option | What it means | Risk | Verdict |
 |---|---|---|---|
 | **A. Disintermediation** | Bypass middlemen entirely; farmer sells to strangers online | **Very high** — loses credit, transport, buyer; proven failure mode | ❌ Not as the core model |
-| **B. Re-intermediation** | KCNP becomes the aggregator (own/buy, store, truck) | High capital, thin margins | ⚠️ Only where a buyer contract exists |
+| **B. Re-intermediation** | Vuna becomes the aggregator (own/buy, store, truck) | High capital, thin margins | ⚠️ Only where a buyer contract exists |
 | **C. Verified-aggregator network** | Partner with existing brokers/collectors; verify, rate, expose margins; farmer chooses | Low capex, uses existing logistics & credit | ✅ **Recommended core** |
 | **D. Demand-led aggregation (hybrid)** | Aggregate only against a confirmed buyer order (RFQ first) | Moderate; matches supply to real demand | ✅ **Recommended operating rule** |
 | **E. Transparency-first** | Start with price board + demand board, capture trades, add escrow later | Low; builds trust & data | ✅ Phase 1 |
@@ -185,9 +185,9 @@ elevator pitch**, which still say "eliminating middlemen." Fix the language ever
 
 ---
 
-## 8. How KCNP Agro maps onto the map (feature → function)
+## 8. How Vuna Digital maps onto the map (feature → function)
 
-| Middleman function | KCNP feature (P0 = build now) | Judge/DD message |
+| Middleman function | Vuna feature (P0 = build now) | Judge/DD message |
 |---|---|---|
 | Price discovery | **Price Board** (P0) — asking/paid prices per crop, farm-gate vs Mombasa | "We expose the margin they used to hide" |
 | Farmer choice (breaks the monopoly) | **Offers/Quotes on a listing** (P0) | "Three buyers bid; the farmer picks" |

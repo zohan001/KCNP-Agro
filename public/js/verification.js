@@ -161,7 +161,7 @@
 
     /** Resolves an i18n key, falling back to English if not loaded. */
     function tr(key) {
-        if (window.KCNP && KCNP.t) return KCNP.t(key);
+        if (window.Vuna && Vuna.t) return Vuna.t(key);
         return key;
     }
 
@@ -362,7 +362,7 @@
         // Switching SW / EN has to repaint the status pill and message, which
         // come from the loaded record rather than from static markup. Without
         // this the page stayed in whichever language it first rendered in.
-        document.addEventListener('kcnp:lang', function () {
+        document.addEventListener('vuna:lang', function () {
             load();
         });
     }

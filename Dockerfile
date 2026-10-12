@@ -1,5 +1,5 @@
 # ============================================
-# Verdant Agro - Production Dockerfile
+# Vuna Digital - Production Dockerfile
 # ============================================
 # Multi-stage build: install dependencies, then
 # run the app in a slim production image.

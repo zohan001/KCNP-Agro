@@ -1,5 +1,5 @@
 {
-  "name": "verdant-agro",
+  "name": "vuna-digital",
   "version": "1.0.0",
   "description": "Climate Smart Agriculture & Trade Initiative - Full Stack Website",
   "main": "server/index.js",
@@ -20,7 +20,7 @@
     "trade",
     "sustainability"
   ],
-  "author": "Verdant Agro",
+  "author": "Vuna Digital",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"

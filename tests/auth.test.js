@@ -113,7 +113,7 @@ describe('Auth', () => {
         expect(login.body.success).toBe(true);
         expect(login.headers['set-cookie']).toBeDefined();
 
-        const cookie = login.headers['set-cookie'].find(c => c.startsWith('kcnp_session='));
+        const cookie = login.headers['set-cookie'].find(c => c.startsWith('vuna_session='));
         expect(cookie).toBeDefined();
         expect(cookie).toContain('HttpOnly');
         expect(cookie).toContain('SameSite=Lax');
@@ -162,8 +162,8 @@ describe('Auth', () => {
             .post('/api/auth/logout')
             .set('Cookie', cookie);
         expect(logout.status).toBe(200);
-        const cleared = logout.headers['set-cookie'].find(c => c.startsWith('kcnp_session='));
-        expect(cleared).toContain('kcnp_session=');
+        const cleared = logout.headers['set-cookie'].find(c => c.startsWith('vuna_session='));
+        expect(cleared).toContain('vuna_session=');
         // The browser is told to drop the cookie immediately.
         expect(cleared).toMatch(/Max-Age=0|Expires=Thu, 01 Jan 1970/);
     });

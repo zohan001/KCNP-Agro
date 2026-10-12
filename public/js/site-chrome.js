@@ -37,17 +37,17 @@
 
     function currentUser() {
         try {
-            return JSON.parse(readStored('kcnp_user') || readStored('user') || 'null');
+            return JSON.parse(readStored('vuna_user') || readStored('user') || 'null');
         } catch (e) { return null; }
     }
 
     function hasToken() {
-        return Boolean(readStored('kcnp_token') || readStored('token'));
+        return Boolean(readStored('vuna_token') || readStored('token'));
     }
 
     function logout() {
         try { localStorage.removeItem('token'); localStorage.removeItem('user'); } catch (e) {}
-        ['kcnp_token', 'kcnp_user', 'token', 'user'].forEach(function (n) {
+        ['vuna_token', 'vuna_user', 'token', 'user'].forEach(function (n) {
             document.cookie = n + '=; path=/; max-age=0';
         });
         window.location.href = '/login';
@@ -89,9 +89,9 @@
     '<header id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-gray-200">\n' +
     '        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" role="navigation" aria-label="Main navigation">\n' +
     '            <div class="flex items-center justify-between h-16 md:h-20">\n' +
-    '                <a href="/" class="flex items-center gap-2 group" aria-label="KCNP Agro Home">\n' +
-    '                    <img src="/logo.jpg" alt="KCNP Agro logo" class="w-10 h-10 rounded-xl object-cover transition-transform duration-300 group-hover:scale-110" width="40" height="40">\n' +
-    '                    <span class="font-heading font-bold text-xl text-gray-900">KCNP<span class="text-primary-400">Agro</span></span>\n' +
+    '                <a href="/" class="flex items-center gap-2 group" aria-label="Vuna Digital Home">\n' +
+    '                    <img src="/logo.jpg" alt="Vuna Digital logo" class="h-10 w-auto rounded-xl object-contain transition-transform duration-300 group-hover:scale-110" width="40" height="40">\n' +
+    '                    <span class="font-heading font-bold text-xl text-gray-900">Vuna<span class="text-primary-400">Digital</span></span>\n' +
     '                </a>\n' +
     '                <div class="hidden md:flex items-center gap-4 lg:gap-8">' + nav + '\n' +
     '                    <span id="nav-auth-desktop" class="hidden md:inline-flex"></span>\n' +
@@ -118,9 +118,9 @@
     '        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">\n' +
     '            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">\n' +
     '                <div>\n' +
-    '                    <a href="/" class="flex items-center gap-2 mb-4" aria-label="KCNP Agro Home">\n' +
-    '                        <img src="/logo.jpg" alt="KCNP Agro logo" class="w-10 h-10 rounded-xl object-cover" width="40" height="40">\n' +
-    '                        <span class="font-heading font-bold text-xl text-gray-900">KCNP<span class="text-primary-400">Agro</span></span>\n' +
+    '                    <a href="/" class="flex items-center gap-2 mb-4" aria-label="Vuna Digital Home">\n' +
+    '                        <img src="/logo.jpg" alt="Vuna Digital logo" class="h-10 w-auto rounded-xl object-contain" width="40" height="40">\n' +
+    '                        <span class="font-heading font-bold text-xl text-gray-900">Vuna<span class="text-primary-400">Digital</span></span>\n' +
     '                    </a>\n' +
     '                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Promoting climate smart agriculture and trade initiatives for sustainable economic growth worldwide.</p>\n' +
     '                </div>\n' +
@@ -153,7 +153,7 @@
     '                </div>\n' +
     '            </div>\n' +
     '            <div class="border-t border-gray-200 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">\n' +
-    '                <p>&copy; ' + year + ' KCNP Agro. All rights reserved.</p>\n' +
+    '                <p>&copy; ' + year + ' Vuna Digital. All rights reserved.</p>\n' +
     '                <div class="flex gap-6">\n' +
     '                    ' + link('/terms', '', 'Terms of Service', 'text-gray-500 hover:text-primary-400 transition-colors') + '\n' +
     '                    ' + link('/privacy', '', 'Privacy Policy', 'text-gray-500 hover:text-primary-400 transition-colors') + '\n' +
@@ -206,7 +206,7 @@
         });
     }
 
-    window.KCNPChrome = { logout: logout };
+    window.VunaChrome = { logout: logout };
 
     function init() {
         var header = document.getElementById('site-header');

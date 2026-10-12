@@ -20,20 +20,20 @@
  */
 
 const SEED_USERS = [
-    { name: 'KCNP Admin', email: 'admin@kcnpagro.org', password: 'adminpass123', role: 'admin', isRoot: true },
+    { name: 'Vuna Digital Admin', email: 'admin@vunadigital.org', password: 'adminpass123', role: 'admin', isRoot: true },
     { name: 'Demo Farmer', email: 'demofarmer@gmail.com', password: 'farmer123', role: 'farmer' },
     { name: 'Demo Trader', email: 'demotrader@gmail.com', password: 'trader123', role: 'trader' },
     // Extra demo farmers (the marketplace relies on farmers posting listings)
-    { name: 'Mary Wanjiru', email: 'marywanjiru@gmail.com', password: 'KcnpAgro2026!', role: 'farmer' },
-    { name: 'John Kamau', email: 'johnkamau@gmail.com', password: 'KcnpAgro2026!', role: 'farmer' },
-    { name: 'Amina Hassan', email: 'aminahassan@gmail.com', password: 'KcnpAgro2026!', role: 'farmer' },
-    { name: 'Peter Otieno', email: 'peterotieno@gmail.com', password: 'KcnpAgro2026!', role: 'farmer' },
-    { name: 'Grace Mwende', email: 'gracemwende@gmail.com', password: 'KcnpAgro2026!', role: 'farmer' },
-    { name: 'Daniel Mutua', email: 'danielmutua@gmail.com', password: 'KcnpAgro2026!', role: 'farmer' },
+    { name: 'Mary Wanjiru', email: 'marywanjiru@gmail.com', password: 'VunaDigital2026!', role: 'farmer' },
+    { name: 'John Kamau', email: 'johnkamau@gmail.com', password: 'VunaDigital2026!', role: 'farmer' },
+    { name: 'Amina Hassan', email: 'aminahassan@gmail.com', password: 'VunaDigital2026!', role: 'farmer' },
+    { name: 'Peter Otieno', email: 'peterotieno@gmail.com', password: 'VunaDigital2026!', role: 'farmer' },
+    { name: 'Grace Mwende', email: 'gracemwende@gmail.com', password: 'VunaDigital2026!', role: 'farmer' },
+    { name: 'Daniel Mutua', email: 'danielmutua@gmail.com', password: 'VunaDigital2026!', role: 'farmer' },
     // Extra demo traders (they buy produce and resell)
-    { name: 'David Musyoka', email: 'davidmusyoka@gmail.com', password: 'KcnpAgro2026!', role: 'trader' },
-    { name: 'Faith Chebet', email: 'faithchebet@gmail.com', password: 'KcnpAgro2026!', role: 'trader' },
-    { name: 'Samuel Kiprop', email: 'samuelkiprop@gmail.com', password: 'KcnpAgro2026!', role: 'trader' }
+    { name: 'David Musyoka', email: 'davidmusyoka@gmail.com', password: 'VunaDigital2026!', role: 'trader' },
+    { name: 'Faith Chebet', email: 'faithchebet@gmail.com', password: 'VunaDigital2026!', role: 'trader' },
+    { name: 'Samuel Kiprop', email: 'samuelkiprop@gmail.com', password: 'VunaDigital2026!', role: 'trader' }
 ];
 
 const SEED_ARTICLES = [
@@ -109,8 +109,8 @@ const SEED_ARTICLES = [
         category: 'policy',
         summary: 'National strategies, county programmes and financing available to Kenyan farmers adopting climate-smart practices.',
         summarySw: 'Mikakati ya kitaifa, mipango ya kaunti na fedha zinazopatikana kwa wakulima wa Kenya wanaotumia mazoea bora kwa mazingira.',
-        content: '<p>Kenya has a supportive policy environment for climate-smart agriculture. The National Climate Change Action Plan and the Kenya Climate-Smart Agriculture Strategy orient public investment toward resilient farming, while the Climate Change Act provides a legal framework for adaptation and emission reduction.</p><p>At county level, agriculture departments run farmer field schools, distribute vouchers for improved seed and fertiliser, and pilot weather-indexed insurance. Under the e-voucher system, eligible smallholders buy subsidised seed and fertiliser through mobile payment schemes. The Agricultural Finance Corporation, commercial banks and SACCOs offer loans for irrigation equipment, greenhouses and dairy with climate-mitigation goals.</p><p>Your new KCNP education hub summarises these and links you to apply. Practically: register with your county\u2019s agriculture office, join a registered farmer group to access group credit and insurance, and keep your land title or an official lease document, which is often needed for credit applications.</p>',
-        contentSw: '<p>Kenya ina mazingira mazuri ya sera kwa kilimo bora kwa mazingira. Mpango wa Kitaifa wa Mabadiliko ya Tabianchi na Mkakati wa Kilimo Bora kwa Mazingira wa Kenya huelekeza uwekezaji wa umma kwenye kilimo endelevu, huku Sheria ya Mabadiliko ya Tabianchi ikitoa mfumo wa kisheria wa kukabiliana na tabianchi na kupunguza gesi chafu.</p><p>Katika ngazi ya kaunti, idara za kilimo huendesha shule za shambani kwa wakulima, kusambaza vocha za mbegu na mbolea bora, na kuendesha majaribio ya bima zinazotegemea hali ya hewa. Kupitia mfumo wa e-voucher, wakulima wanaostahili hununua mbegu na mbolea kwa bei nafuu kupitia malipo ya simu. Shirika la Fedha la Kilimo (AFC), benki na SACCO hutoa mikopo kwa vifaa vya umwagiliaji, greenhouses na mifugo yenye malengo ya kupunguza madhara ya tabianchi.</p><p>Kituo chako kipya cha elimu cha KCNP kinafupisha habari hizi na kukuunganisha na maombi. Kiutendaji: jiandikishe na ofisi ya kilimo ya kaunti yako, jiunge na kikundi kilichosajiliwa cha wakulima ili kupata mikopo na bima ya kikundi, na uweke tayari hati ya ardhi au mkataba rasmi, ambao mara nyingi unahitajika kwa maombi ya mikopo.</p>',
+        content: '<p>Kenya has a supportive policy environment for climate-smart agriculture. The National Climate Change Action Plan and the Kenya Climate-Smart Agriculture Strategy orient public investment toward resilient farming, while the Climate Change Act provides a legal framework for adaptation and emission reduction.</p><p>At county level, agriculture departments run farmer field schools, distribute vouchers for improved seed and fertiliser, and pilot weather-indexed insurance. Under the e-voucher system, eligible smallholders buy subsidised seed and fertiliser through mobile payment schemes. The Agricultural Finance Corporation, commercial banks and SACCOs offer loans for irrigation equipment, greenhouses and dairy with climate-mitigation goals.</p><p>Your new Vuna Digital education hub summarises these and links you to apply. Practically: register with your county\u2019s agriculture office, join a registered farmer group to access group credit and insurance, and keep your land title or an official lease document, which is often needed for credit applications.</p>',
+        contentSw: '<p>Kenya ina mazingira mazuri ya sera kwa kilimo bora kwa mazingira. Mpango wa Kitaifa wa Mabadiliko ya Tabianchi na Mkakati wa Kilimo Bora kwa Mazingira wa Kenya huelekeza uwekezaji wa umma kwenye kilimo endelevu, huku Sheria ya Mabadiliko ya Tabianchi ikitoa mfumo wa kisheria wa kukabiliana na tabianchi na kupunguza gesi chafu.</p><p>Katika ngazi ya kaunti, idara za kilimo huendesha shule za shambani kwa wakulima, kusambaza vocha za mbegu na mbolea bora, na kuendesha majaribio ya bima zinazotegemea hali ya hewa. Kupitia mfumo wa e-voucher, wakulima wanaostahili hununua mbegu na mbolea kwa bei nafuu kupitia malipo ya simu. Shirika la Fedha la Kilimo (AFC), benki na SACCO hutoa mikopo kwa vifaa vya umwagiliaji, greenhouses na mifugo yenye malengo ya kupunguza madhara ya tabianchi.</p><p>Kituo chako kipya cha elimu cha Vuna Digital kinafupisha habari hizi na kukuunganisha na maombi. Kiutendaji: jiandikishe na ofisi ya kilimo ya kaunti yako, jiunge na kikundi kilichosajiliwa cha wakulima ili kupata mikopo na bima ya kikundi, na uweke tayari hati ya ardhi au mkataba rasmi, ambao mara nyingi unahitajika kwa maombi ya mikopo.</p>',
         tags: ['policy', 'financing', 'county', 'insurance'],
         published: true
     },

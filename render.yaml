@@ -1,5 +1,5 @@
 # ============================================
-# Render Blueprint - Verdant Agro
+# Render Blueprint - Vuna Digital
 # ============================================
 # Defines the web service deployment on Render.
 #
@@ -53,7 +53,7 @@ services:
 
       # Name of the httpOnly session cookie that carries the JWT.
       - key: AUTH_COOKIE_NAME
-        value: kcnp_session
+        value: vuna_session
 
       # Public URL of this service. Used to build password-reset links and as
       # the CORS allow-list origin in production. Update to your real domain.

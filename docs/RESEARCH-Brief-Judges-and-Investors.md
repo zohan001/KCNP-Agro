@@ -1,4 +1,4 @@
-# KCNP Agro — Research Brief for Judges & Investors
+# Vuna Digital — Research Brief for Judges & Investors
 
 **Two-page summary of:** `RESEARCH-Assumptions-Register.md` and
 `RESEARCH-Middlemen-Value-Chain-Map.md`. Use in Q&A and in the data room.
@@ -14,7 +14,7 @@ advance cash**. Kenya-specific evidence shows **80–95% of smallholder mango mo
 middlemen**, who add only ~8% of value but earn ~22% gross margin, while farmers who sell spot
 at the gate capture **under 30% of the final value** and cannot access credit elsewhere. That is
 why projects that promise to "eliminate the middleman" fail: they remove the farmer's buyer,
-logistics and credit and replace them with a website. **KCNP Agro does not pretend to delete
+logistics and credit and replace them with a website. **Vuna Digital does not pretend to delete
 those functions. We digitise the one layer software is genuinely good at — information,
 matching, reputation and traceability — and we make the rest accountable through verified,
 rated aggregator partners.**

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="KCNP Agro Dashboard - Manage your listings and browse the marketplace">
-    <title>Dashboard | KCNP Agro</title>
+    <meta name="description" content="Vuna Digital Dashboard - Manage your listings and browse the marketplace">
+    <title>Dashboard | Vuna Digital</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     <script>document.documentElement.classList.add('js');
-        function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }</script>
+        function P(s) { return (window.Vuna && window.Vuna.trPhrase) ? window.Vuna.trPhrase(s) : s; }</script>
     <script src="/js/ux.js" defer></script>
     <script src="/js/nav.js" defer></script>
 </head>
@@ -24,9 +24,9 @@
     <header id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-gray-200">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" role="navigation" aria-label="Main navigation">
             <div class="flex items-center justify-between h-16 md:h-20">
-                <a href="/" class="flex items-center gap-2 group" aria-label="KCNP Agro Home">
-                    <img src="/logo.jpg" alt="KCNP Agro logo" class="w-10 h-10 rounded-xl object-cover transition-transform duration-300 group-hover:scale-110" width="40" height="40">
-                    <span class="font-heading font-bold text-xl text-gray-900">KCNP<span class="text-primary-400">Agro</span></span>
+                <a href="/" class="flex items-center gap-2 group" aria-label="Vuna Digital Home">
+                    <img src="/logo.jpg" alt="Vuna Digital logo" class="h-10 w-auto rounded-xl object-contain transition-transform duration-300 group-hover:scale-110" width="40" height="40">
+                    <span class="font-heading font-bold text-xl text-gray-900">Vuna<span class="text-primary-400">Digital</span></span>
                 </a>
                 <div class="hidden md:flex items-center gap-4 lg:gap-8">
                     <a href="/" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_home">Home</span></a>
@@ -179,7 +179,7 @@
                 <!-- Feedback / Testimonial panel (farmers + traders only) -->
                 <div id="feedback-panel" class="hidden mt-10 glass-card rounded-2xl p-6 md:p-8 reveal">
                     <h2 data-i18n="d_feedback_title" class="font-heading text-2xl font-bold text-gray-900 mb-2">Share your experience</h2>
-                    <p data-i18n="d_feedback_sub" class="text-gray-400 text-sm mb-5">Let others know what KCNP Agro has done for you. Your testimonial becomes visible after an admin approves it.</p>
+                    <p data-i18n="d_feedback_sub" class="text-gray-400 text-sm mb-5">Let others know what Vuna Digital has done for you. Your testimonial becomes visible after an admin approves it.</p>
                     <form id="testimonial-form" class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end" novalidate>
                         <div class="sm:col-span-3">
                             <label for="test-rating" class="block text-sm font-medium text-gray-300 mb-1"><span data-i18n="d_feedback_rating">Rating</span></label>
@@ -193,7 +193,7 @@
                         </div>
                         <div class="sm:col-span-3">
                             <label for="test-message" class="block text-sm font-medium text-gray-300 mb-1"><span data-i18n="d_feedback_msg">Your testimonial</span></label>
-                            <textarea id="test-message" rows="4" maxlength="1000" placeholder="e.g. I used KCNP Agro to find a trader for my mangoes within two days..." class="form-input w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-gray-900 placeholder-gray-500 text-sm"></textarea>
+                            <textarea id="test-message" rows="4" maxlength="1000" placeholder="e.g. I used Vuna Digital to find a trader for my mangoes within two days..." class="form-input w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-gray-900 placeholder-gray-500 text-sm"></textarea>
                         </div>
                         <div class="sm:col-span-3 flex items-center gap-4">
                             <button type="submit" class="cta-btn px-6 py-3 rounded-xl text-white font-semibold text-sm w-full sm:w-auto">
@@ -213,9 +213,9 @@
 
                 <!-- Column 1: Brand -->
                 <div class="lg:col-span-1">
-                    <a href="/" class="flex items-center gap-2 mb-4" aria-label="KCNP Agro Home">
-                        <img src="/logo.jpg" alt="KCNP Agro logo" class="w-10 h-10 rounded-xl object-cover" width="40" height="40">
-                        <span class="font-heading font-bold text-xl text-gray-900">KCNP<span class="text-primary-400">Agro</span></span>
+                    <a href="/" class="flex items-center gap-2 mb-4" aria-label="Vuna Digital Home">
+                        <img src="/logo.jpg" alt="Vuna Digital logo" class="h-10 w-auto rounded-xl object-contain" width="40" height="40">
+                        <span class="font-heading font-bold text-xl text-gray-900">Vuna<span class="text-primary-400">Digital</span></span>
                     </a>
                     <p class="text-gray-500 text-sm leading-relaxed mb-6">
                         Promoting climate smart agriculture and trade initiatives for sustainable economic growth worldwide.
@@ -281,7 +281,7 @@
             <!-- Bottom bar -->
             <div class="pt-8 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p class="text-gray-600 text-xs sm:text-sm">
-                    &copy; <span id="current-year"></span> KCNP Agro. <span data-i18n="f_rights">All rights reserved.</span>
+                    &copy; <span id="current-year"></span> Vuna Digital. <span data-i18n="f_rights">All rights reserved.</span>
                 </p>
                 <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-gray-600 text-xs sm:text-sm">
                     <a href="mailto:kabulmatano027@gmail.com" class="hover:text-primary-400 transition-colors">kabulmatano027@gmail.com</a>
@@ -289,7 +289,7 @@
                     <span>Mombasa, Kenya</span>
                 </div>
                 <div class="flex gap-6">
-                    <a href="#" onclick="KCNP && KCNP.showTour(); return false;" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_howto">How to Use</span></a>
+                    <a href="#" onclick="Vuna && Vuna.showTour(); return false;" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_howto">How to Use</span></a>
                     <a href="/privacy" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_privacy">Privacy Policy</span></a>
                     <a href="/terms" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_terms">Terms of Service</span></a>
                 </div>
@@ -348,10 +348,10 @@
             const m = document.cookie.match('(?:^|; )' + name + '=([^;]*)');
             return m ? decodeURIComponent(m[1]) : null;
         }
-        const getToken = () => readStored('kcnp_token') || readStored('token');
+        const getToken = () => readStored('vuna_token') || readStored('token');
         const getUser = () => {
             try {
-                return JSON.parse(readStored('kcnp_user') || readStored('user') || 'null');
+                return JSON.parse(readStored('vuna_user') || readStored('user') || 'null');
             } catch (e) { return null; }
         };
         /**
@@ -374,10 +374,10 @@
                 if (fresh === null) return;
                 identityVerified = fresh;
                 try {
-                    const stored = JSON.parse(readStored('kcnp_user') || readStored('user') || 'null');
+                    const stored = JSON.parse(readStored('vuna_user') || readStored('user') || 'null');
                     if (stored) {
                         stored.identityVerified = fresh;
-                        localStorage.setItem('kcnp_user', JSON.stringify(stored));
+                        localStorage.setItem('vuna_user', JSON.stringify(stored));
                     }
                 } catch (e) { /* storage unavailable */ }
             } catch (e) { /* keep the cached value */ }
@@ -388,8 +388,8 @@
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
             } catch (e) { /* ignore */ }
-            document.cookie = 'kcnp_token=; path=/; max-age=0';
-            document.cookie = 'kcnp_user=; path=/; max-age=0';
+            document.cookie = 'vuna_token=; path=/; max-age=0';
+            document.cookie = 'vuna_user=; path=/; max-age=0';
             document.cookie = 'token=; path=/; max-age=0';
             document.cookie = 'user=; path=/; max-age=0';
         }
@@ -449,7 +449,7 @@
          * leads nowhere.
          */
         function applyDashboardPostingGate() {
-            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            const t = (window.Vuna && Vuna.t) ? Vuna.t.bind(window.Vuna) : (k => k);
             const targets = Array.prototype.slice.call(
                 document.querySelectorAll('#post-listing-cta, a[href*="#listing-form"]'));
             targets.forEach(function (el) {
@@ -473,7 +473,7 @@
         }
 
         function showDashboardVerifyNotice() {
-            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            const t = (window.Vuna && Vuna.t) ? Vuna.t.bind(window.Vuna) : (k => k);
             let box = document.getElementById('dashboard-verify-notice');
             if (!box) {
                 box = document.createElement('div');
@@ -552,7 +552,7 @@
 
         async function loadInsights() {
             const line = document.getElementById('insights-dash');
-            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            const t = (window.Vuna && Vuna.t) ? Vuna.t.bind(window.Vuna) : (k => k);
             try {
                 const data = await fetchJSON(`${API}/market-insights`);
                 if (!data.success) throw new Error('insights');
@@ -564,7 +564,7 @@
                 }
                 const top = (d.opportunities && d.opportunities[0]) || (d.segments && d.segments[0]);
                 if (top) {
-                    const cat = (window.KCNP && KCNP.t) ? KCNP.t('cat_' + top.category) : top.category;
+                    const cat = (window.Vuna && Vuna.t) ? Vuna.t('cat_' + top.category) : top.category;
                     line.innerHTML = `<span class="text-gray-400">${t('d_top_opp')}</span> <span class="text-primary-300 font-semibold">${cat} · ${top.location}</span> — ${bal(top.balance)}. ${Number(top.views30d).toLocaleString()} ${t('mp_views_short')}, ${Number(top.interest30d).toLocaleString()} ${t('mp_interest_short')}.`;
                 } else {
                     line.textContent = t('mi_no_opportunities');
@@ -581,7 +581,7 @@
 
         async function loadMyListings() {
             const container = document.getElementById('my-listings');
-            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            const t = (window.Vuna && Vuna.t) ? Vuna.t.bind(window.Vuna) : (k => k);
             try {
                 const data = await fetchJSON(`${API}/products/my`, {
                     headers: { Authorization: `Bearer ${getToken()}` }
@@ -615,7 +615,7 @@
                             <span class="text-primary-400 font-bold text-lg">${formatPrice(p.price, p.unit)}</span>
                             <span class="text-gray-500 text-xs">${p.location || 'Location TBD'}</span>
                         </div>
-                        <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen" onclick="event.stopPropagation(); KCNP.speakBtn(this);">&#9654; Listen</button>
+                        <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen" onclick="event.stopPropagation(); Vuna.speakBtn(this);">&#9654; Listen</button>
                     </article>
                 `).join('');
             } catch (err) {
@@ -847,7 +847,7 @@
 
         async function loadTraderListings(search = '') {
             const container = document.getElementById('trader-listings');
-            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            const t = (window.Vuna && Vuna.t) ? Vuna.t.bind(window.Vuna) : (k => k);
             const params = new URLSearchParams();
             if (search) params.set('search', search);
             try {
@@ -872,7 +872,7 @@
                             ${p.contactEmail ? `<a href="mailto:${p.contactEmail}" class="block text-xs text-primary-400 hover:text-primary-300 transition-colors truncate">${p.contactEmail}</a>` : ''}
                             ${p.contactPhone ? `<a href="tel:${p.contactPhone}" class="block text-xs text-gray-400 hover:text-primary-300 transition-colors">${p.contactPhone}</a>` : ''}
                         </div>
-                        <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen" onclick="event.stopPropagation(); KCNP.speakBtn(this);">&#9654; Listen</button>
+                        <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen" onclick="event.stopPropagation(); Vuna.speakBtn(this);">&#9654; Listen</button>
                     </article>
                 `).join('');
             } catch (err) {
@@ -890,7 +890,7 @@
             window.location.href = '/';
         }
 
-        document.addEventListener('kcnp:lang', () => {
+        document.addEventListener('vuna:lang', () => {
             const r = user && user.role ? user.role : 'farmer';
             showRoleView(r);
             applyDashboardPostingGate();
@@ -940,7 +940,7 @@
                 });
             }
 
-            document.addEventListener('kcnp:lang', () => {
+            document.addEventListener('vuna:lang', () => {
                 const role = user && user.role ? user.role : 'farmer';
                 if (role === 'trader') loadTraderListings((traderSearch && traderSearch.value) || '');
                 else if (role !== 'admin') loadMyListings();
@@ -956,10 +956,10 @@
             var selectedRating = 5;
             function getToken() {
                 try {
-                    var t = localStorage.getItem('kcnp_token') || localStorage.getItem('token');
+                    var t = localStorage.getItem('vuna_token') || localStorage.getItem('token');
                     if (t) return t;
                 } catch (e) {}
-                var m = document.cookie.match('(?:^|; )kcnp_token=([^;]*)');
+                var m = document.cookie.match('(?:^|; )vuna_token=([^;]*)');
                 return m ? decodeURIComponent(m[1]) : null;
             }
             document.getElementById('test-rating').addEventListener('click', function (e) {

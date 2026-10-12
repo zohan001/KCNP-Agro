@@ -1,5 +1,5 @@
 # ============================================
-# Verdant Agro - Docker Compose Configuration
+# Vuna Digital - Docker Compose Configuration
 # ============================================
 # Local development/production stack with a
 # MongoDB database service.
@@ -9,7 +9,7 @@ services:
   # MongoDB database
   mongodb:
     image: mongo:4.4
-    container_name: verdant-agro-mongo
+    container_name: vuna-digital-mongo
     restart: unless-stopped
     environment:
       MONGO_INITDB_DATABASE: verdant
@@ -28,8 +28,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: verdant-agro:latest
-    container_name: verdant-agro-web
+    image: vuna-digital:latest
+    container_name: vuna-digital-web
     restart: unless-stopped
     depends_on:
       mongodb:

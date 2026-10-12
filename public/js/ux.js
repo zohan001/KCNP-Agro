@@ -14,7 +14,7 @@
  *    not read comfortably in English.
  *
  * Handlers are attached inline via
- * `onclick="KCNP.speakBtn(this)"` in each page
+ * `onclick="Vuna.speakBtn(this)"` in each page
  * template, so buttons created later (cards
  * rendered after API fetch) always work.
  * ============================================
@@ -25,7 +25,7 @@
     // ==============================
     // Configuration
     // ==============================
-    var LANG_KEY = 'kcnp_lang';
+    var LANG_KEY = 'vuna_lang';
     var TTS_LANG = { en: 'en-US', sw: 'sw-KE' };
 
     // ==============================
@@ -53,12 +53,12 @@
             p_marketplace: 'Marketplace',
             p_education: 'Education <span class="gradient-text">Center</span>',
             p_dashboard: 'Dashboard',
-            p_login: 'Login to <span class="gradient-text">KCNP Agro</span>',
+            p_login: 'Login to <span class="gradient-text">Vuna Digital</span>',
             p_register: 'Create <span class="gradient-text">Account</span>',
             p_forgot: 'Forgot <span class="gradient-text">Password?</span>',
             p_reset: 'Choose a New <span class="gradient-text">Password</span>',
             p_activate: 'Activate Your <span class="gradient-text">Account</span>',
-            p_activate_sub: 'Verify your email to start using KCNP Agro.',
+            p_activate_sub: 'Verify your email to start using Vuna Digital.',
             p_eyebrow_login: 'Welcome Back',
             p_eyebrow_join: 'Join Us',
             p_eyebrow_recovery: 'Account Recovery',
@@ -186,10 +186,10 @@
             pr_otp_err: 'Could not confirm the code. Please try again.',
             pr_otp_refresh: 'Request a new payment instead',
             tt_loading: 'Loading testimonials...',
-            tt_empty: 'No testimonials yet. Be the first to share your experience with KCNP Agro.',
+            tt_empty: 'No testimonials yet. Be the first to share your experience with Vuna Digital.',
             tt_cta: 'Share your experience',
             d_feedback_title: 'Share your experience',
-            d_feedback_sub: 'Let others know what KCNP Agro has done for you. Your testimonial becomes visible after an admin approves it.',
+            d_feedback_sub: 'Let others know what Vuna Digital has done for you. Your testimonial becomes visible after an admin approves it.',
             d_feedback_rating: 'Rating',
             d_feedback_msg: 'Your testimonial',
             d_feedback_submit: 'Submit testimonial',
@@ -320,9 +320,9 @@
             s_all: 'See all marketplace listings',
             s_post_new: '+ Post a new listing',
             f_howto: 'How to Use',
-            tour_title: 'Welcome to KCNP Agro!',
+            tour_title: 'Welcome to Vuna Digital!',
             tour_sub: 'Here is a quick guide to get you started in minutes.',
-            t1_t: 'Welcome to KCNP Agro!',
+            t1_t: 'Welcome to Vuna Digital!',
             t1_d: 'This platform helps farmers buy, sell, and learn climate-smart farming. Use the buttons below to walk through the main pages.',
             t2_t: 'Move around the site',
             t2_d: 'Use the menu at the top: Home, Marketplace, and Education. The Marketplace is where farmers and traders buy and sell; Education has free lessons and quizzes.',
@@ -367,12 +367,12 @@
             p_marketplace: 'Soko',
             p_education: 'Kituo cha <span class="gradient-text">Elimu</span>',
             p_dashboard: 'Dashibodi',
-            p_login: 'Ingia kwenye <span class="gradient-text">KCNP Agro</span>',
+            p_login: 'Ingia kwenye <span class="gradient-text">Vuna Digital</span>',
             p_register: 'Fungua <span class="gradient-text">Akaunti</span>',
             p_forgot: 'Umesahau <span class="gradient-text">Nenosiri?</span>',
             p_reset: 'Chagua Nenosiri <span class="gradient-text">Jipya</span>',
             p_activate: 'Amilisha Akaunti <span class="gradient-text">Yako</span>',
-            p_activate_sub: 'Thibitisha barua pepe yako ili kuanza kutumia KCNP Agro.',
+            p_activate_sub: 'Thibitisha barua pepe yako ili kuanza kutumia Vuna Digital.',
             p_eyebrow_login: 'Karibu Tena',
             p_eyebrow_join: 'Jiunge Nasi',
             p_eyebrow_recovery: 'Urejeshaji Akaunti',
@@ -500,10 +500,10 @@
             pr_otp_err: 'Haikuweza kuthibitisha nambari. Tafadhali jaribu tena.',
             pr_otp_refresh: 'Omba malipo mapya badala yake',
             tt_loading: 'Tunapakia maoni...',
-            tt_empty: 'Bado hakuna maoni. Kuwa wa kwanza kushiriki uzoefu wako na KCNP Agro.',
+            tt_empty: 'Bado hakuna maoni. Kuwa wa kwanza kushiriki uzoefu wako na Vuna Digital.',
             tt_cta: 'Shiriki uzoefu wako',
             d_feedback_title: 'Shiriki uzoefu wako',
-            d_feedback_sub: 'Wajulishe wengine kile KCNP Agro imekufanyia. Maoni yako yanaonekana baada ya msimamizi kuidhinisha.',
+            d_feedback_sub: 'Wajulishe wengine kile Vuna Digital imekufanyia. Maoni yako yanaonekana baada ya msimamizi kuidhinisha.',
             d_feedback_rating: 'Ukadiriaji',
             d_feedback_msg: 'Maoni yako',
             d_feedback_submit: 'Wasilisha maoni',
@@ -633,9 +633,9 @@
             s_all: 'Ona matangazo yote ya soko',
             s_post_new: '+ Chapisha tangazo jipya',
             f_howto: 'Jinsi ya Kutumia',
-            tour_title: 'Karibu KCNP Agro!',
+            tour_title: 'Karibu Vuna Digital!',
             tour_sub: 'Huu ni mwongozo wa haraka wa kukusaidia kuanza.',
-            t1_t: 'Karibu kwenye KCNP Agro!',
+            t1_t: 'Karibu kwenye Vuna Digital!',
             t1_d: 'Jukwaa hili husaidia wakulima kununua, kuuza, na kujifunza kilimo bora cha hali ya hewa. Tumia vitufe hapa chini kutembea kurasa kuu.',
             t2_t: 'Tembea kwenye tovuti',
             t2_d: 'Tumia menyu iliyo juu: Nyumbani, Soko, na Elimu. Soko ndipo wakulima na wafanyabiashara wanunuzi na kuuza; Elimu ina masomo na majaribio bila malipo.',
@@ -672,7 +672,7 @@
   ") and its services. By using our website, you consent to the practices described in this Policy.": ") na huduma zake. Kwa kutumia tovuti yetu, unakubali mazoea yaliyoelezwa katika Sera hii.",
   ") and related services. By accessing or using our website, you agree to be bound by these Terms. If you do not agree with any part of these Terms, please do not use the website.": ") na huduma zinazohusiana. Kwa kufikia au kutumia tovuti yetu, unakubali kufungwa na Masharti haya. Ikiwa hukubaliani na sehemu yoyote ya Masharti haya, tafadhali usitumie tovuti.",
   ". You confirm that the information you provide is accurate and that you have the right to provide it.": ". Unathibitisha kwamba taarifa unazotoa ni sahihi na kwamba una haki ya kuzitoa.",
-  "1. About KCNP Agro": "1. Kuhusu KCNP Agro",
+  "1. About Vuna Digital": "1. Kuhusu Vuna Digital",
   "1. Information We Collect": "1. Taarifa Tunazozikusanya",
   "10. Changes to This Privacy Policy": "10. Mabadiliko ya Sera hii ya Faragha",
   "10. Severability": "10. Kutengwa kwa Vifungu",
@@ -776,9 +776,9 @@
   "Implementing adaptive agricultural techniques that increase productivity while reducing environmental footprint and building climate resilience.": "Kutekeleza mbinu za kilimo zenye kubadilika zinazoongeza tija huku tukipunguza athari za mazingira na kujenga ustahimilivu wa hali ya hewa.",
   "Improve our website, services, and user experience.": "Kuboresha tovuti yetu, huduma, na uzoefu wa mtumiaji.",
   "Introduce any malicious software or interfere with the proper working of the website.": "Kuanzisha programu hasidi au kuingilia utendakazi mzuri wa tovuti.",
-  "KCNP Agro Home": "Nyumbani KCNP Agro",
-  "KCNP Agro is at the forefront of the global movement to transform agricultural systems. We believe that climate-smart agriculture isn't just about surviving — it's about building resilient, prosperous communities.": "KCNP Agro iko mstari wa mbele katika harakati za kimataifa za kubadilisha mifumo ya kilimo. Tunaamini kwamba kilimo bora cha hali ya hewa si kuhusu kuishi tu — ni kuhusu kujenga jamii zenye ustahimilivu na ustawi.",
-  "KCNP Agro promotes climate-smart agriculture and trade initiatives for sustainable economic growth. The website provides information, resources, and contact facilities related to our programmes and services.": "KCNP Agro inakuza kilimo bora cha hali ya hewa na mipango ya biashara kwa ukuaji endelevu wa uchumi. Tovuti hutoa taarifa, rasilimali, na njia za mawasiliano zinazohusiana na programu na huduma zetu.",
+  "Vuna Digital Home": "Nyumbani Vuna Digital",
+  "Vuna Digital is at the forefront of the global movement to transform agricultural systems. We believe that climate-smart agriculture isn't just about surviving — it's about building resilient, prosperous communities.": "Vuna Digital iko mstari wa mbele katika harakati za kimataifa za kubadilisha mifumo ya kilimo. Tunaamini kwamba kilimo bora cha hali ya hewa si kuhusu kuishi tu — ni kuhusu kujenga jamii zenye ustahimilivu na ustawi.",
+  "Vuna Digital promotes climate-smart agriculture and trade initiatives for sustainable economic growth. The website provides information, resources, and contact facilities related to our programmes and services.": "Vuna Digital inakuza kilimo bora cha hali ya hewa na mipango ya biashara kwa ukuaji endelevu wa uchumi. Tovuti hutoa taarifa, rasilimali, na njia za mawasiliano zinazohusiana na programu na huduma zetu.",
   "Key statistics": "Takwimu muhimu",
   "Knowledge Articles": "Makala za Elimu",
   "Last updated: August 2026": "Ilisasishwa mwisho: Agosti 2026",
@@ -853,9 +853,9 @@
   "Thank you! Your message has been sent successfully. We'll get back to you soon.": "Asante! Ujumbe wako umetumwa kwa mafanikio. Tutawasiliana nawe hivi karibuni.",
   "The website and its content are provided on an \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"as is\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" and \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"as available\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" basis without warranties of any kind, whether express or implied, including, but not limited to, implied warranties of merchantability, fitness for a particular purpose, or non-infringement. We do not warrant that the website will be uninterrupted, secure, or error-free, or that the content is accurate, complete, or current.": "Tovuti na maudhui yake hutolewa kwa msingi wa \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"jinsi yalivyo\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" na \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"inavyopatikana\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" bila dhamana ya aina yoyote, iwe ya moja kwa moja au ya kidhahiri, ikijumuisha, lakini haikuwekewa kikomo, dhamana ya kufaa kwa biashara, kufaa kwa madhumuni fulani, au kutokiukwa. Hatuthibitishi kwamba tovuti haiwezi kukatika, ni salama, au haina makosa, au kwamba maudhui ni sahihi, kamili, au ya sasa.",
   "These rights are recognised under, among others, Kenya's Data Protection Act, 2019. To exercise any of these rights, please contact us using the details below.": "Haki hizi zinatambuliwa chini ya, miongoni mwa zingine, Sheria ya Ulinzi wa Data ya Kenya, 2019. Ili kutumia haki hizo, tafadhali wasiliana nasi kupitia maelezo hapa chini.",
-  "These Terms of Service (\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Terms\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\") govern your access to and use of the KCNP Agro website (": "Masharti haya ya Huduma (\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Masharti\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\") yanasimamia ufikiaji wako na matumizi yako ya tovuti ya KCNP Agro (",
+  "These Terms of Service (\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Terms\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\") govern your access to and use of the Vuna Digital website (": "Masharti haya ya Huduma (\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Masharti\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\") yanasimamia ufikiaji wako na matumizi yako ya tovuti ya Vuna Digital (",
   "These Terms shall be governed by and construed in accordance with the laws of the Republic of Kenya. Any disputes arising out of or relating to these Terms or your use of the website shall be subject to the exclusive jurisdiction of the courts of Kenya.": "Masharti haya yatasimamiwa na kufasiriwa kwa kufuata sheria za Jamhuri ya Kenya. Migogoro yoyote inayotokana na au kuhusiana na Masharti haya au matumizi yako ya tovuti itahukumiwa na mahakama za Kenya pekee.",
-  "To the maximum extent permitted by law, KCNP Agro shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or data, arising out of or in connection with your use of the website, even if we have been advised of the possibility of such damages.": "Kwa kiwango kikubwa kinachoruhusiwa na sheria, KCNP Agro haitawajibika kwa uharibifu wowote usio wa moja kwa moja, badala, maalum, unaofuata, au wa adhabu, au upotevu wa faida au data, unaotokana na au kuhusiana na matumizi yako ya tovuti, hata kama tulifahamishwa juu ya uwezekano wa uharibifu kama huo.",
+  "To the maximum extent permitted by law, Vuna Digital shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or data, arising out of or in connection with your use of the website, even if we have been advised of the possibility of such damages.": "Kwa kiwango kikubwa kinachoruhusiwa na sheria, Vuna Digital haitawajibika kwa uharibifu wowote usio wa moja kwa moja, badala, maalum, unaofuata, au wa adhabu, au upotevu wa faida au data, unaotokana na au kuhusiana na matumizi yako ya tovuti, hata kama tulifahamishwa juu ya uwezekano wa uharibifu kama huo.",
   "Toggle mobile menu": "Fungua menyu ya simu",
   "Trade & Market Access": "Biashara na Ufikiaji wa Soko",
   "Trade Facilitation": "Urahisishaji wa Biashara",
@@ -1041,30 +1041,30 @@ var PHRASE_REV = {};
     // Browser tab titles per language.
     var PAGE_TITLES = {
         sw: {
-            'Login | KCNP Agro': 'Ingia | KCNP Agro',
-            'Register | KCNP Agro': 'Jisajili | KCNP Agro',
-            'Forgot Password | KCNP Agro': 'Nenosiri la Kusahau | KCNP Agro',
-            'Reset Password | KCNP Agro': 'Weka Upya Nenosiri | KCNP Agro',
-            'Marketplace | KCNP Agro': 'Soko | KCNP Agro',
-            'Education | KCNP Agro': 'Elimu | KCNP Agro',
-            'Market Insights | KCNP Agro': 'Uchambuzi wa Soko | KCNP Agro',
-            'Dashboard | KCNP Agro': 'Dashibodi | KCNP Agro',
-            'Privacy Policy | KCNP Agro': 'Sera ya Faragha | KCNP Agro',
-            'Terms of Service | KCNP Agro': 'Masharti ya Huduma | KCNP Agro',
-            'KCNP Agro | Climate Smart Agriculture & Trade': 'KCNP Agro | Kilimo Bora na Biashara'
+            'Login | Vuna Digital': 'Ingia | Vuna Digital',
+            'Register | Vuna Digital': 'Jisajili | Vuna Digital',
+            'Forgot Password | Vuna Digital': 'Nenosiri la Kusahau | Vuna Digital',
+            'Reset Password | Vuna Digital': 'Weka Upya Nenosiri | Vuna Digital',
+            'Marketplace | Vuna Digital': 'Soko | Vuna Digital',
+            'Education | Vuna Digital': 'Elimu | Vuna Digital',
+            'Market Insights | Vuna Digital': 'Uchambuzi wa Soko | Vuna Digital',
+            'Dashboard | Vuna Digital': 'Dashibodi | Vuna Digital',
+            'Privacy Policy | Vuna Digital': 'Sera ya Faragha | Vuna Digital',
+            'Terms of Service | Vuna Digital': 'Masharti ya Huduma | Vuna Digital',
+            'Vuna Digital | Climate Smart Agriculture & Trade': 'Vuna Digital | Kilimo Bora na Biashara'
         },
         en: {
-            'Ingia | KCNP Agro': 'Login | KCNP Agro',
-            'Jisajili | KCNP Agro': 'Register | KCNP Agro',
-            'Nenosiri la Kusahau | KCNP Agro': 'Forgot Password | KCNP Agro',
-            'Weka Upya Nenosiri | KCNP Agro': 'Reset Password | KCNP Agro',
-            'Soko | KCNP Agro': 'Marketplace | KCNP Agro',
-            'Elimu | KCNP Agro': 'Education | KCNP Agro',
-            'Uchambuzi wa Soko | KCNP Agro': 'Market Insights | KCNP Agro',
-            'Dashibodi | KCNP Agro': 'Dashboard | KCNP Agro',
-            'Sera ya Faragha | KCNP Agro': 'Privacy Policy | KCNP Agro',
-            'Masharti ya Huduma | KCNP Agro': 'Terms of Service | KCNP Agro',
-            'KCNP Agro | Kilimo Bora na Biashara': 'KCNP Agro | Climate Smart Agriculture & Trade'
+            'Ingia | Vuna Digital': 'Login | Vuna Digital',
+            'Jisajili | Vuna Digital': 'Register | Vuna Digital',
+            'Nenosiri la Kusahau | Vuna Digital': 'Forgot Password | Vuna Digital',
+            'Weka Upya Nenosiri | Vuna Digital': 'Reset Password | Vuna Digital',
+            'Soko | Vuna Digital': 'Marketplace | Vuna Digital',
+            'Elimu | Vuna Digital': 'Education | Vuna Digital',
+            'Uchambuzi wa Soko | Vuna Digital': 'Market Insights | Vuna Digital',
+            'Dashibodi | Vuna Digital': 'Dashboard | Vuna Digital',
+            'Sera ya Faragha | Vuna Digital': 'Privacy Policy | Vuna Digital',
+            'Masharti ya Huduma | Vuna Digital': 'Terms of Service | Vuna Digital',
+            'Vuna Digital | Kilimo Bora na Biashara': 'Vuna Digital | Climate Smart Agriculture & Trade'
         }
     };
 
@@ -1165,7 +1165,7 @@ var PHRASE_REV = {};
 
         // Let pages that load dynamic content re-render in the new language
         try {
-            var evt = new Event('kcnp:lang', { bubbles: true });
+            var evt = new Event('vuna:lang', { bubbles: true });
             document.dispatchEvent(evt);
         } catch (e) {}
 
@@ -1287,7 +1287,7 @@ var PHRASE_REV = {};
     // ==============================
     // Quick guide (onboarding tour)
     // ==============================
-    var TOUR_KEY = 'kcnp_tour_done';
+    var TOUR_KEY = 'vuna_tour_done';
     var tourStep = 0;
     var tourShown = false;
     var TOUR_STEPS = 8;
@@ -1295,8 +1295,8 @@ var PHRASE_REV = {};
     function tourMarkup() {
         return '<div id="tour-wrap" class="tour-backdrop" hidden>' +
             '<div class="tour-modal" role="dialog" aria-modal="true" aria-label="Quick guide">' +
-            '<button type="button" id="tour-close" class="tour-close" aria-label="Close" onclick="KCNP.skipTour()">&times;</button>' +
-            '<h2 class="tour-title" data-i18n="tour_title">Welcome to KCNP Agro!</h2>' +
+            '<button type="button" id="tour-close" class="tour-close" aria-label="Close" onclick="Vuna.skipTour()">&times;</button>' +
+            '<h2 class="tour-title" data-i18n="tour_title">Welcome to Vuna Digital!</h2>' +
             '<p class="tour-sub" data-i18n="tour_sub">Quick guide to get you started.</p>' +
             '<div class="tour-step-box">' +
             '<h3 id="tour-step-title" class="tour-step-title" data-i18n="t1_t"></h3>' +
@@ -1304,8 +1304,8 @@ var PHRASE_REV = {};
             '</div>' +
             '<div id="tour-dots" class="tour-dots" role="presentation"></div>' +
             '<div class="tour-actions">' +
-            '<button type="button" id="tour-skip-btn" class="tour-skip" data-i18n="tour_skip" onclick="KCNP.skipTour()">Skip</button>' +
-            '<button type="button" id="tour-next-btn" class="tour-next" data-i18n="tour_next" onclick="KCNP.nextTour()">Next</button>' +
+            '<button type="button" id="tour-skip-btn" class="tour-skip" data-i18n="tour_skip" onclick="Vuna.skipTour()">Skip</button>' +
+            '<button type="button" id="tour-next-btn" class="tour-next" data-i18n="tour_next" onclick="Vuna.nextTour()">Next</button>' +
             '</div>' +
             '</div>' +
             '</div>';
@@ -1601,7 +1601,7 @@ var PHRASE_REV = {};
         initCounters();
         initPasswordToggles();
 
-        document.addEventListener('kcnp:lang', function () {
+        document.addEventListener('vuna:lang', function () {
             document.querySelectorAll('.pw-toggle').forEach(function (btn) {
                 btn.dispatchEvent(new Event('pw:lang'));
             });
@@ -1629,7 +1629,7 @@ var PHRASE_REV = {};
     }
 
     // Expose to inline onclick handlers in templates
-    window.KCNP = {
+    window.Vuna = {
         speakBtn: speakBtn,
         speak: speak,
         t: tr,

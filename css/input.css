@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ============================================================
-   KCNP Agro - design system
+   Vuna Digital - design system
    ------------------------------------------------------------
    Palette (see tailwind.config.js for the ramps):
      page background #F8FAF5   cards/sections #FFFFFF
@@ -519,7 +519,7 @@ summary:focus-visible {
     border-bottom-color: #E3E8E2;
 }
 
-/* The wordmark keeps ink "KCNP" with a green "Agro". */
+/* The wordmark keeps ink "Vuna" with a green "Digital". */
 .nav-blur .font-heading {
     color: #1B2A1B;
 }

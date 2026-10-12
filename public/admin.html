@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="KCNP Agro super admin control panel.">
+    <meta name="description" content="Vuna Digital super admin control panel.">
     <meta name="robots" content="noindex, nofollow">
-    <title>Super Admin | KCNP Agro</title>
+    <title>Super Admin | Vuna Digital</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -16,7 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     <script>
         document.documentElement.classList.add('js');
-        function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }
+        function P(s) { return (window.Vuna && window.Vuna.trPhrase) ? window.Vuna.trPhrase(s) : s; }
     </script>
     <script src="/js/ux.js" defer></script>
     <script src="/js/nav.js" defer></script>
@@ -27,9 +27,9 @@
     <header id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-gray-200">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" role="navigation" aria-label="Admin navigation">
             <div class="flex items-center justify-between h-16 md:h-20">
-                <a href="/" class="flex items-center gap-2 group" aria-label="KCNP Agro Home">
-                    <img src="/logo.jpg" alt="KCNP Agro logo" class="w-10 h-10 rounded-xl object-cover transition-transform duration-300 group-hover:scale-110" width="40" height="40">
-                    <span class="font-heading font-bold text-xl text-gray-900">KCNP<span class="text-primary-400">Agro</span></span>
+                <a href="/" class="flex items-center gap-2 group" aria-label="Vuna Digital Home">
+                    <img src="/logo.jpg" alt="Vuna Digital logo" class="h-10 w-auto rounded-xl object-contain transition-transform duration-300 group-hover:scale-110" width="40" height="40">
+                    <span class="font-heading font-bold text-xl text-gray-900">Vuna<span class="text-primary-400">Digital</span></span>
                 </a>
                 <div class="flex items-center gap-6">
                     <span class="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full bg-red-500/10 text-red-300 border border-red-500/30">Admin</span>
@@ -54,7 +54,7 @@
                 <!-- Unauthorized / not logged in -->
                 <div id="admin-guard" class="hidden max-w-xl mx-auto text-center glass-card rounded-2xl p-10">
                     <h1 class="font-heading text-2xl font-bold text-gray-900 mb-3">Restricted area</h1>
-                    <p class="text-gray-400 text-sm mb-6">This control panel is reserved for KCNP Agro administrators. Please log in with an admin account.</p>
+                    <p class="text-gray-400 text-sm mb-6">This control panel is reserved for Vuna Digital administrators. Please log in with an admin account.</p>
                     <a href="/login" class="cta-btn inline-block px-6 py-3 rounded-xl text-white font-semibold text-sm">Login</a>
                 </div>
 
@@ -127,8 +127,8 @@
 
             function getAuth() {
                 try {
-                    var tk = readStored('kcnp_token') || readStored('token');
-                    var us = readStored('kcnp_user') || readStored('user');
+                    var tk = readStored('vuna_token') || readStored('token');
+                    var us = readStored('vuna_user') || readStored('user');
                     var u = us ? JSON.parse(us) : null;
                     return { user: u, token: tk };
                 } catch (e) { return { user: null, token: null }; }
@@ -901,7 +901,7 @@
                     '<label class="' + labelCls + '">Title (Kiswahili)</label><input id="ed-titleSw" class="' + inputCls + '" value="' + esc(a.titleSw || '') + '">' +
                     '<label class="' + labelCls + '">Category</label>' + catSelect(ARTICLE_CATS, a.category || 'general') +
                     '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">' +
-                    '<div><label class="' + labelCls + '">Author</label><input id="ed-author" class="' + inputCls + '" value="' + esc(a.author || '') + '" placeholder="KCNP Agro Team"></div>' +
+                    '<div><label class="' + labelCls + '">Author</label><input id="ed-author" class="' + inputCls + '" value="' + esc(a.author || '') + '" placeholder="Vuna Digital Team"></div>' +
                     '<div class="flex items-end"><label class="flex items-center gap-2 text-sm text-gray-300 cursor-pointer"><input type="checkbox" id="ed-published"' + (a.published ? ' checked' : '') + ' class="accent-primary-500 w-4 h-4"> Published</label></div>' +
                     '</div>' +
                     '<label class="' + labelCls + '">Summary (English)</label><textarea id="ed-summary" class="' + inputCls + '" rows="2">' + esc(a.summary || '') + '</textarea>' +
@@ -1026,7 +1026,7 @@
                     // Persist the server-confirmed profile so the users tab
                     // (role badges, self-actions) always sees fresh data.
                     try {
-                        localStorage.setItem('kcnp_user', JSON.stringify(user));
+                        localStorage.setItem('vuna_user', JSON.stringify(user));
                         localStorage.setItem('user', JSON.stringify(user));
                     } catch (e) { /* storage unavailable */ }
                     document.getElementById('admin-app').classList.remove('hidden');
@@ -1037,7 +1037,7 @@
                             headers: { 'Authorization': 'Bearer ' + getAuth().token },
                             credentials: 'same-origin'
                         }).catch(function () {});
-                        ['kcnp_token', 'kcnp_user', 'token', 'user'].forEach(function (k) { localStorage.removeItem(k); });
+                        ['vuna_token', 'vuna_user', 'token', 'user'].forEach(function (k) { localStorage.removeItem(k); });
                         window.location.href = '/login';
                     });
                     document.getElementById('refresh-btn').addEventListener('click', function () {
@@ -1064,7 +1064,7 @@
                 }
 
                 // The guard must trust the server, not local storage. A stale
-                // token (issued before promotion) or a cached kcnp_user is what
+                // token (issued before promotion) or a cached vuna_user is what
                 // caused "Restricted area" on accounts that were admin all along.
                 api('/auth/profile').then(function (r) {
                     var user = r && r.data && r.data.data && r.data.data.user;
@@ -1086,7 +1086,7 @@
 
     <footer class="border-t border-gray-200 py-8" role="contentinfo">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p class="text-gray-600 text-xs sm:text-sm">&copy; <span id="current-year"></span> KCNP Agro. Administrative control panel.</p>
+            <p class="text-gray-600 text-xs sm:text-sm">&copy; <span id="current-year"></span> Vuna Digital. Administrative control panel.</p>
             <a href="/" class="text-gray-500 hover:text-primary-400 text-xs sm:text-sm transition-colors">Back to website</a>
         </div>
     </footer>

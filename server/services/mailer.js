@@ -136,13 +136,13 @@ async function deliver(to, subject, text, html) {
  * @returns {Promise<Object>} { status, code }
  */
 async function sendPasswordResetEmail(to, resetUrl) {
-    const subject = 'Reset your KCNP Agro password';
+    const subject = 'Reset your Vuna Digital password';
 
     // Plain text body for simple clients
     const text = [
         'Hello,',
         '',
-        'You requested a password reset for your KCNP Agro account.',
+        'You requested a password reset for your Vuna Digital account.',
         'Use the link below to choose a new password. This link is valid for 60 minutes.',
         '',
         resetUrl,
@@ -150,7 +150,7 @@ async function sendPasswordResetEmail(to, resetUrl) {
         'If you did not request this, you can safely ignore this email — your password will not change.',
         '',
         'Regards,',
-        'The KCNP Agro Team'
+        'The Vuna Digital Team'
     ].join('\n');
 
     // HTML body with a styled button
@@ -158,7 +158,7 @@ async function sendPasswordResetEmail(to, resetUrl) {
         <div style="font-family: Arial, Helvetica, sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;">
             <h2 style="color: #16a34a; margin: 0 0 16px;">Reset your password</h2>
             <p style="color: #334155; line-height: 1.6;">Hello,</p>
-            <p style="color: #334155; line-height: 1.6;">You requested a password reset for your KCNP Agro account. Click the button below to choose a new password.</p>
+            <p style="color: #334155; line-height: 1.6;">You requested a password reset for your Vuna Digital account. Click the button below to choose a new password.</p>
             <p style="color: #64748b; font-size: 13px; line-height: 1.6;">This link is valid for <strong>60 minutes</strong>. If you did not request a reset, you can safely ignore this email — your password will not change.</p>
             <div style="text-align: center; margin: 24px 0;">
                 <a href="${resetUrl}" style="display: inline-block; background: #16a34a; color: #ffffff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">Reset Password</a>
@@ -178,12 +178,12 @@ async function sendPasswordResetEmail(to, resetUrl) {
  * @returns {Promise<Object>} { status, code }
  */
 async function sendActivationEmail(to, activationUrl) {
-    const subject = 'Activate your KCNP Agro account';
+    const subject = 'Activate your Vuna Digital account';
 
     const text = [
         'Hello,',
         '',
-        'Welcome to KCNP Agro! Your account is ready, but you need to activate it first.',
+        'Welcome to Vuna Digital! Your account is ready, but you need to activate it first.',
         'Click the link below to verify your email. This link is valid for 48 hours.',
         '',
         activationUrl,
@@ -191,12 +191,12 @@ async function sendActivationEmail(to, activationUrl) {
         'If you did not create this account, you can safely ignore this email.',
         '',
         'Regards,',
-        'The KCNP Agro Team'
+        'The Vuna Digital Team'
     ].join('\n');
 
     const html = `
         <div style="font-family: Arial, Helvetica, sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;">
-            <h2 style="color: #16a34a; margin: 0 0 16px;">Welcome to KCNP Agro</h2>
+            <h2 style="color: #16a34a; margin: 0 0 16px;">Welcome to Vuna Digital</h2>
             <p style="color: #334155; line-height: 1.6;">Hello,</p>
             <p style="color: #334155; line-height: 1.6;">Your account has been created. To finish setting it up, please verify your email address by clicking the button below.</p>
             <p style="color: #64748b; font-size: 13px; line-height: 1.6;">This link is valid for <strong>48 hours</strong>. If you did not create this account, you can safely ignore this email.</p>

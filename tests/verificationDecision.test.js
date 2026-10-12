@@ -28,7 +28,7 @@ jest.mock('../server/services/notifications', () => ({ notifyAdmins: mockNotifyA
 
 const controller = require('../server/controllers/verificationController');
 
-const ADMIN = { _id: 'admin-1', email: 'admin@kcnp.test', role: 'admin' };
+const ADMIN = { _id: 'admin-1', email: 'admin@vuna.test', role: 'admin' };
 
 /** Minimal stand-in for the record document the controller mutates. */
 function makeRecord(overrides = {}) {

@@ -1,4 +1,4 @@
-# Verdant Agro - Full Stack Application
+# Vuna Digital - Full Stack Application
 # ============================================
 # Climate Smart Agriculture & Trade Initiative
 # Promoting sustainable economic growth through
@@ -42,7 +42,6 @@ climate-smart-ag/
 │   ├── init-db.js           # Verify DB connection & indexes
 │   └── test-api.js          # API integration tests
 ├── data/                     # SQLite database files (generated)
-├── index.html                 # Development copy of frontend
 ├── .env.example               # Environment variable template
 ├── .gitignore                 # Git ignore rules
 ├── Dockerfile                 # Container build file
@@ -96,7 +95,7 @@ and the live stats on the homepage reflect real database counts.
 
 | Role   | Email                | Password    |
 |--------|----------------------|-------------|
-| Admin  | admin@kcnpagro.org   | adminpass123 |
+| Admin  | admin@vunadigital.org   | adminpass123 |
 | Farmer | demofarmer@gmail.com | farmer123   |
 | Trader | demotrader@gmail.com | trader123   |
 
@@ -194,8 +193,8 @@ docker-compose down
 To build a standalone image:
 
 ```bash
-docker build -t verdant-agro .
-docker run -p 3000:3000 -e MONGO_URI=mongodb://host.docker.internal:27017/verdant verdant-agro
+docker build -t vuna-digital .
+docker run -p 3000:3000 -e MONGO_URI=mongodb://host.docker.internal:27017/verdant vuna-digital
 ```
 
 ## ☁️ Production Deployment on Render
@@ -233,10 +232,10 @@ this up with `sync: false` so you're prompted for the value.
 # From the project root
 git init
 git add .
-git commit -m "Initial commit: Verdant Agro full-stack app"
+git commit -m "Initial commit: Vuna Digital full-stack app"
 git branch -M main
 # Create a repo on GitHub, then:
-git remote add origin https://github.com/YOUR_USERNAME/verdant-agro.git
+git remote add origin https://github.com/YOUR_USERNAME/vuna-digital.git
 git push -u origin main
 ```
 
@@ -278,8 +277,8 @@ MIT
 
 ## 👥 Author
 
-Verdant Agro Team
+Vuna Digital Team
 
 ---
 
-© 2026 Verdant Agro. All rights reserved.
+© 2026 Vuna Digital. All rights reserved.

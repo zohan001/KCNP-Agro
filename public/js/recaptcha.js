@@ -28,10 +28,10 @@
     var pending = [];
 
     function ensureHolder() {
-        var host = document.getElementById('kcnp-recaptcha-holder');
+        var host = document.getElementById('vuna-recaptcha-holder');
         if (!host) {
             host = document.createElement('div');
-            host.id = 'kcnp-recaptcha-holder';
+            host.id = 'vuna-recaptcha-holder';
             host.setAttribute('aria-hidden', 'true');
             host.style.position = 'absolute';
             host.style.left = '-9999px';
@@ -154,7 +154,7 @@
         return Date.now();
     }
 
-    window.KCNPRecaptcha = {
+    window.VunaRecaptcha = {
         init: init,
         execute: execute,
         active: active,

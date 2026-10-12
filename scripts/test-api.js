@@ -15,7 +15,7 @@ require('dotenv').config();
 process.env.BREVO_API_KEY = '';
 process.env.SMTP_HOST = '';
 process.env.SMTP_PORT = '';
-process.env.MAIL_FROM = 'KCNP Agro <noreply@kcnpagro.org>';
+process.env.MAIL_FROM = 'Vuna Digital <noreply@vunadigital.org>';
 const createApp = require('../server/app');
 
 const request = (path, options = {}) => {
@@ -49,7 +49,7 @@ const request = (path, options = {}) => {
     const { connectDB, initializeDatabase, closeDatabase } = require('../server/db/database');
     const User = require('../server/models/User');
 
-    console.log('=== Verdant Agro API Integration Tests ===\n');
+    console.log('=== Vuna Digital API Integration Tests ===\n');
 
     try {
         await connectDB();

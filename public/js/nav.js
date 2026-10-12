@@ -33,12 +33,12 @@
 
     function currentUser() {
         try {
-            return JSON.parse(readStored('kcnp_user') || readStored('user') || 'null');
+            return JSON.parse(readStored('vuna_user') || readStored('user') || 'null');
         } catch (e) { return null; }
     }
 
     function hasToken() {
-        return Boolean(readStored('kcnp_token') || readStored('token'));
+        return Boolean(readStored('vuna_token') || readStored('token'));
     }
 
     function logout() {
@@ -46,7 +46,7 @@
             localStorage.removeItem('token');
             localStorage.removeItem('user');
         } catch (e) { /* storage unavailable */ }
-        ['kcnp_token', 'kcnp_user', 'token', 'user'].forEach(function (n) {
+        ['vuna_token', 'vuna_user', 'token', 'user'].forEach(function (n) {
             document.cookie = n + '=; path=/; max-age=0';
         });
         window.location.href = '/login';

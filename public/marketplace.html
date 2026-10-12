@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="KCNP Agro Marketplace - Buy and sell climate-smart agriculture products and services">
-    <title>Marketplace | KCNP Agro</title>
+    <meta name="description" content="Vuna Digital Marketplace - Buy and sell climate-smart agriculture products and services">
+    <title>Marketplace | Vuna Digital</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     <script>document.documentElement.classList.add('js');
-        function P(s) { return (window.KCNP && window.KCNP.trPhrase) ? window.KCNP.trPhrase(s) : s; }</script>
+        function P(s) { return (window.Vuna && window.Vuna.trPhrase) ? window.Vuna.trPhrase(s) : s; }</script>
     <script src="/js/ux.js" defer></script>
     <script src="/js/nav.js" defer></script>
 </head>
@@ -24,9 +24,9 @@
     <header id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-gray-200">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" role="navigation" aria-label="Main navigation">
             <div class="flex items-center justify-between h-16 md:h-20">
-                <a href="/" class="flex items-center gap-2 group" aria-label="KCNP Agro Home">
-                    <img src="/logo.jpg" alt="KCNP Agro logo" class="w-10 h-10 rounded-xl object-cover transition-transform duration-300 group-hover:scale-110" width="40" height="40">
-                    <span class="font-heading font-bold text-xl text-gray-900">KCNP<span class="text-primary-400">Agro</span></span>
+                <a href="/" class="flex items-center gap-2 group" aria-label="Vuna Digital Home">
+                    <img src="/logo.jpg" alt="Vuna Digital logo" class="h-10 w-auto rounded-xl object-contain transition-transform duration-300 group-hover:scale-110" width="40" height="40">
+                    <span class="font-heading font-bold text-xl text-gray-900">Vuna<span class="text-primary-400">Digital</span></span>
                 </a>
                 <div class="hidden md:flex items-center gap-4 lg:gap-8">
                     <a href="/" class="text-sm font-medium text-gray-300 hover:text-primary-400 transition-colors duration-300"><span data-i18n="nav_home">Home</span></a>
@@ -186,9 +186,9 @@
 
                 <!-- Column 1: Brand -->
                 <div class="lg:col-span-1">
-                    <a href="/" class="flex items-center gap-2 mb-4" aria-label="KCNP Agro Home">
-                        <img src="/logo.jpg" alt="KCNP Agro logo" class="w-10 h-10 rounded-xl object-cover" width="40" height="40">
-                        <span class="font-heading font-bold text-xl text-white">KCNP<span class="text-primary-400">Agro</span></span>
+                    <a href="/" class="flex items-center gap-2 mb-4" aria-label="Vuna Digital Home">
+                        <img src="/logo.jpg" alt="Vuna Digital logo" class="h-10 w-auto rounded-xl object-contain" width="40" height="40">
+                        <span class="font-heading font-bold text-xl text-white">Vuna<span class="text-primary-400">Digital</span></span>
                     </a>
                     <p class="text-gray-500 text-sm leading-relaxed mb-6">
                         Promoting climate smart agriculture and trade initiatives for sustainable economic growth worldwide.
@@ -254,7 +254,7 @@
             <!-- Bottom bar -->
             <div class="pt-8 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p class="text-gray-600 text-xs sm:text-sm">
-                    &copy; <span id="current-year"></span> KCNP Agro. <span data-i18n="f_rights">All rights reserved.</span>
+                    &copy; <span id="current-year"></span> Vuna Digital. <span data-i18n="f_rights">All rights reserved.</span>
                 </p>
                 <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-gray-600 text-xs sm:text-sm">
                     <a href="mailto:kabulmatano027@gmail.com" class="hover:text-primary-400 transition-colors">kabulmatano027@gmail.com</a>
@@ -262,7 +262,7 @@
                     <span>Mombasa, Kenya</span>
                 </div>
                 <div class="flex gap-6">
-                    <a href="#" onclick="KCNP && KCNP.showTour(); return false;" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_howto">How to Use</span></a>
+                    <a href="#" onclick="Vuna && Vuna.showTour(); return false;" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_howto">How to Use</span></a>
                     <a href="/privacy" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_privacy">Privacy Policy</span></a>
                     <a href="/terms" class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm transition-colors"><span data-i18n="f_terms">Terms of Service</span></a>
                 </div>
@@ -320,19 +320,19 @@
             const m = document.cookie.match('(?:^|; )' + name + '=([^;]*)');
             return m ? decodeURIComponent(m[1]) : null;
         }
-        const getToken = () => readStored('kcnp_token') || readStored('token');
+        const getToken = () => readStored('vuna_token') || readStored('token');
         function getVisitorId() {
             let id = '';
-            try { id = localStorage.getItem('kcnp_visitor'); } catch (e) {}
+            try { id = localStorage.getItem('vuna_visitor'); } catch (e) {}
             if (!id) {
                 id = 'v-' + Math.random().toString(36).slice(2) + Date.now().toString(36);
-                try { localStorage.setItem('kcnp_visitor', id); } catch (e) {}
+                try { localStorage.setItem('vuna_visitor', id); } catch (e) {}
             }
             return id;
         }
         const getAuthUser = () => {
             try {
-                return JSON.parse(readStored('kcnp_user') || readStored('user') || 'null');
+                return JSON.parse(readStored('vuna_user') || readStored('user') || 'null');
             } catch (e) { return null; }
         };
         function clearSession() {
@@ -340,8 +340,8 @@
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
             } catch (e) {}
-            document.cookie = 'kcnp_token=; path=/; max-age=0';
-            document.cookie = 'kcnp_user=; path=/; max-age=0';
+            document.cookie = 'vuna_token=; path=/; max-age=0';
+            document.cookie = 'vuna_user=; path=/; max-age=0';
             document.cookie = 'token=; path=/; max-age=0';
             document.cookie = 'user=; path=/; max-age=0';
         }
@@ -387,7 +387,7 @@
         const RETRY_MAX = 5;
 
         async function loadListings() {
-            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            const t = (window.Vuna && Vuna.t) ? Vuna.t.bind(window.Vuna) : (k => k);
             if (loadListings._timer) {
                 clearTimeout(loadListings._timer);
                 loadListings._timer = null;
@@ -433,7 +433,7 @@
         function renderListings(listings) {
             const grid = document.getElementById('listings-grid');
             const empty = document.getElementById('listings-empty');
-            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            const t = (window.Vuna && Vuna.t) ? Vuna.t.bind(window.Vuna) : (k => k);
             if (!listings.length) {
                 grid.innerHTML = '';
                 empty.innerHTML = t('mp_empty');
@@ -442,7 +442,7 @@
             }
             empty.classList.add('hidden');
             grid.innerHTML = listings.map(p => {
-                const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+                const t = (window.Vuna && Vuna.t) ? Vuna.t.bind(window.Vuna) : (k => k);
                 const auth = getAuthUser();
                 const isOwner = auth && p.seller && String(p.seller) === String(auth._id);
                 return `
@@ -465,7 +465,7 @@
                     </div>
                     <button type="button" class="interest-btn mt-3 w-full" data-id="${p._id}" onclick="event.stopPropagation(); markInterest('${p._id}')">${t('mp_interest')}</button>
                     ${isOwner ? `<button type="button" class="edit-btn mt-2 w-full py-2.5 rounded-lg bg-white text-primary-400 hover:bg-primary-50 text-sm font-semibold" onclick="event.stopPropagation(); openEdit('${p._id}');">${t('btn_edit')}</button>` : ''}
-                    <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen" onclick="event.stopPropagation(); KCNP.speakBtn(this);">&#9654; Listen</button>
+                    <button type="button" class="listen-btn mt-3" data-speak="self" data-i18n="btn_listen" onclick="event.stopPropagation(); Vuna.speakBtn(this);">&#9654; Listen</button>
                 </article>
             `;
             }).join('');
@@ -478,7 +478,7 @@
         async function submitListing(e) {
             e.preventDefault();
             const status = document.getElementById('listing-status');
-            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            const t = (window.Vuna && Vuna.t) ? Vuna.t.bind(window.Vuna) : (k => k);
 
             const title = document.getElementById('l-title').value.trim();
             const description = document.getElementById('l-description').value.trim();
@@ -558,7 +558,7 @@
         function openEdit(id) {
             const p = LAST_LISTINGS.find(x => String(x._id) === String(id));
             if (!p) return;
-            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            const t = (window.Vuna && Vuna.t) ? Vuna.t.bind(window.Vuna) : (k => k);
             editingListing = p;
             document.getElementById('l-title').value = p.title || '';
             document.getElementById('l-description').value = p.description || '';
@@ -593,7 +593,7 @@
             listingImage = null;
             resetImagePreview();
             const submitBtn = document.querySelector('#listing-form button[type="submit"]');
-            if (submitBtn) submitBtn.textContent = (window.KCNP && KCNP.t) ? KCNP.t('btn_post_listing') : 'Post Listing';
+            if (submitBtn) submitBtn.textContent = (window.Vuna && Vuna.t) ? Vuna.t('btn_post_listing') : 'Post Listing';
             const cancelBtn = document.getElementById('cancel-edit-btn');
             if (cancelBtn) cancelBtn.classList.add('hidden');
             if (!silent) {
@@ -606,7 +606,7 @@
         async function openListingDetail(id) {
             const p = LAST_LISTINGS.find(x => String(x._id) === String(id));
             if (!p) return;
-            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            const t = (window.Vuna && Vuna.t) ? Vuna.t.bind(window.Vuna) : (k => k);
 
             const body = document.getElementById('listing-detail-body');
             body.innerHTML = `
@@ -919,12 +919,12 @@
                 const file = input.files && input.files[0];
                 if (!file) { resetImagePreview(); return; }
                 if (file.type && !/^image\//.test(file.type)) {
-                    alert((window.KCNP && KCNP.t('err_image_type')) || 'Please choose an image file (JPG, PNG, WEBP or GIF).');
+                    alert((window.Vuna && Vuna.t('err_image_type')) || 'Please choose an image file (JPG, PNG, WEBP or GIF).');
                     input.value = '';
                     return;
                 }
                 if (file.size > 5 * 1024 * 1024) {
-                    alert((window.KCNP && KCNP.t('err_image_big')) || 'That photo is too big. Please choose one under 5 MB.');
+                    alert((window.Vuna && Vuna.t('err_image_big')) || 'That photo is too big. Please choose one under 5 MB.');
                     input.value = '';
                     return;
                 }
@@ -958,7 +958,7 @@
             if (!controls || !notice) return;
             const auth = getAuthUser();
             const role = (auth && auth.role) || null;
-            const t = (window.KCNP && KCNP.t) ? KCNP.t.bind(window.KCNP) : (k => k);
+            const t = (window.Vuna && Vuna.t) ? Vuna.t.bind(window.Vuna) : (k => k);
 
             if (role === 'farmer') {
                 // A farmer must be identity-verified before they can list.
@@ -1106,9 +1106,9 @@
                 const json = JSON.stringify(auth);
                 try {
                     localStorage.setItem('user', json);
-                    localStorage.setItem('kcnp_user', json);
+                    localStorage.setItem('vuna_user', json);
                 } catch (e) { /* cookies may already hold it */ }
-                document.cookie = 'kcnp_user=' + encodeURIComponent(json) + '; path=/; max-age=604800; SameSite=Lax';
+                document.cookie = 'vuna_user=' + encodeURIComponent(json) + '; path=/; max-age=604800; SameSite=Lax';
             } catch (e) { /* offline: fall back to the cached flag */ }
         }
 
@@ -1119,7 +1119,7 @@
             loadListings();
             bindImageUpload();
 
-        document.addEventListener('kcnp:lang', () => { loadListings(); applyPostingPermissions(); });
+        document.addEventListener('vuna:lang', () => { loadListings(); applyPostingPermissions(); });
 
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');

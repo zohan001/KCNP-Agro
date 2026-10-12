@@ -84,7 +84,7 @@ async function startServer() {
 
         // Start listening for requests
         const server = app.listen(config.port, () => {
-            console.log(`[Server] KCNP Agro server running in ${config.env} mode`);
+            console.log(`[Server] Vuna Digital server running in ${config.env} mode`);
             console.log(`[Server] Listening on port ${config.port}`);
             console.log(`[Server] http://localhost:${config.port}`);
         });

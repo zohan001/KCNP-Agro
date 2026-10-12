@@ -7,7 +7,7 @@ module.exports = {
     theme: {
         extend: {
             /* ----------------------------------------------------------------
-               KCNP Agro palette.
+               Vuna Digital palette.
 
                Every value below was picked against the page background
                (#F8FAF5) so the text that uses it clears WCAG AA (4.5:1):

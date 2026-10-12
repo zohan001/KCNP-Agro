@@ -54,7 +54,7 @@
 
     function readStoredUser() {
         try {
-            var raw = localStorage.getItem('kcnp_user') || localStorage.getItem('user');
+            var raw = localStorage.getItem('vuna_user') || localStorage.getItem('user');
             return raw ? JSON.parse(raw) : null;
         } catch (e) { return null; }
     }

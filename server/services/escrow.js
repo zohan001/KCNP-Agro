@@ -79,7 +79,7 @@ function computeTotals(unitPrice, quantity) {
 }
 
 /**
- * Human-friendly order reference, e.g. KCNP-8H3K2QD.
+ * Human-friendly order reference, e.g. VUNA-8H3K2QD.
  *
  * @returns {string}
  */
@@ -89,7 +89,7 @@ function generateReference() {
     for (let i = 0; i < 7; i += 1) {
         tail += alphabet[Math.floor(Math.random() * alphabet.length)];
     }
-    return `KCNP-${tail}`;
+    return `VUNA-${tail}`;
 }
 
 /**

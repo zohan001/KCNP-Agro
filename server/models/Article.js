@@ -50,7 +50,7 @@ const articleSchema = new mongoose.Schema(
         author: {
             type: String,
             trim: true,
-            default: 'KCNP Agro Team'
+            default: 'Vuna Digital Team'
         },
         published: {
             type: Boolean,
